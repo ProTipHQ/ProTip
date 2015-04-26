@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ProTip</title>
+    <meta name="description" content="Keeps track of how much time you spend on various web sites and records blockchain hashes for later tipping.">
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/protip.css">
+
+    <script src="../lib/jquery-2.1.3.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/bitcoinjs-min.js"></script>
+    <script src="../lib/ydn-db.min.js"></script>
+    <script src="../js/schema.js"></script>
+    <script src="../js/ui-utils.js"></script>
+    <script src="../controllers/blacklist.js"></script>
+</head>
+
+<body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container nav-non-responsive">
+            <div id="navbar" class="">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="popup.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Home</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="subscriptions" href="subscriptions.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Subscriptions</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="feedback.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Feedback</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="financial.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Wallet</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="paywalls" href="passes.html">
+                            <div id="menu-pass-icon"></div>
+                            <div class="menu-label">Passes</div>
+                        </a>
+                    </li>
+
+                    <li class="active">
+                        <a id="blacklist" href="blacklist.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Ignore</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="options.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Options</div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <a class="external-link" id="full-screen-link" href="blacklist.html">
+              Full Screen...
+            </a>
+        </div>
+    </nav>
+
+
+    <label class="ios-subheading">IGNORED URL</label>
+    <div style="background-color:#fff;
+                padding:10px;
+                border-bottom: solid #ccc 1px;
+                margin-bottom:10px;">
+        <div class="ios-element-divider">
+            <input type="text" id="add-to-blacklist" style="width:435px;margin:5px;" placeholder="http://example.com"></input>
+            <button class="btn btn-primary btn-xs" id="add-selected-btn">Add</button>
+        </div>
+
+        <select style="width:400px;margin:5px;" id="remove-from-blacklist" MULTIPLE size="10">
+        </select>
+        <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-btn">
+            Remove Selected
+        </button>
+    </div>
+
+
+    <label class="ios-subheading">IGNORED DOMAINS</label>
+    <div class="ios-section">
+        <div class="ios-element-divider">
+            <input type="text" id="add-blacklisted-hostnames" style="width:200px;margin:5px;" placeholder="example.com">
+            </input>
+            <button class="btn btn-primary btn-xs" id="add-selected-blacklisted-hostnames-btn">
+                Add
+            </button>
+        </div>
+
+        <select style="width:200px;margin:5px;" id="remove-from-blacklisted-hostname" MULTIPLE size="10">
+        </select>
+        <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-blacklisted-hostnames-btn">
+            Remove Selected
+        </button>
+    </div>
+
+
+    <label class="ios-subheading">IGNORED BITCOIN ADDRESSES</label>
+    <div class="ios-section">
+        <div class="ios-element-divider">
+            <input type="text" id="add-blacklisted-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e">
+            </input>
+            <button class="btn btn-primary btn-xs" id="add-blacklisted-bitcoin-address-btn">
+                Add
+            </button>
+        </div>
+
+        <select style="width:350px;margin:5px;" id="remove-from-blacklisted-bitcoin-addresses" MULTIPLE size="10">
+        </select>
+        <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-blacklisted-bitcoin-addresses-btn">
+            Remove Selected
+        </button>
+    </div>
+
+</body>
+
+</html>

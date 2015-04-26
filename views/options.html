@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ProTip</title>
+    <meta name="description" content="Keeps track of how much time you spend on various web sites and records blockchain hashes for later tipping.">
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/protip.css">
+
+    <script src="../lib/jquery-2.1.3.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/ui-utils.js"></script>
+    <script src="../controllers/options.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container nav-non-responsive">
+        <!-- <div class="navbar-header">
+          <a class="navbar-brand" href="#">ProGatis</a>
+        </div> -->
+        <div id="navbar" class="">
+          <ul class="nav navbar-nav">
+
+            <li>
+              <a href="popup.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Home</div>
+              </a>
+            </li>
+
+            <li>
+              <a id="subscriptions" href="subscriptions.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Subscriptions</div>
+              </a>
+            </li>
+
+            <li>
+              <a href="feedback.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Feedback</div>
+              </a>
+            </li>
+
+            <li>
+              <a href="financial.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Wallet</div>
+              </a>
+            </li>
+
+            <li>
+              <a id="paywalls" href="passes.html">
+                <div id="menu-pass-icon"></div>
+                <div class="menu-label">Passes</div>
+              </a>
+            </li>
+
+            <li>
+              <a id="blacklist" href="blacklist.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+                </div>
+                 <div class="menu-label">Ignore</div>
+              </a>
+            </li>
+
+            <li class="active">
+              <a href="options.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Options</div>
+              </a>
+            </li>
+
+          </ul>
+        </div><!--/.nav-collapse -->
+        <a class="external-link" id="full-screen-link" href="options.html">
+          Full Screen...
+        </a>
+
+      </div>
+    </nav>
+
+
+
+    <label class="ios-subheading">
+      CURRENCY
+    </label>
+    <div class="ios-section">
+      <select id="fiat-currency-select" style="width:100px;" class="form-control">
+        <option value="GBP">GBP</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+        <option value="AUD">AUD</option>
+        <option value="NZD">NZD</option>
+        <option value="CAD">CAD</option>
+      </select>
+    </div>
+
+
+
+    <label class="ios-subheading">
+      PRICE OF COFFEE IN YOUR LOCALITY
+    </label>
+    <div class="ios-section">
+      <input type="number" id="price-of-coffee" step="0.1" min="0.1" style="width:80px;margin:5px;"></input>
+      <span class="fiat-code">USD</span>
+    </div>
+
+
+
+    <label class="ios-subheading">
+      DEFAULT SUBSCRIPTION AMOUNT
+    </label>
+    <div class="ios-section">
+      <input type="number" id="default-subscription-amount-fiat" step="0.05" min="0.1" style="width:80px;margin:5px;"></input>
+      <span class="fiat-code">USD</span>
+    </div>
+
+
+  </body>
+</html>

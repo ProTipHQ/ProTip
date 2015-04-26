@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ProTip</title>
+    <meta name="description" content="Keeps track of how much time you spend on various web sites and records blockchain hashes for later tipping.">
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/protip.css">
+
+    <script src="../lib/jquery-2.1.3.min.js"></script>
+    <script src="../assets/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../lib/ydn-db.min.js"></script>
+    <script src="../js/schema.js"></script>
+    <!-- // <script src="../assets/js/switchery.min.js"></script> -->
+    <script src="../js/ui-utils.js"></script>
+    <script src="../controllers/feedback.js"></script>
+</head>
+
+<body>
+
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container nav-non-responsive">
+            <!-- <div class="navbar-header">
+          <a class="navbar-brand" href="#">ProGatis</a>
+        </div> -->
+            <div id="navbar" class="">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="popup.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Home</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="subscriptions" href="subscriptions.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Subscriptions</div>
+                        </a>
+                    </li>
+
+                    <li class="active">
+                        <a href="feedback.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Feedback</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="financial.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Wallet</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="paywalls" href="passes.html">
+                            <div id="menu-pass-icon"></div>
+                            <div class="menu-label">Passes</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="blacklist" href="blacklist.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Ignore</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="options.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Options</div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <a class="external-link" id="full-screen-link" href="feedback.html">
+          Full Screen...
+        </a>
+
+        </div>
+    </nav>
+
+
+
+    <label class="ios-subheading">FEEDBACK <span style="color:#ff3b30;">Planned Development!</span></label>
+    <div class="ios-section">
+
+        <div class="alert alert-info" style="width:100%;color:#000000" role="alert">
+            <p>
+                Our intention with this feature is to give artists a way of sending high value messages to their subscribers. Messages have a cost to deter spam.
+            </p>
+
+            <p>
+                We anticipate this feature being used to notify fans about important upcoming projects such as book launches, social events and crowd funding campaigns.
+            </p>
+        </div>
+
+        <div style="padding: 0.5em 1em; line-height: 1.3em;">
+
+            <div style="text-align: right; color: #888; font-weight: bold;">
+                Chris Ellis
+                <br/> http://twitter.com/mrchrisellis
+                <br/> March 21th 2015
+            </div>
+        </div>
+
+        <div style="border: 1px solid #888; border-radius: 1.5em; padding: 0.5em 0.7em; color: #000; margin-left: 20%; background: #9AC9FF;">
+            We are crowd-funding to build the tools for you to turn your passion into an enterprise. http://youtu.be/ykQLO4f2fI8
+
+        </div>
+        <div style="margin-top: 0.7em; border: 1px solid #888; border-radius: 1.5em; padding: 0.5em 0.7em; color: #000; margin-right: 20%; background: #DDD;"> Looks cool, I have been selling coffee cups and t-shirts, but it hasn't allowed me to quit my day job.</div>
+
+
+        <div style="padding: 0.5em 1em; line-height: 1.3em;">
+
+            <div style="text-align: right; color: #888; font-weight: bold;">
+                New City Architecture
+                <br/> https://www.youtube.com/user/Aloon
+                <br/> March 21th 2015
+            </div>
+        </div>
+
+        <div style="margin-top: 0.7em; border: 1px solid #888; border-radius: 1.5em; padding: 0.5em 0.7em; color: #000; margin-left: 20%; background: #9AC9FF;"> Releasing our new book. "From Arcologies to the Kowloon Walled City". PreOrder now. http://amzn.to/1eH9qG6 </div>
+
+
+        <div style="background: #C8C9CD;margin-top:5px;  padding: 0.25em; height: 2.8em; border-top: 1px solid #888">
+            <div style="background: #1C4ADE; border: 1px solid #666; border-radius: 0.8em; color: #fff; padding: 0.25em 1em; font-weight: bold; float: right;"> Send ($0.10)</div>
+            <div style="background: #FFF; border: 1px solid #888; border-radius: 0.8em; color: #FFF; padding: 0.25em 1em; margin-right: 5em; font-weight: bold;">
+                <br>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+</body>
+
+</html>

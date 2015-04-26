@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ProTip</title>
+    <meta name="description" content="Keeps track of how much time you spend on various web sites and records blockchain hashes for later tipping.">
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/protip.css">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-slider.css">
+    <link rel="stylesheet" href="../assets/css/switchery.min.css">
+
+    <script src="../lib/jquery-2.1.3.min.js"></script>
+    <script src="../lib/bitcoinjs-min.js"></script>
+
+    <script src="../assets/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/ydn-db.min.js"></script>
+    <script src="../js/schema.js"></script>
+    <script src="../js/ui-utils.js"></script>
+
+    <script src="../assets/bootstrap/js/bootstrap-slider.js"></script>
+    <script src="../controllers/financial.js"></script>
+
+  </head>
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container nav-non-responsive">
+        <!-- <div class="navbar-header">
+          <a class="navbar-brand" href="#">ProGatis</a>
+        </div> -->
+        <div id="navbar" class="">
+          <ul class="nav navbar-nav">
+
+            <li>
+              <a href="popup.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Home</div>
+              </a>
+            </li>
+
+            <li>
+              <a id="subscriptions" href="subscriptions.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Subscriptions</div>
+              </a>
+            </li>
+
+            <li>
+              <a href="feedback.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Feedback</div>
+              </a>
+            </li>
+
+            <li>
+              <a href="financial.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Wallet</div>
+              </a>
+            </li>
+
+            <li class="active">
+              <a id="paywalls" href="passes.html">
+                <div id="menu-pass-icon-active"></div>
+                <div class="menu-label">Passes</div>
+              </a>
+            </li>
+
+            <li>
+              <a id="blacklist" href="blacklist.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+                </div>
+                 <div class="menu-label">Ignore</div>
+              </a>
+            </li>
+
+            <li>
+              <a href="options.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Options</div>
+              </a>
+            </li>
+
+          </ul>
+        </div><!--/.nav-collapse -->
+
+        <a class="external-link" id="full-screen-link" href="paywalls.html">
+          Full Screen...
+        </a>
+
+      </div>
+    </nav>
+
+    <div class="ios-subheading">CREATE NEW PASS <span style="color:#ff3b30;">Coming Soon!</span></div>
+    <div class="ios-section">
+
+      <form>
+        <table>
+          <tr>
+            <td style="text-align:right;width:170px;">
+              <label for="exampleInputEmail1">Your Bitcoin Address</label>
+            </td>
+            <td>
+              <input type="text" id="manual-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e"></input>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputPassword1">Hidden File URL</label>
+            </td>
+            <td>
+              <input type="text" id="manual-label" style="width:300px;margin:5px;" placeholder="http://youraddress.com/file.html"></input>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputPassword1">You Name</label>
+            </td>
+            <td>
+              <input type="text" id="manual-label" style="width:300px;margin:5px;" placeholder="Nixie Pixel"></input>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputPassword1">Price</label>
+            </td>
+            <td>
+              <form class="form-inline">
+                <div class="form-group" style="margin-left:5px;">
+                  <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" id="exampleInputAmount" placeholder="Amount">
+                  </div>
+                </div>
+              </form>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputPassword1">Processor </label>
+            </td>
+            <td>
+              <select id="fiat-currency-select" style="width:300px;margin-left:4px;" class="form-control">
+                <option value="USD">Self Hosted</option>
+                <option value="USD">Third Party</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <p class="help-block" style="font-size:80%;max-width:500px;">
+                Easy self hosting solutions are under development. For example, a Wordpress plugin.
+              </p>
+              <p>
+                <button class="btn btn-lg btn-primary">Generate</button>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </form>
+
+
+      <hr/>
+
+
+      <h4>Preview</h4>
+      <div>
+        <img src="../assets/images/one_time_pass.png" style="width:560px" />
+      </div>
+
+      <h4>Embed this code</h4>
+      <textarea style="width:560px;height:150px;">
+        <a class="lightweight-ticket" href="https://3rdpartyservice.com/Wa234s2" data-widget-id="577789487167705089"></a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.random.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","tesesr-wjs");</script>
+      </textarea>
+
+    </div>
+
+  </body>
+</html>

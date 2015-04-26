@@ -1,0 +1,47 @@
+{
+   "background": {
+      "scripts": [
+        "./lib/jquery-2.1.3.min.js",
+        "./lib/promise.min.js",
+        "./lib/underscore-min.js",
+        "./lib/cryptojs.min.js",
+        "./lib/bitcoinjs-lib.min.js",
+        "./js/preferences.js",
+        "./lib/util.js",
+        "./lib/currency-manager.js",
+        "./js/wallet.js",
+        "./js/payment-manager.js",
+        "./lib/ydn-db.min.js",
+        "./js/schema.js",
+        "background.js"
+      ]
+   },
+   "content_scripts": [
+       {
+           "matches": ["http://*/*", "https://*/*"],
+           "js": ["./lib/jquery-2.1.3.min.js","content.js"]
+       }
+   ],
+  "icons": { "16": "./assets/images/icon_16.png",
+             "48": "./assets/images/icon_48.png",
+            "128": "./assets/images/icon_128.png" },
+   "browser_action": {
+      "default_icon": "./assets/images/icon.png",
+      "default_popup": "./views/popup.html",
+      "default_title": "ProTip"
+   },
+   "description": "ProTip is peer to peer crowd funding. ProTip provides tipping, weekly subscriptions and content passes for premium work.",
+   "icons": {
+      "128": "./assets/images/icon.png"
+   },
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
+   "permissions": [
+       "http://blockchain.info/*", "https://blockchain.info/*", "ws://ws.blockchain.info:*", "https://api.bitcoinaverage.com/ticker/*"
+     ],
+   "manifest_version": 2,
+   "name": "ProTip demonstration pre-release",
+   "options_page": "./views/options.html",
+   "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.2.0.3"
+}
