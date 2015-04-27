@@ -4,6 +4,12 @@ function initialize() {
     allowExternalLinks();
 }
 
+function setExampleMetaTag(){
+  $('#example-metatag').html(
+   '<meta name="microtip" content="' + wallet.getAddress() + '" data-currency="btc">'
+  );
+}
+
 
 $(document).ready(function() {
     initialize();
@@ -28,6 +34,7 @@ $(document).ready(function() {
         function setQRCodes() {
             $('#qrcode').html(createQRCodeCanvas(wallet.getAddress()));
             $('#textAddress').text(wallet.getAddress());
+            setExampleMetaTag();
         }
     }
     wallet.setBalanceListener(function(balance) {
@@ -38,6 +45,7 @@ $(document).ready(function() {
         });
     });
     setupWallet();
+
 
     $('#amount').on('keyup change', function() {
         val = Math.floor(Number($(this).val() * BTCMultiplier));

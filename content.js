@@ -62,9 +62,9 @@ var matchText = function(node, regex, callback, excludeElements) {
 // function searchLinksForBitcoin(){
 //     var accumulator = [];
 //     bitcoinTagRegexp = /bitcoin:([13][1-9A-HJ-NP-Za-km-z]{26,33})\?&?amount=[0-9\.]+/g;
-//     $.each(document.links, function(key, value) {
-//         if (value.href.match(bitcoinTagRegexp)) {
-//             accumulator.push(value.href)
+//     for (i = 0; i < document.links.length; i++) {
+//         if (document.links[i].href.match(bitcoinTagRegexp)) {
+//             accumulator.push(document.links[i].href)
 //         }
 //     });
 //     return accumulator;
@@ -72,8 +72,8 @@ var matchText = function(node, regex, callback, excludeElements) {
 //
 // function stripBitcoinAddresssesFromBitcoinLinks(accumulator){
 //     if (accumulator.length) { accumulator = [] }
-//     $.each(searchLinksForBitcoin(), function (value) {
-//         match = value.match(/[13][a-km-zA-HJ-NP-Z0-9]{26,33}/)
+//     for (i = 0; i < document.links.length; i++) {
+//         match = document.links[i].match(/[13][a-km-zA-HJ-NP-Z0-9]{26,33}/)
 //         if (match.length > 0) {
 //             accumulator.push(match);
 //         }
