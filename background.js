@@ -109,6 +109,23 @@ function isBlacklisted(url, callback){
   });
 }
 
+function isStarredUser(url, callback){
+  twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
+  if(twitterHandle){
+    twitterHandle = twitterHandle[1];
+    db.get('sponsors', twitterHandle).then(function(record){
+      if(record){ // if hostname not blacklisted.
+          callback(true);
+      } else {
+          callback(false);
+      }
+    });
+  } else {
+    callback(false);
+  }
+}
+
+
 function updateTime(url, seconds) {  //function updateTime(site, seconds) {
 
   // Only sites with BitcoinAddresses should exist.
@@ -204,6 +221,14 @@ chrome.runtime.onMessage.addListener(
             chrome.tabs.sendRequest(tab.id, {method: 'isBlacklisted', response: false});
           }
         });
+      });
+    } else if(request.action && request.action == "isStarredUser") {
+      isStarredUser(request.url, function(starredFound){
+          if( isStarredUser ) {
+              chrome.tabs.getSelected(null, function(tab) {
+                chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
+              });
+          }
       });
     } else if(request.bitcoinAddresses && (request.bitcoinAddresses.length > 0)){
       // This assumes that addresses found on blacklisted sites will never ever be sent.

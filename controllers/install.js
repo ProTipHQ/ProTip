@@ -35,7 +35,61 @@ function initDefaultBlacklistedHostnames() {
     db.put('blacklistedhostnames', hostnames);
 }
 
+function initSponsors() {
+    sponsorTwitterHandles = [{
+        twitterhandle: "KiskaZilla"
+    }, {
+        twitterhandle: "mrchrisellis"
+    }];
+
+    db.put('sponsors', sponsorTwitterHandles);
+}
+
+function initPriceOfCoffee() {
+    if (!localStorage["priceOfCoffee"]) {
+        localStorage["priceOfCoffee"] = "1.0"
+    }
+    $('#price-of-coffee').change(function() {
+        localStorage["priceOfCoffee"] = $('#price-of-coffee').val();
+    });
+    $('#price-of-coffee').val(localStorage["priceOfCoffee"]);
+}
+
+function initFiatCurrency() {
+    if (!localStorage["fiatCurrencyCode"]) {
+        localStorage["fiatCurrencyCode"] = "USD"
+    }
+
+    $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
+    updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+
+    $('#fiat-currency-select').change(function() {
+        localStorage["fiatCurrencyCode"] = this.value;
+        updateFiatCurrencyCode();
+    });
+}
+
+function updateFiatCurrencyCode() {
+    $.each($(".fiat-code"), function(key, element) {
+        element.textContent = localStorage["fiatCurrencyCode"];
+    });
+}
+
 $(document).ready(function() {
+    db = new ydn.db.Storage('protip', schema);
+
+
+    initPriceOfCoffee();
+    initFiatCurrency();
+    initDefaultBlacklistedHostnames();
+    initDefaultProTipSubscriptions();
+    initSponsors();
+
+    $('#launch').click(function(){
+        localStorage['proTipInstalled'] = true;
+        window.location.replace("popup.html");
+    });
+
     // Setup the wallet, page values and callbacks
     var val = '',
         address = '',

@@ -51,6 +51,7 @@ function initDefaultSubscriptionAmountFiat() {
 }
 
 function initialize() {
+
     // db = new ydn.db.Storage('protip', schema);
     // Going to use *localStore* for the options/preferences because
     // IndexedDB isn't built for a single record options array very
@@ -67,5 +68,9 @@ function initialize() {
 }
 
 $(function() {
+    if(!localStorage['proTipInstalled']) {
+        window.location.replace("install.html");
+    }
+
     initialize()
 });

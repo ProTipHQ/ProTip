@@ -177,5 +177,9 @@ function initialize() {
 
 
 document.addEventListener("DOMContentLoaded", function() {
+    if(!localStorage['proTipInstalled']) {
+        window.location.replace("install.html");
+    }
+
     initialize();
 });

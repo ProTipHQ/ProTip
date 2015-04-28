@@ -122,6 +122,10 @@ function initialize() {
 }
 
 $(function() {
+    if(!localStorage['proTipInstalled']) {
+        window.location.replace("install.html");
+    }
+  
     initialize();
 
     $('#toggle-alarm').click(function() {

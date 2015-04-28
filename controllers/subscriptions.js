@@ -138,6 +138,9 @@ function manualSubscription() {
 }
 
 function initialize() {
+    if(!localStorage['proTipInstalled']) {
+        window.location.replace("install.html");
+    }
 
     db = new ydn.db.Storage('protip', schema);
 

@@ -68,6 +68,17 @@ blacklistBitcoinAddresses = {
   ]
 };
 
+sponsors = {
+  name: 'sponsors',
+  keyPath: 'twitterhandle',
+  autoIncrement: false,
+  indexes: [
+    {
+      name: 'twitterhandle'
+    }
+  ]
+};
+
 audit = {
   name: 'audit',
   keyPath: 'createdAt',
@@ -80,9 +91,9 @@ audit = {
 };
 
 schema = {
-  //version: 1,
-  autoSchema: true, // false, // must be false when version is defined
-  stores: [subscriptions, sites, blacklist, blacklistedHostname, blacklistBitcoinAddresses, audit]
+  version: 1,
+  autoSchema: false, // must be false when version is defined
+  stores: [subscriptions, sites, blacklist, blacklistedHostname, blacklistBitcoinAddresses, audit, sponsors]
 }
 
 

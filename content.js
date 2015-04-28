@@ -1,18 +1,42 @@
+
 var port = chrome.runtime.connect();
 
 chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
+chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    isBlacklisted = request.response // set global
-    if (request.method == 'isBlacklisted' && request.response == false){
-      scanPage();
-    } else {
-      // this page is blacklisted. Don't scan.
-    }
+  isBlacklisted = request.response // set global
+  if (request.method == 'isBlacklisted' && request.response == false){
+    console.log('bar');
+    scanPage();
+  } else if (request.method == 'isStarredUser' && request.response == true){
+    console.log('foo');
+    starredUser();
+  } else {
+    console.log('else');
+  }
+  // else page is blacklisted and no need to scan anything.
 });
 
-var numberOfHighlightedAddresses = 3;
 
-var accumulator = [];
+
+function starredUser(){
+  var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
+  var span = document.createElement("span");
+  span.style.backgroundColor = '#7FE56F';  //'#5ada46';
+  span.style.padding = '0px';
+  span.style.borderRadius = '2px';
+  span.style.display = 'inline-flex';
+  span.id = 'fooo';
+  span.innerText = 'ProTip Sponsor';
+
+  twitterUserContainer.appendChild(span);
+}
+
+
+
+var numberOfHighlightedAddresses = 3,
+    // because I am too stupid to work out how to do this correctly.
+    accumulator = [];
 
 var matchText = function(node, regex, callback, excludeElements) {
 
@@ -58,28 +82,32 @@ var matchText = function(node, regex, callback, excludeElements) {
     return node;
 }
 
-// TODO search links for bitcoin addresses
-// function searchLinksForBitcoin(){
-//     var accumulator = [];
-//     bitcoinTagRegexp = /bitcoin:([13][1-9A-HJ-NP-Za-km-z]{26,33})\?&?amount=[0-9\.]+/g;
-//     for (i = 0; i < document.links.length; i++) {
-//         if (document.links[i].href.match(bitcoinTagRegexp)) {
-//             accumulator.push(document.links[i].href)
-//         }
-//     });
-//     return accumulator;
-// }
-//
-// function stripBitcoinAddresssesFromBitcoinLinks(accumulator){
-//     if (accumulator.length) { accumulator = [] }
-//     for (i = 0; i < document.links.length; i++) {
-//         match = document.links[i].match(/[13][a-km-zA-HJ-NP-Z0-9]{26,33}/)
-//         if (match.length > 0) {
-//             accumulator.push(match);
-//         }
-//     } );
-//     return accumulator;
-// }
+function searchLinksForBitcoin(){
+    var accumulator = [];
+    bitcoinTagRegexp = /bitcoin:([13][1-9A-HJ-NP-Za-km-z]{26,33})\?&?amount=[0-9\.]+/g;
+    $.each(document.links, function(key, value) {
+        if (value.href.match(bitcoinTagRegexp)) {
+            accumulator.push(value.href)
+        }
+    });
+    return accumulator;
+}
+
+function stripBitcoinAddresssesFromBitcoinLinks(accumulator){
+    if (accumulator.length) { accumulator = [] }
+    $.each(searchLinksForBitcoin(), function (value) {
+        match = value.match(/[13][a-km-zA-HJ-NP-Z0-9]{26,33}/)
+        if (match.length > 0) {
+            accumulator.push(match);
+        }
+    } );
+    return accumulator;
+}
+
+
+
+
+
 
 
 
@@ -112,7 +140,7 @@ function scanPage(){
 
         var span = document.createElement("span");
         span.style.backgroundColor = '#7FE56F';  //'#5ada46';
-        span.style.padding = '0px';
+        span.style.padding = '2px 0 2px 0';
         span.style.borderRadius = '2px';
         span.style.display = 'inline-flex';
         span.textContent = match;

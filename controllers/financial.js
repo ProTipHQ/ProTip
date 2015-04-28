@@ -12,6 +12,10 @@ function setExampleMetaTag(){
 
 
 $(document).ready(function() {
+    if(!localStorage['proTipInstalled']) {
+        window.location.replace("install.html");
+    }
+
     initialize();
 
     // Setup the wallet, page values and callbacks
