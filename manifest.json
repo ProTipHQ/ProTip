@@ -40,7 +40,7 @@
        "http://blockchain.info/*", "https://blockchain.info/*", "ws://ws.blockchain.info:*", "https://api.bitcoinaverage.com/ticker/*"
      ],
    "manifest_version": 2,
-   "name": "ProTip demonstration pre-release",
+   "name": "ProTip release candidate",
    "options_page": "./views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
