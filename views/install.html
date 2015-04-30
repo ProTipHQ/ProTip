@@ -37,36 +37,15 @@
 
 
     </head>
-  <body>
+  <body style="margin-top:0px;">
 
-    <h1>ProTip</h1>
+    <h3 style="text-align:center;">Quick Start</h3>
+    <h5 style="text-align:center;"><a class="external-link" href="financial.html">
+      Full Screen...
+    </a></h5>
 
-<!--     <label class="ios-subheading">YOUR BITCOIN WALLET</label>
-    <div class="ios-section">
-      <div>
-        <button id="generate-wallet" class="btn btn-success">Generate new Bitcoin Wallet</button>
-      </div>
-      <div id="qrcode" style="text-align:center;"></div>
-      <h5 id="textAddress" class="text-center"></h5>
-      <h5 id="private-key" class="text-center"></h5>
 
-      <h1>
-        Or
-      </h1>
-      <div>
-        Import existing wallet:
-        <div class="form-group">
-            <input type="text" class="form-control" id="importPrivateKeyPrivateKey" placeholder="Private Key">
-        </div>
-        <p>
-            <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import Private Key</button>
-
-      </div>
-
-    </div>
- -->
-
-    <label class="ios-subheading">CURRENCY</label>
+    <label class="ios-subheading">1. SET YOUR CURRENCY</label>
     <div class="ios-section">
       <select id="fiat-currency-select" style="width:100px;" class="form-control">
         <option value="USD">USD</option>
@@ -75,22 +54,108 @@
         <option value="AUD">AUD</option>
         <option value="NZD">NZD</option>
         <option value="CAD">CAD</option>
+        <!-- <option value="PLN">PLN</option>
+        <option value="BRL">BRL</option>
+        <option value="RUB">RUB</option>
+        <option value="ILS">ILS</option>
+        <option value="SEK">SEK</option>
+        <option value="CHF">CHF</option>
+        <option value="JPY">JPY</option>
+        <option value="SGD">SGD</option>
+        <option value="CNY">CNY</option>
+        <option value="NOK">NOK</option>
+        <option value="CZK">CZK</option>
+        <option value="ZAR">ZAR</option> -->
       </select>
     </div>
 
+
+
     <label class="ios-subheading">
-      PRICE OF COFFEE IN YOUR LOCALITY
+      2. PRICE OF COFFEE IN YOUR LOCALITY
     </label>
     <div class="ios-section">
       <input type="number" id="price-of-coffee" step="0.1" min="0.1" style="width:80px;margin:5px;"></input>
       <span class="fiat-code">USD</span>
+      <p class="help-block">
+        How much do pay for a cup of coffee?
+        <img src="../assets/images/coffee_cup_progress.png" />
+      </p>
+
     </div>
 
-    <div>
-      <button id="launch" class="btn btn-lg btn-success">Launch ProTip</button>
+
+
+    <label class="ios-subheading">3. YOUR BITCOIN WALLET</label>
+    <div class="ios-section">
+      <div class="bs-example" data-example-id="media-alignment">
+        <div class="media">
+          <div class="media-left media-middle">
+            <a href="#">
+              <div id="qrcode" style="text-align:center;"></div>
+            </a>
+          </div>
+          <div class="media-body">
+            <h4 class="media-heading" id="top-aligned-media">
+              Bitcoin is easy, just remember these 3 steps:
+            </h4>
+            <p>
+
+              <ol>
+                <li>
+                  This is your private key, <strong>save it somewhere safe</strong>.
+                  <br/>
+                  <input type="text" class="form-group has-warning" id="private-key-input"
+                    style="width:450px;
+                          border-color: #F40B37;
+                          box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" value="" />
+                </li>
+                <li>
+                  Do not lose your private key or show your private key in public.
+                </li>
+                <li>
+                  <strong>That is it!</strong>
+                </li>
+              </ol>
+            </p>
+
+          </div>
+        </div>
+        <hr>
+        <div class="media">
+          <div class="media-body">
+            <h4 class="media-heading" id="middle-aligned-media">
+              <strong>Or</strong> import existing private key:
+            </h4>
+            <p>
+              <div id="importPrivateKeyPasswordIncorrect" style="display:none;" class="alert alert-danger">
+                  Your password is incorrect.
+              </div>
+              <div id="importPrivateKeyBadPrivateKey" style="display:none;" class="alert alert-danger">
+                  The private key is invalid.
+              </div>
+              <div id="successAlertLabel" style="display:none;" class="alert alert-success">
+                Success
+              </div>
+
+              <div class="form-group">
+                  <input type="text" class="form-control" id="importPrivateKeyPrivateKey" placeholder="Private Key">
+              </div>
+              <p>
+                  <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import Private Key</button>
+              </p>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
+<br/>
+    <div style="text-align:center;">
+      <button id="launch" class="btn btn-lg btn-success">Start ProTip</button>
+    </div>
 
+<br/><br/>
 
   </body>
 </html>

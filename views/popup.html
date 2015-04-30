@@ -230,9 +230,56 @@
             </td>
           </tr>
 
-          <tr style="border-top:solid #000 1px;">
+          <!-- <tr style="border-top:solid #000 1px;">
             <td style="" colspan="2">
               <button id="donate-now" style="margin-top:7px;float: right;margin-right: 6px;" type="button" class="btn btn-success">
+                Donate Now!
+              </button>
+            </td>
+            <td colspan="2">
+              <div class="alert alert-warning" id="donate-now-reminder" style="padding:12px;margin:1px;text-align:center;display:none;">
+                  <strong>Hello</strong>, you asked to be <br> reminded to donate!
+                                         <span class="label label-info" style="float: none;font-size:14px;border-radius:20px;">7</span>
+                                        days ago.
+              </div>
+            </td>
+          </tr> -->
+
+          <tr>
+            <td colspan="4">
+
+              <ul class="list-group" style="margin-bottom:0px;">
+                <li id="manual-remind-container" class="list-group-item">
+                  <input type="radio" id="manualRemind" value="manualRemind" name="remind-me" checked="checked" />
+                  Remind me to Manually Donate in
+                  <span class="label label-info" id="days-till-end-of-week" style="float: none;font-size:14px;border-radius:20px;">x</span>
+                  days.
+                </li>
+                <li id="automatic-donate-container" class="list-group-item">
+                  <input type="radio" id="automaticDonate" value="automaticDonate" name="remind-me" />
+                  Automatically Donate on <span id="date-end-of-week" style="font-weight:bold;">xxxx</span>.
+
+                </li>
+                <li class="list-group-item" style="background-color:#f7f7f9;">
+                  <button class="btn btn-xs btn-default" id="toggle-alarm">Reset Timer</button>
+                  <span style="font-weight:bold;font-size:70%;">(Actually 20 second delay.)</span>
+                  <!-- <span style="font-size:10px;">
+                      <strong>Most Recent Donation:</strong>
+                      2 days ago
+                      <a href="https://blockchain.info/tx/33672539abd700981a072ae7a4fcda5567579fd60c8cc4b5d767cec14c5871b4">
+                        33672539abd70...
+                      </a>
+                  </span> -->
+
+                </li>
+              </ul>
+
+            </td>
+          </tr>
+
+          <tr style="border-top:solid #000 1px;">
+            <td style="" colspan="2">
+              <button id="donate-now" style="margin-top:0px;float: right;margin-right: 6px;" type="button" class="btn btn-success">
                 Donate Now!
               </button>
             </td>
@@ -244,6 +291,8 @@
               </div>
             </td>
           </tr>
+
+
           <tr>
             <td colspan="4">
 
@@ -274,37 +323,8 @@
             </td>
           </tr>
 
-          <tr>
-            <td colspan="4">
 
-              <ul class="list-group">
-                <li id="manual-remind-container" class="list-group-item">
-                  <input type="radio" id="manualRemind" value="manualRemind" name="remind-me" checked="checked" />
-                  Remind me to Manually Donate in
-                  <span class="label label-info" id="days-till-end-of-week" style="float: none;font-size:14px;border-radius:20px;">x</span>
-                  days.
-                </li>
-                <li id="automatic-donate-container" class="list-group-item">
-                  <input type="radio" id="automaticDonate" value="automaticDonate" name="remind-me" />
-                  Automatically Donate on <span id="date-end-of-week" style="font-weight:bold;">xxxx</span>.
 
-                </li>
-                <li class="list-group-item" style="background-color:#f7f7f9;">
-                  <button class="btn btn-xs btn-default" id="toggle-alarm">Reset Timer</button>
-                  <span style="font-weight:bold;font-size:70%;">(Actually 20 second delay.)</span>
-                  <!-- <span style="font-size:10px;">
-                      <strong>Most Recent Donation:</strong>
-                      2 days ago
-                      <a href="https://blockchain.info/tx/33672539abd700981a072ae7a4fcda5567579fd60c8cc4b5d767cec14c5871b4">
-                        33672539abd70...
-                      </a>
-                  </span> -->
-
-                </li>
-              </ul>
-
-            </td>
-          </tr>
 
         </tbody>
       </table>

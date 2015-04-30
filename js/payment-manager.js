@@ -169,14 +169,14 @@
 
                 subscriptions = this.paymentManager.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
                 browsing = this.paymentManager.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
-
                 var paymentObjs = subscriptions.concat(browsing);
                 if (paymentObjs.length > 0) {
                     wallet.mulitpleOutputsSend(paymentObjs, fee, '').then(function() {
                         console.log('---Automatic Payments ---');
                         console.log(paymentObjs);
                         console.log('-------------------------');
-                        return paymentObjs
+                        db.clear('sites');
+                        return paymentObjs;
                     });
                 }
             });

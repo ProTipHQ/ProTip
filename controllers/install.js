@@ -40,6 +40,46 @@ function initSponsors() {
         twitterhandle: "KiskaZilla"
     }, {
         twitterhandle: "mrchrisellis"
+    }, {
+        twitterhandle: "victoriavaneyk"
+    }, {
+        twitterhandle: "shop_rocket"
+    }, {
+        twitterhandle: "HardBTC"
+    }, {
+        twitterhandle: "M3metic"
+    }, {
+        twitterhandle: "brennannovak"
+    }, {
+        twitterhandle: "Bittylicious_"
+    }, {
+        twitterhandle: "agoodman1111"
+    }, {
+        twitterhandle: "Calem_Smith"
+    }, {
+        twitterhandle: "makevoid"
+    }, {
+        twitterhandle: "bitcoinpotato"
+    }, {
+        twitterhandle: "MadBitcoins"
+    }, {
+        twitterhandle: "LesleeFrost"
+    }, {
+        twitterhandle: "prestonjbyrne"
+    }, {
+        twitterhandle: "j32804"
+    }, {
+        twitterhandle: "NixiePixel"
+    }, {
+        twitterhandle: "OllyNewport"
+    }, {
+        twitterhandle: "mormo_music"
+    }, {
+        twitterhandle: "MinuteEarth"
+    }, {
+        twitterhandle: "rhian_is"
+    }, {
+      twitterhandle: "fliptopbox13"
     }];
 
     db.put('sponsors', sponsorTwitterHandles);
@@ -47,7 +87,7 @@ function initSponsors() {
 
 function initPriceOfCoffee() {
     if (!localStorage["priceOfCoffee"]) {
-        localStorage["priceOfCoffee"] = "1.0"
+        localStorage["priceOfCoffee"] = "2.0"
     }
     $('#price-of-coffee').change(function() {
         localStorage["priceOfCoffee"] = $('#price-of-coffee').val();
@@ -64,6 +104,7 @@ function initFiatCurrency() {
     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
     $('#fiat-currency-select').change(function() {
+        preferences.setCurrency($(this.selectedOptions).val());
         localStorage["fiatCurrencyCode"] = this.value;
         updateFiatCurrencyCode();
     });
@@ -110,12 +151,16 @@ $(document).ready(function() {
         function setQRCodes() {
             $('#qrcode').html(createQRCodeCanvas(wallet.getAddress()));
             $('#textAddress').text(wallet.getAddress());
-            $('#private-key').text(wallet.getDecryptedPrivateKey(''));
+            //$('#private-key').text(wallet.getDecryptedPrivateKey(''));
+
+            //$('#text-address-input').val(wallet.getAddress());
+            $('#private-key-input').val(wallet.getDecryptedPrivateKey(''));
         }
     }
-    $('#generate-wallet').click(function() {
-        setupWallet();
-    });
+    setupWallet();
+    // $('#generate-wallet').click(function() {
+    //     setupWallet();
+    // });
 
     function createQRCodeCanvas(text) {
         var sizeMultiplier = 4;
@@ -168,4 +213,43 @@ $(document).ready(function() {
         }
         return canvas;
     }
+
+    /*
+     *  Import Private Key
+     */
+    $('#importPrivateKey').click(function() {
+        $('#importPrivateKeyPasswordIncorrect').hide();
+        $('#importPrivateKeyBadPrivateKey').hide();
+        if (wallet.isEncrypted()) {
+            $('#importPrivateKeyPassword').val(null).show();
+        } else {
+            $('#importPrivateKeyPassword').hide();
+        }
+        $('#importPrivateKeyPrivateKey').val(null);
+        $('#importPrivateKeyModal').modal().show();
+    });
+
+    $('#importPrivateKeyConfirm').click(function() {
+        var privateKey = $('#importPrivateKeyPrivateKey').val();
+        try {
+            new Bitcoin.ECKey(privateKey).getExportedPrivateKey();
+        } catch (e) {
+            $('#importPrivateKeyBadPrivateKey').slideDown();
+            return;
+        }
+        wallet.importAddress($('#importPrivateKeyPassword').val(), privateKey).then(function() {
+            setupWallet();
+            $('#successAlertLabel').text('Private key imported successfully.');
+            $('#successAlertLabel').slideDown();
+        }, function(e) {
+            if (e.message === 'Incorrect password') {
+                $('#importPrivateKeyBadPrivateKey').slideUp();
+                $('#importPrivateKeyPasswordIncorrect').slideDown();
+            } else {
+                $('#importPrivateKeyPasswordIncorrect').slideUp();
+                $('#importPrivateKeyBadPrivateKey').slideDown();
+            }
+        });
+    });
+
 });

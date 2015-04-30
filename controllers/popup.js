@@ -125,7 +125,7 @@ $(function() {
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
-  
+
     initialize();
 
     $('#toggle-alarm').click(function() {
@@ -176,7 +176,7 @@ $(function() {
     $('#confirm-donate-now').click(function() {
         //$(this).button('loading');
         restartTheWeek();
-        db.clear('sites');
+        //db.clear('sites');
         $('#confirm-donate-now').button('reset')
         $('#browsing-table').fadeOut();
         $('#browsing-table').empty();

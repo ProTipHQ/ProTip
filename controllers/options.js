@@ -7,10 +7,12 @@ function initFiatCurrency() {
     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
     $('#fiat-currency-select').change(function() {
+        preferences.setCurrency($(this.selectedOptions).val());
         localStorage["fiatCurrencyCode"] = this.value;
         updateFiatCurrencyCode();
     });
 }
+
 
 function initFilterLevel() {
     if (!localStorage["filterLevel"]) {

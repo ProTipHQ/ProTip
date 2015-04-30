@@ -16,6 +16,7 @@
         "background.js"
       ]
    },
+   "web_accessible_resources": ["assets/images/star.png"],
    "content_scripts": [
        {
            "matches": ["http://*/*", "https://*/*"],

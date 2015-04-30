@@ -27,8 +27,8 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
   } else if (localStorage['manualRemind'] == 'true') {
     localStorage['weeklyAlarmReminder'] = true;
     chrome.tabs.getSelected(null, function(tab) {
-      //chrome.browserAction.setBadgeBackgroundColor({color:'#000000'});
-      chrome.browserAction.setBadgeText({text: 'Remind'});
+      chrome.browserAction.setBadgeBackgroundColor({color:'#FF9D05'});
+      chrome.browserAction.setBadgeText({text: '....$'});
     });
   }
 

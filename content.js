@@ -6,29 +6,54 @@ chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   isBlacklisted = request.response // set global
   if (request.method == 'isBlacklisted' && request.response == false){
-    console.log('bar');
-    scanPage();
+
+    if(!checkMetatag()){ // if the metatag tip is found, don't scan the page.
+        scanPage();
+    }
   } else if (request.method == 'isStarredUser' && request.response == true){
-    console.log('foo');
     starredUser();
   } else {
-    console.log('else');
+    // else page is blacklisted and no need to scan anything.
   }
-  // else page is blacklisted and no need to scan anything.
+
 });
 
-
+function checkMetatag(){
+    //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
+    if ( $('meta[name=microtip]').content ){
+        chrome.runtime.sendMessage({
+            bitcoinAddress: $('meta[name=microtip]').attr("content"),
+            title: document.title,
+            url: document.URL,
+            timestamp: Date.now()
+        });
+        return true
+    } else {
+        return false
+    }
+}
 
 function starredUser(){
   var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
   var span = document.createElement("span");
   span.style.backgroundColor = '#7FE56F';  //'#5ada46';
-  span.style.padding = '0px';
+
+  //Code for displaying <extensionDir>/images/myimage.png:
+  var imgURL = chrome.extension.getURL("./assets/images/star.png");
+  var img = document.createElement("img");
+  img.setAttribute("src", imgURL);
+  //var img.src = imgURL;
+
+  span.style.padding = '5px';
+  span.style.marginLeft = '6px';
+  span.style.position = 'relative';
+  span.style.fontSize = '10px';
+  span.style.top = '-3px';
   span.style.borderRadius = '2px';
   span.style.display = 'inline-flex';
-  span.id = 'fooo';
   span.innerText = 'ProTip Sponsor';
 
+  twitterUserContainer.appendChild(img);
   twitterUserContainer.appendChild(span);
 }
 
