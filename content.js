@@ -7,9 +7,11 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
   isBlacklisted = request.response // set global
   if (request.method == 'isBlacklisted' && request.response == false){
 
-    if(!checkMetatag()){ // if the metatag tip is found, don't scan the page.
-        scanPage();
-    }
+    scanPage();
+
+    // if(!checkMetatag()){ // if the metatag tip is found, don't scan the page.
+    //     scanPage();
+    // }
   } else if (request.method == 'isStarredUser' && request.response == true){
     starredUser();
   } else {
@@ -18,20 +20,20 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 
 });
 
-function checkMetatag(){
-    //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
-    if ( $('meta[name=microtip]').content ){
-        chrome.runtime.sendMessage({
-            bitcoinAddress: $('meta[name=microtip]').attr("content"),
-            title: document.title,
-            url: document.URL,
-            timestamp: Date.now()
-        });
-        return true
-    } else {
-        return false
-    }
-}
+// function checkMetatag(){
+//     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
+//     if ( $('meta[name=microtip]').content ){
+//         chrome.runtime.sendMessage({
+//             bitcoinAddress: $('meta[name=microtip]').attr("content"),
+//             title: document.title,
+//             url: document.URL,
+//             timestamp: Date.now()
+//         });
+//         return true
+//     } else {
+//         return false
+//     }
+// }
 
 function starredUser(){
   var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
@@ -60,7 +62,6 @@ function starredUser(){
 
 
 var numberOfHighlightedAddresses = 3,
-    // because I am too stupid to work out how to do this correctly.
     accumulator = [];
 
 var matchText = function(node, regex, callback, excludeElements) {
@@ -128,13 +129,6 @@ function stripBitcoinAddresssesFromBitcoinLinks(accumulator){
     } );
     return accumulator;
 }
-
-
-
-
-
-
-
 
 window.addEventListener("message", function (event) {
     // We only accept messages from ourselves

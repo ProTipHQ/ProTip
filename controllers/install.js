@@ -79,7 +79,15 @@ function initSponsors() {
     }, {
         twitterhandle: "rhian_is"
     }, {
-      twitterhandle: "fliptopbox13"
+        twitterhandle: "fliptopbox13"
+    }, {
+        twitterhandle: "TomerKantor"
+    }, {
+        twitterhandle: "louissschang"
+    }, {
+        twitterhandle: "ProofOfWork"
+    }, {
+        twitterhandle: "LaraCelenza"
     }];
 
     db.put('sponsors', sponsorTwitterHandles);
@@ -123,7 +131,7 @@ $(document).ready(function() {
     initPriceOfCoffee();
     initFiatCurrency();
     initDefaultBlacklistedHostnames();
-    initDefaultProTipSubscriptions();
+    //initDefaultProTipSubscriptions();
     initSponsors();
 
     $('#launch').click(function(){
@@ -149,7 +157,9 @@ $(document).ready(function() {
             });
 
         function setQRCodes() {
-            $('#qrcode').html(createQRCodeCanvas(wallet.getAddress()));
+            //$('#qrcode').html(createQRCodeCanvas(wallet.getAddress()));
+            //$('#qrcode').html(createQRCodeCanvas(wallet.getDecryptedPrivateKey(''));
+
             $('#textAddress').text(wallet.getAddress());
             //$('#private-key').text(wallet.getDecryptedPrivateKey(''));
 

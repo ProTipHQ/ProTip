@@ -43,9 +43,11 @@ $(document).ready(function() {
     }
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
+        if(balance == '0'){ $('#buy-bitcoins-info').show() }
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
             setBudgetWidget(results[0], results[1]);
+            debugger;
         });
     });
     setupWallet();

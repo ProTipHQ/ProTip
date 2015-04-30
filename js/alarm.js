@@ -15,9 +15,10 @@ function createAlarm() {
         text: ''
     });
     chrome.alarms.create(alarmName, {
-        delayInMinutes: 0.4
-    });
+        delayInMinutes: 10080 //0.4
     //delayInMinutes: 10080, periodInMinutes: 1440}); // in one week, with reminders everyday after.
+    });
+
 }
 
 function cancelAlarm() {

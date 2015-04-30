@@ -75,14 +75,15 @@ function initCurrentWeek() {
     }
 }
 
-function updateFiatAmounts() {
-    var subscriptions = parseFloat($('#subscription-fiat-amount').html()); // don't recalculate subscriptions constantly
-    var incidental = parseFloat($('#incidental-fiat-amount').val());
-    $('#total-fiat-amount').html((subscriptions + incidental).toFixed(2));
-    localStorage['totalWeelyBudgetFiat'] = (subscriptions + incidental).toFixed(2);
-
-    refreshTotalCoffeeCupProgressBar('total-amount-progress-bar');
-}
+// function updateFiatAmounts() {
+//     var subscriptions = parseFloat($('#subscription-fiat-amount').html()); // don't recalculate subscriptions constantly
+//     var incidental = parseFloat($('#incidental-fiat-amount').val());
+//     var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
+//     $('#total-fiat-amount').html((subscriptions + incidental + bitcoinFeeFiat).toFixed(2));
+//     localStorage['totalWeelyBudgetFiat'] = (subscriptions + incidental).toFixed(2);
+//
+//     refreshTotalCoffeeCupProgressBar('total-amount-progress-bar');
+// }
 
 function initialize() {
     db = new ydn.db.Storage('protip', schema);
@@ -141,10 +142,10 @@ $(function() {
         var incidentalTotalFiat = parseFloat($(this).val());
 
         var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-        if (weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat) {
-            weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
-            $(this).attr('max', incidentalTotalFiat);
-        }
+        // if (availableBalanceFiat > 0 && weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat) {
+        //     weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
+        //     $(this).attr('max', incidentalTotalFiat);
+        // }
         var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
         if (balanceCoversXWeeks < 0) {
             balanceCoversXWeeks = 0
