@@ -47,7 +47,6 @@ $(document).ready(function() {
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
             setBudgetWidget(results[0], results[1]);
-            debugger;
         });
     });
     setupWallet();

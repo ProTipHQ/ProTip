@@ -224,7 +224,7 @@ chrome.runtime.onMessage.addListener(
       });
     } else if(request.action && request.action == "isStarredUser") {
       isStarredUser(request.url, function(starredFound){
-          if( isStarredUser ) {
+          if( starredFound ) {
               chrome.tabs.getSelected(null, function(tab) {
                 chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
               });
