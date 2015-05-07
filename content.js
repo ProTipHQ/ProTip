@@ -1,66 +1,4 @@
 
-var port = chrome.runtime.connect();
-
-chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
-chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-  isBlacklisted = request.response // set global
-  if (request.method == 'isBlacklisted' && request.response == false){
-
-    scanPage();
-
-    // if(!checkMetatag()){ // if the metatag tip is found, don't scan the page.
-    //     scanPage();
-    // }
-  } else if (request.method == 'isStarredUser' && request.response == true){
-    starredUser();
-  } else {
-    // else page is blacklisted and no need to scan anything.
-  }
-
-});
-
-// function checkMetatag(){
-//     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
-//     if ( $('meta[name=microtip]').content ){
-//         chrome.runtime.sendMessage({
-//             bitcoinAddress: $('meta[name=microtip]').attr("content"),
-//             title: document.title,
-//             url: document.URL,
-//             timestamp: Date.now()
-//         });
-//         return true
-//     } else {
-//         return false
-//     }
-// }
-
-function starredUser(){
-  var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
-  var span = document.createElement("span");
-  span.style.backgroundColor = '#7FE56F';  //'#5ada46';
-
-  //Code for displaying <extensionDir>/images/myimage.png:
-  var imgURL = chrome.extension.getURL("./assets/images/star.png");
-  var img = document.createElement("img");
-  img.setAttribute("src", imgURL);
-  //var img.src = imgURL;
-
-  span.style.padding = '5px';
-  span.style.marginLeft = '6px';
-  span.style.position = 'relative';
-  span.style.fontSize = '10px';
-  span.style.top = '-3px';
-  span.style.borderRadius = '2px';
-  span.style.display = 'inline-flex';
-  span.innerText = 'ProTip Sponsor';
-
-  twitterUserContainer.appendChild(img);
-  twitterUserContainer.appendChild(span);
-}
-
-
-
 var numberOfHighlightedAddresses = 3,
     accumulator = [];
 
@@ -108,26 +46,45 @@ var matchText = function(node, regex, callback, excludeElements) {
     return node;
 }
 
-function searchLinksForBitcoin(){
-    var accumulator = [];
-    bitcoinTagRegexp = /bitcoin:([13][1-9A-HJ-NP-Za-km-z]{26,33})\?&?amount=[0-9\.]+/g;
-    $.each(document.links, function(key, value) {
-        if (value.href.match(bitcoinTagRegexp)) {
-            accumulator.push(value.href)
+function checkMetatag(){
+    //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
+    var metatags = document.getElementsByTagName('meta');
+    for ( i = 0; i < metatags.length; i++ ) {
+        if( metatags[i].name == 'microtip' ) {
+          chrome.runtime.sendMessage({
+              source: 'metatag',
+              bitcoinAddress: metatags[i].content,
+              title: document.title,
+              url: document.URL,
+              timestamp: Date.now()
+          });
+          return true // only get the first instance of a microtip metatag.
         }
-    });
-    return accumulator;
+    }
 }
 
-function stripBitcoinAddresssesFromBitcoinLinks(accumulator){
-    if (accumulator.length) { accumulator = [] }
-    $.each(searchLinksForBitcoin(), function (value) {
-        match = value.match(/[13][a-km-zA-HJ-NP-Z0-9]{26,33}/)
-        if (match.length > 0) {
-            accumulator.push(match);
-        }
-    } );
-    return accumulator;
+function starredUser(){
+  var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
+  var span = document.createElement("span");
+  span.style.backgroundColor = '#7FE56F';  //'#5ada46';
+
+  //Code for displaying <extensionDir>/images/myimage.png:
+  var imgURL = chrome.extension.getURL("./assets/images/star.png");
+  var img = document.createElement("img");
+  img.setAttribute("src", imgURL);
+  //var img.src = imgURL;
+
+  span.style.padding = '5px';
+  span.style.marginLeft = '6px';
+  span.style.position = 'relative';
+  span.style.fontSize = '10px';
+  span.style.top = '-3px';
+  span.style.borderRadius = '2px';
+  span.style.display = 'inline-flex';
+  span.innerText = 'ProTip Sponsor';
+
+  twitterUserContainer.appendChild(img);
+  twitterUserContainer.appendChild(span);
 }
 
 window.addEventListener("message", function (event) {
@@ -185,4 +142,21 @@ function scanPage(){
     }
   }
 }
+
+var port = chrome.runtime.connect();
+
+chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
+chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
+chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+  isBlacklisted = request.response // set global
+  if (request.method == 'isBlacklisted' && request.response == false){
+    if(!checkMetatag()){ // if the metatag tip is found, don't scan the page.
+        scanPage();
+    }
+  } else if (request.method == 'isStarredUser' && request.response == true){
+    starredUser();
+  }
+  // else page is blacklisted and no need to scan anything.
+});
+
 

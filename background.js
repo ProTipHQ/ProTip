@@ -230,13 +230,20 @@ chrome.runtime.onMessage.addListener(
               });
           }
       });
-    } else if(request.bitcoinAddresses && (request.bitcoinAddresses.length > 0)){
+    } else if(request.bitcoinAddress){
+      if(!request.bitcoinAddresses){
+        request.bitcoinAddresses = [request.bitcoinAddress]; // tempory hack till I get standardize single address per page.
+      }
       // This assumes that addresses found on blacklisted sites will never ever be sent.
       db.put('sites', {bitcoinAddress: request.bitcoinAddress, bitcoinAddresses: request.bitcoinAddresses, url: request.url, title: request.title});
 
       chrome.tabs.getSelected(null, function(tab) {
         chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
-        chrome.browserAction.setBadgeText({text: '.', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+        if ( request.source == 'metatag' ) {
+          chrome.browserAction.setBadgeText({text: 'Meta', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+        } else {
+          chrome.browserAction.setBadgeText({text: '.', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+        }
         chrome.browserAction.setIcon({path: './assets/images/icon_found_btc.png', tabId: tab.id});
       });
     }
