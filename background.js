@@ -148,7 +148,7 @@ Array.prototype.diff = function(a) {
 
 function removeBitcoinAddress(blacklistBitcoinAddress, url){
   db.get('sites', url).done(function(record) {
-    record.bitcoinAddresses = record.bitcoinAddresses.diff([blacklistBitcoinAddress]); //subtract blacklistBitcoinAddress
+    //record.bitcoinAddresses = record.bitcoinAddresses.diff([blacklistBitcoinAddress]); //subtract blacklistBitcoinAddress
     db.from('sites', '=', record.url).patch({ bitcoinAddresses: record.bitcoinAddresses }); // update
     db.put('blacklistbitcoinaddresses', {bitcoinAddress: blacklistBitcoinAddress, url: url}, record.bitcoinAddresses);
   });
@@ -210,6 +210,9 @@ chrome.runtime.onMessage.addListener(
 
     if (request.action && request.action == "revokeBitcoinAddress") {
       removeBitcoinAddress(request.bitcoinAddress, request.url);
+      chrome.tabs.getSelected(null, function(tab) {
+          chrome.browserAction.setBadgeText({text: '', tabId: tab.id}); // let the use know it has been removed
+      });
     } else if(request.action && request.action == "isBlacklisted") {
       isBlacklisted(request.url, function(blacklistFound){
         chrome.tabs.getSelected(null, function(tab) {
@@ -242,7 +245,7 @@ chrome.runtime.onMessage.addListener(
         if ( request.source == 'metatag' ) {
           chrome.browserAction.setBadgeText({text: 'Meta', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
         } else {
-          chrome.browserAction.setBadgeText({text: '.', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+          chrome.browserAction.setBadgeText({text: request.bitcoinAddress.substring(0,4), tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
         }
         chrome.browserAction.setIcon({path: './assets/images/icon_found_btc.png', tabId: tab.id});
       });
