@@ -1,6 +1,3 @@
-//var numberOfHighlightedAddresses = 3;
-//var accumulator = [];
-
 var matchText = function(node, regex, callback, excludeElements) {
 
     excludeElements || (excludeElements = ['script', 'style', 'iframe', 'cavas', 'a']);
@@ -33,6 +30,39 @@ var matchText = function(node, regex, callback, excludeElements) {
     } while (child = child.nextSibling);
 
     return node;
+}
+
+function starredUser(){
+    var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
+    var span = document.createElement("span");
+    span.style.backgroundColor = '#7FE56F';
+
+    //Code for displaying <extensionDir>/images/myimage.png:
+    var imgURL = chrome.extension.getURL("./assets/images/star.png");
+    var img = document.createElement("img");
+    img.setAttribute("src", imgURL);
+
+    span.style.padding = '5px';
+    span.style.marginLeft = '6px';
+    span.style.position = 'relative';
+    span.style.fontSize = '10px';
+    span.style.top = '-3px';
+    span.style.borderRadius = '2px';
+    span.style.display = 'inline-flex';
+    span.innerText = 'ProTip Sponsor';
+
+    twitterUserContainer.appendChild(img);
+    twitterUserContainer.appendChild(span);
+}
+
+function highlightElement(match){
+    var span = document.createElement("span");
+    span.style.padding = '0px';
+    span.style.borderRadius = '2px';
+    span.style.display = 'inline-flex';
+    span.className = 'protip-match';
+    span.id = match;
+    return span;
 }
 
 function ensureSingleSelectionOfCheckbox(selectedBTCAddress){
@@ -102,15 +132,15 @@ function addCheckboxes(){
         checkbox.addEventListener("click",
             function () {
                 if( this.checked ) { // state changed before 'click' is fired
-                  window.postMessage(
-                      { action: "updateBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
-                  );
-                  ensureSingleSelectionOfCheckbox(this.parentElement.id);
+                    window.postMessage(
+                        { action: "updateBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
+                    );
+                    ensureSingleSelectionOfCheckbox(this.parentElement.id);
                 } else {
-                  window.postMessage(
-                      { action: "revokeBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
-                  );
-                  this.parentElement.style.backgroundColor = 'transparent';
+                    window.postMessage(
+                        { action: "revokeBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
+                    );
+                    this.parentElement.style.backgroundColor = 'transparent';
                 }
             }, false
         );
@@ -130,51 +160,13 @@ function scanLinks() {
     }
 }
 
-function highlightElement(match){
-    var span = document.createElement("span");
-    span.style.padding = '0px';
-    span.style.borderRadius = '2px';
-    span.style.display = 'inline-flex';
-    span.className = 'protip-match';
-    span.id = match;
-    return span;
-}
-
 function scanText(){
     if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
         var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
         matchText(document.body, regex, function (node, match, offset) {
-
-             // var span = document.createElement("span");
-             // //span.style.backgroundColor = '#7FE56F';
-             // span.style.padding = '0px';
-             // span.style.borderRadius = '2px';
-             // span.style.display = 'inline-flex';
-             // span.textContent = match;
-             // span.className = 'protip-match';
-             // span.id = match;
-
              var span = highlightElement(match);
              span.textContent = match;
-             //span.style.backgroundColor = '#7FE56F';
              node.parentNode.insertBefore(span, node.nextSibling);
-
-             // checkbox = document.createElement("input");
-             // checkbox.type = 'checkbox';
-             // checkbox.checked = 'checked';
-             // checkbox.addEventListener("click",
-             //      function () {
-             //          window.postMessage({ action: "revokeBitcoinAddress", bitcoinAddress: match }, "*");
-             //      }, false
-             // );
-             // node.nextSibling.insertBefore(checkbox, node.nextSibling.firstChild);
-
-             // chrome.runtime.sendMessage({
-             //   source: 'text',
-             //   bitcoinAddress: match, //match,
-             //   title: document.title,
-             //   url: document.URL
-             // });
         });
     }
 }
@@ -185,39 +177,15 @@ function scanMetatags(){
     var metatags = document.getElementsByTagName('meta');
     for ( i = 0; i < metatags.length; i++ ) {
         if( metatags[i].name == 'microtip' ) {
-          chrome.runtime.sendMessage({
-              source: 'metatag',
-              bitcoinAddress: metatags[i].content,
-              title: document.title,
-              url: document.URL
-          });
-          return true // only get the first instance of a microtip metatag.
+            chrome.runtime.sendMessage({
+                source: 'metatag',
+                bitcoinAddress: metatags[i].content,
+                title: document.title,
+                url: document.URL
+            });
+            return true // only get the first instance of a microtip metatag.
         }
     }
-}
-
-function starredUser(){
-    var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
-    var span = document.createElement("span");
-    span.style.backgroundColor = '#7FE56F';  //'#5ada46';
-
-    //Code for displaying <extensionDir>/images/myimage.png:
-    var imgURL = chrome.extension.getURL("./assets/images/star.png");
-    var img = document.createElement("img");
-    img.setAttribute("src", imgURL);
-    //var img.src = imgURL;
-
-    span.style.padding = '5px';
-    span.style.marginLeft = '6px';
-    span.style.position = 'relative';
-    span.style.fontSize = '10px';
-    span.style.top = '-3px';
-    span.style.borderRadius = '2px';
-    span.style.display = 'inline-flex';
-    span.innerText = 'ProTip Sponsor';
-
-    twitterUserContainer.appendChild(img);
-    twitterUserContainer.appendChild(span);
 }
 
 window.addEventListener("message", function (event) {
@@ -226,13 +194,11 @@ window.addEventListener("message", function (event) {
         return;
     }
 
-    // var highlight = document.getElementById(event.data.bitcoinAddress);
-    // highlight.style.backgroundColor = '';
     chrome.runtime.sendMessage({
         action: event.data.action,
         bitcoinAddress: event.data.bitcoinAddress,
         url: document.URL
-     } );
+     });
 }, false);
 
 var port = chrome.runtime.connect();
