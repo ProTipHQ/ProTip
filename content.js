@@ -101,31 +101,40 @@ function ensureSingleSelectionOfCheckbox(selectedBTCAddress){
             els[i].parentElement.style.backgroundColor = '#7FE56F';
         } else {
             els[i].checked = false;
+            els[i].parentElement.style.border = 'solid 1px #7FE56F';
             els[i].parentElement.style.backgroundColor = 'transparent';
         }
     }
 }
 
-function addCheckboxes(){
+function addCheckboxes(knownBTCAddress){
+    // The first found BTC address is almost always the correct BTC address to record
+    // User can use our checkboxes UI to change this default behavor if needed.
     var firstAddress = true;
+
+    // However if this URL already has a recorded BTC address highlight that address rather than
+    // the first found address.
+    if ( knownBTCAddress ) {
+      firstAddress = false;
+    }
 
     var els = document.getElementsByClassName('protip-match');
     for ( i = 0; i < els.length; i++ ) {
 
         var checkbox = document.createElement("input");
         checkbox.type = 'checkbox';
-        if ( firstAddress ) {
-            // The first found BTC address is almost always the correct BTC address to record
-            // User can use our checkboxes UI to change this default behavor if needed.
+        if ( knownBTCAddress == els[i].id || firstAddress ) {
             checkbox.checked = 'checked';
             firstAddress = false;
             els[i].style.backgroundColor = '#7FE56F';
             chrome.runtime.sendMessage({
-              source: 'link',
-              bitcoinAddress: els[i].id,
-              title: document.title,
-              url: document.URL
+                action: 'putBitcoinAddress',
+                bitcoinAddress: els[i].id,
+                title: document.title,
+                url: document.URL
             });
+        } else {
+            els[i].style.border = 'solid 1px #7FE56F';
         }
         checkbox.className = 'protip-checkbox';
         checkbox.id = 'protip-checkbox-' + els[i].id;
@@ -133,12 +142,15 @@ function addCheckboxes(){
             function () {
                 if( this.checked ) { // state changed before 'click' is fired
                     window.postMessage(
-                        { action: "updateBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
+                        {
+                            action: "putBitcoinAddress",
+                            bitcoinAddress: this.parentElement.id
+                        }, "*"
                     );
                     ensureSingleSelectionOfCheckbox(this.parentElement.id);
                 } else {
                     window.postMessage(
-                        { action: "revokeBitcoinAddress", bitcoinAddress: this.parentElement.id }, "*"
+                        { action: "deleteBitcoinAddress" }, "*"
                     );
                     this.parentElement.style.backgroundColor = 'transparent';
                 }
@@ -151,9 +163,26 @@ function addCheckboxes(){
 function scanLinks() {
     var links = document.links;
     for ( i = 0; i < links.length; i++ ) {
+
+        // The standard for most third party software such as tipping services and wallets.
+        // <a href="bitcoin:1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF">foo</a>
         var match = links[i].href.match(/bitcoin:([13][a-km-zA-HJ-NP-Z0-9]{26,33})/i);
+        var btcAddress = '';
+
         if ( match ) {
-            var span = highlightElement(match[0]);
+            btcAddress = match[1];
+        } else if ( links[i].text && !match ) { // check "links[i].text" because <area shape="rect" ... href="/150/"> is a link
+
+            // Allow for this type of bitcoin link, the text only contains the BTC Address
+            // <a href="https://blockchain.info/address/1B9c5V8Fc89qCKKznWUGh1vAxDh3RstqgC">
+            //    1B9c5V8Fc89qCKKznWUGh1vAxDh3RstqgC
+            // </a>
+            match = links[i].text.match(/(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)/i);
+            btcAddress = match[0];
+        }
+
+        if ( match ) {
+            var span = highlightElement(btcAddress);
             links[i].parentElement.insertBefore(span, links[i]);
             span.appendChild(links[i]);
         }
@@ -161,14 +190,14 @@ function scanLinks() {
 }
 
 function scanText(){
-    if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
-        var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
-        matchText(document.body, regex, function (node, match, offset) {
-             var span = highlightElement(match);
-             span.textContent = match;
-             node.parentNode.insertBefore(span, node.nextSibling);
-        });
-    }
+    //if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
+    var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
+    matchText(document.body, regex, function (node, match, offset) {
+         var span = highlightElement(match);
+         span.textContent = match;
+         node.parentNode.insertBefore(span, node.nextSibling);
+    });
+    //}
 }
 
 
@@ -197,25 +226,29 @@ window.addEventListener("message", function (event) {
     chrome.runtime.sendMessage({
         action: event.data.action,
         bitcoinAddress: event.data.bitcoinAddress,
-        url: document.URL
+        url: document.URL,
+        title: document.title
      });
 }, false);
 
 var port = chrome.runtime.connect();
 
-chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
-chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
-chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    isBlacklisted = request.response // set global
-    if (request.method == 'isBlacklisted' && request.response == false){
-        if(!scanMetatags()){ // Metatag tip has priority over all other BTC addresses.
-            scanLinks();
-            scanText();
-            addCheckboxes();
-        }
-    } else if (request.method == 'isStarredUser' && request.response == true){
-        starredUser();
-    } // else page is blacklisted and no need to scan anything.
-});
+if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
 
+    chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
+    chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
+    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+        isBlacklisted = request.response // set global
+        if (request.method == 'isBlacklisted' && request.response == false){
+            if(!scanMetatags()){ // Metatag tip has priority over all other BTC addresses.
+                scanLinks();
+                scanText();
+                addCheckboxes(request.knownBTCAddress);
+            }
+        } else if (request.method == 'isStarredUser' && request.response == true){
+            starredUser();
+        } // else page is blacklisted and no need to scan anything.
+    });
+
+}
 

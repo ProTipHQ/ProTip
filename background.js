@@ -109,12 +109,24 @@ function isBlacklisted(url, callback){
   });
 }
 
+function hasKnownBtcAddress(url, callback){
+  db.get('sites', url).then(function(record){
+      if(record){
+          callback(record);
+      } else {
+          callback(false);
+      }
+  });
+}
+
+
+
 function isStarredUser(url, callback){
   twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
   if(twitterHandle){
     twitterHandle = twitterHandle[1];
     db.get('sponsors', twitterHandle).then(function(record){
-      if(record){ // if hostname not blacklisted.
+      if(record){
           callback(true);
       } else {
           callback(false);
@@ -145,14 +157,6 @@ Array.prototype.diff = function(a) {
   // => [1, 2, 6]
   return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
-
-function removeBitcoinAddress(blacklistBitcoinAddress, url){
-  db.get('sites', url).done(function(record) {
-    //record.bitcoinAddresses = record.bitcoinAddresses.diff([blacklistBitcoinAddress]); //subtract blacklistBitcoinAddress
-    db.from('sites', '=', record.url).patch({ bitcoinAddresses: record.bitcoinAddresses }); // update
-    db.put('blacklistbitcoinaddresses', {bitcoinAddress: blacklistBitcoinAddress, url: url}, record.bitcoinAddresses);
-  });
-}
 
 function initialize() {
   db = new ydn.db.Storage('protip', schema);
@@ -206,49 +210,57 @@ initialize();
 
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
+    function(request, sender, sendResponse) {
 
-    if (request.action && request.action == "revokeBitcoinAddress") {
-      removeBitcoinAddress(request.bitcoinAddress, request.url);
-      chrome.tabs.getSelected(null, function(tab) {
-          chrome.browserAction.setBadgeText({text: '', tabId: tab.id}); // let the use know it has been removed
-      });
-    } else if(request.action && request.action == "isBlacklisted") {
-      isBlacklisted(request.url, function(blacklistFound){
-        chrome.tabs.getSelected(null, function(tab) {
-          if(blacklistFound){
-            chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
-            chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
-          } else {
-            // give permission for the content script to scan the DOM for BTC addresses
-            chrome.tabs.sendRequest(tab.id, {method: 'isBlacklisted', response: false});
-          }
-        });
-      });
-    } else if(request.action && request.action == "isStarredUser") {
-      isStarredUser(request.url, function(starredFound){
-          if( starredFound ) {
-              chrome.tabs.getSelected(null, function(tab) {
-                chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
-              });
-          }
-      });
-    } else if(request.bitcoinAddress){
-      if(!request.bitcoinAddresses){
-        request.bitcoinAddresses = [request.bitcoinAddress]; // tempory hack till I get standardize single address per page.
-      }
-      // This assumes that addresses found on blacklisted sites will never ever be sent.
-      db.put('sites', {bitcoinAddress: request.bitcoinAddress, bitcoinAddresses: request.bitcoinAddresses, url: request.url, title: request.title});
-
-      chrome.tabs.getSelected(null, function(tab) {
-        chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
-        if ( request.source == 'metatag' ) {
-          chrome.browserAction.setBadgeText({text: 'Meta', tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
-        } else {
-          chrome.browserAction.setBadgeText({text: request.bitcoinAddress.substring(0,4), tabId: tab.id}) // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+        if(request.action && request.action == "isBlacklisted") {
+            isBlacklisted(request.url, function(blacklistFound){
+                chrome.tabs.getSelected(null, function(tab) {
+                    if(blacklistFound){
+                        chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
+                        chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
+                    } else {
+                        hasKnownBtcAddress(request.url, function(record){
+                            // give permission for the content script to scan the DOM for BTC addresses
+                            chrome.tabs.sendRequest(tab.id, {method: 'isBlacklisted', response: false, knownBTCAddress: record.bitcoinAddress});
+                        })
+                    }
+                });
+            });
+        } else if(request.action && request.action == "isStarredUser") {
+            isStarredUser(request.url, function(starredFound){
+                if( starredFound ) {
+                    chrome.tabs.getSelected(null, function(tab) {
+                        chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
+                    });
+                }
+            });
+        } else if(request.action && request.action == "deleteBitcoinAddress"){
+            db.remove('sites', request.url);
+            db.put('blacklist', { url: request.url });
+            chrome.tabs.getSelected(null, function(tab) {
+                chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
+                chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
+                // chrome.browserAction.setBadgeText({text: '', tabId: tab.id});
+                chrome.browserAction.setIcon({path: './assets/images/icon_48.png', tabId: tab.id});
+            });
+        } else if(request.action && request.action == "putBitcoinAddress"){
+            db.get('sites', request.url).done(function(record) {
+                if (!record) {
+                    db.put('sites', {bitcoinAddress: request.bitcoinAddress, url: request.url, title: request.title});
+                } else {
+                    db.from('sites', '=', record.url).patch({ bitcoinAddress: request.bitcoinAddress });
+                }
+                db.remove('blacklist', request.url);
+            });
+            chrome.tabs.getSelected(null, function(tab) {
+                chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
+                if (request.source && request.source == 'metatag') {
+                    chrome.browserAction.setBadgeText({text: 'Meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                } else {
+                    chrome.browserAction.setBadgeText({text: request.bitcoinAddress.substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                }
+                chrome.browserAction.setIcon({path: './assets/images/icon_found_btc.png', tabId: tab.id});
+            });
         }
-        chrome.browserAction.setIcon({path: './assets/images/icon_found_btc.png', tabId: tab.id});
-      });
     }
-  }
 );

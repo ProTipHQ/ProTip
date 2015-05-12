@@ -56,7 +56,7 @@ function subscriptionBitcoinAddressCell(record) {
     cell.className = 'blockchain-address';
     cell.appendChild(
         document.createTextNode(
-            record.bitcoinAddresses[0].substring(0, 7) + '...'
+            record.bitcoinAddress.substring(0, 7) + '...'
         )
     );
     return cell;
@@ -81,13 +81,13 @@ function subscriptionSwitchCell(record) {
         return function() {
             var parentTr = input.parentElement.parentElement;
             if (input.checked != true) {
-                db.remove('subscriptions', record.bitcoinAddresses[0]);
+                db.remove('subscriptions', record.bitcoinAddress);
                 parentTr.style.backgroundColor = 'white';
                 parentTr.style.color = '#000';
             } else {
                 // Allow the unsubscription to be reversed, no need to display confirmation warning
                 // EG. "Do you really want to delete this subscription?"
-                record.bitcoinAddress = record.bitcoinAddresses[0]
+                record.bitcoinAddress = record.bitcoinAddress;
                 record.amountFiat = localStorage['defaultSubscriptionAmountFiat'];
                 db.put('subscriptions', record);
                 parentTr.style.backgroundColor = '#eeeeee';
