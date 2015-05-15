@@ -120,7 +120,9 @@ function addCheckboxes(knownBTCAddress){
 
     var els = document.getElementsByClassName('protip-match');
     for ( i = 0; i < els.length; i++ ) {
-
+        // When opening link in a new tab sometimes causes double checkboxes to be created.
+        if( document.getElementById('protip-checkbox-' + els[i].id)){ break }
+        //
         var checkbox = document.createElement("input");
         checkbox.type = 'checkbox';
         if ( knownBTCAddress == els[i].id || firstAddress ) {
@@ -156,6 +158,7 @@ function addCheckboxes(knownBTCAddress){
                 }
             }, false
         );
+        //debugger;
         els[i].insertBefore(checkbox, els[i].firstChild);
     }
 }
@@ -178,10 +181,12 @@ function scanLinks() {
             //    1B9c5V8Fc89qCKKznWUGh1vAxDh3RstqgC
             // </a>
             match = links[i].text.match(/(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)/i);
-            btcAddress = match[0];
+            if ( match ) {
+                btcAddress = match[0];
+            }
         }
 
-        if ( match ) {
+        if ( match ) { // && !document.getElementById( match ) ) {
             var span = highlightElement(btcAddress);
             links[i].parentElement.insertBefore(span, links[i]);
             span.appendChild(links[i]);
@@ -193,9 +198,11 @@ function scanText(){
     //if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
     var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
     matchText(document.body, regex, function (node, match, offset) {
-         var span = highlightElement(match);
-         span.textContent = match;
-         node.parentNode.insertBefore(span, node.nextSibling);
+         //if ( !document.getElementById( match ) ) {
+            var span = highlightElement(match);
+            span.textContent = match;
+            node.parentNode.insertBefore(span, node.nextSibling);
+         //}
     });
     //}
 }

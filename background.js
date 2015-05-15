@@ -34,6 +34,16 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
 
 });
 
+// http://stackoverflow.com/questions/4945541/dynamically-deploying-content-scripts-in-chrome-extensions
+// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+//     if(changeInfo.status == "complete" && isInUserList(tab.url)) {
+//         chrome.tabs.executeScript(tabId, {file:"script.js"}, function() {
+//             //script injected
+//         });
+//     }
+// });
+
+
 function checkIdleTime(newState) {
   console.log("Checking idle behaviour " + newState);
   if ((newState == "idle" || newState == "locked") &&
@@ -240,7 +250,6 @@ chrome.runtime.onMessage.addListener(
             chrome.tabs.getSelected(null, function(tab) {
                 chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
                 chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
-                // chrome.browserAction.setBadgeText({text: '', tabId: tab.id});
                 chrome.browserAction.setIcon({path: './assets/images/icon_48.png', tabId: tab.id});
             });
         } else if(request.action && request.action == "putBitcoinAddress"){

@@ -212,7 +212,7 @@ function buildRow(record) {
     row.appendChild(subscriptionSwitchCell(record));
     row.appendChild(browseLabelCell(record));
     row.appendChild(browseAmountCell(record));
-    row.appendChild(progressBarCell(record));
+    // row.appendChild(progressBarCell(record));
     row.appendChild(subscriptionBitcoinAddressCell(record));
     row.appendChild(browseIgnoreCell(record));
 

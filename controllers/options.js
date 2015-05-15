@@ -13,6 +13,11 @@ function initFiatCurrency() {
     });
 }
 
+function setExampleMetaTag(){
+  $('#example-metatag').html(
+   '<meta name="microtip" content="' + wallet.getAddress() + '" data-currency="btc">'
+  );
+}
 
 function initFilterLevel() {
     if (!localStorage["filterLevel"]) {
@@ -67,6 +72,12 @@ function initialize() {
     initDefaultSubscriptionAmountFiat();
 
     allowExternalLinks();
+
+    wallet.restoreAddress().then(function () {
+        $('#textAddress').text(wallet.getAddress());
+        setExampleMetaTag();
+    });
+
 }
 
 $(function() {
