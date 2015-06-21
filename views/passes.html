@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/css/protip.css">
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-slider.css">
     <link rel="stylesheet" href="../assets/css/switchery.min.css">
@@ -30,17 +31,14 @@
   </head>
   <body>
 
-    <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container nav-non-responsive">
-        <!-- <div class="navbar-header">
-          <a class="navbar-brand" href="#">ProGatis</a>
-        </div> -->
+
         <div id="navbar" class="">
           <ul class="nav navbar-nav">
 
             <li>
-              <a href="popup.html">
+              <a href="home.html">
                 <div class="menu-icon">
                   <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
                 </div>
@@ -58,27 +56,11 @@
             </li>
 
             <li>
-              <a href="feedback.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Feedback</div>
-              </a>
-            </li>
-
-            <li>
               <a href="financial.html">
                 <div class="menu-icon">
                   <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
                 </div>
                 <div class="menu-label">Wallet</div>
-              </a>
-            </li>
-
-            <li class="active">
-              <a id="paywalls" href="passes.html">
-                <div id="menu-pass-icon-active"></div>
-                <div class="menu-label">Passes</div>
               </a>
             </li>
 
@@ -100,12 +82,34 @@
               </a>
             </li>
 
-          </ul>
-        </div><!--/.nav-collapse -->
+            <li>
+              <a href="recommend.html">
+                <div class="menu-icon" style="margin-top:2px;">
+                  <i class="fa fa-group"></i>
+                </div>
+                <div class="menu-label">Recommended</div>
+              </a>
+            </li>
 
-        <a class="external-link" id="full-screen-link" href="paywalls.html">
-          Full Screen...
-        </a>
+            <li>
+              <a href="feedback.html">
+                <div class="menu-icon">
+                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                </div>
+                <div class="menu-label">Feedback</div>
+              </a>
+            </li>
+
+
+            <li class="active">
+              <a id="paywalls" href="passes.html">
+                <div id="menu-pass-icon-active"></div>
+                <div class="menu-label">Passes</div>
+              </a>
+            </li>
+
+          </ul>
+        </div>
 
       </div>
     </nav>
@@ -170,7 +174,7 @@
           </tr>
           <tr>
             <td style="text-align:right">
-              <label for="exampleInputPassword1">You Name</label>
+              <label for="exampleInputPassword1">Your Name</label>
             </td>
             <td>
               <input type="text" id="manual-label" disabled="disabled" style="width:300px;margin:5px;" placeholder="Nixie Pixel"></input>

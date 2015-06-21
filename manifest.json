@@ -13,6 +13,7 @@
         "./js/payment-manager.js",
         "./lib/ydn-db.min.js",
         "./js/schema.js",
+        "./js/alarm.js",
         "background.js"
       ]
    },
@@ -20,20 +21,20 @@
    "content_scripts": [
        {
            "matches": ["http://*/*", "https://*/*"],
-           "js": ["./lib/jquery-2.1.3.min.js","content.js"]
+           "js": ["./lib/jquery-2.1.3.min.js","content.js", "./lib/bitcoinjs-lib.min.js"]
        }
    ],
-  "icons": { "16": "./assets/images/icon_16.png",
-             "48": "./assets/images/icon_48.png",
-            "128": "./assets/images/icon_128.png" },
+  "icons": { "16": "./assets/images/heart16x16.png",
+             "48": "./assets/images/heart48x48.png",
+            "128": "./assets/images/heart128x128.png" },
    "browser_action": {
-      "default_icon": "./assets/images/icon.png",
+      "default_icon": "./assets/images/heart48x48_passive.png",
       "default_popup": "./views/popup.html",
       "default_title": "ProTip"
    },
    "description": "ProTip is peer to peer crowd funding. ProTip provides tipping, weekly subscriptions and content passes for premium work.",
    "icons": {
-      "128": "./assets/images/icon.png"
+      "128": "./assets/images/heart128x128.png"
    },
    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
    "permissions": [
@@ -44,5 +45,5 @@
    "options_page": "./views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.8.0.0"
+   "version": "0.8.1.0"
 }

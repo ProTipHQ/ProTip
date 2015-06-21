@@ -20,6 +20,10 @@ We also support the use of metatags in the HTML header for added security:
 <meta name=“microtip” content=“1YourBitcoinAdressHere” data-currency=“btc”>
 ```
 
+## Special Thanks
+Andrew Toth, for releasing his bitcoin wallet under the MIT license.
+[https://github.com/andrewtoth/BitcoinWallet](https://github.com/andrewtoth/BitcoinWallet)
+
 ## Licence
 ProTip a Chrome extension for peer-to-peer crowd-funding.
 Copyright (C) 2015 Leo Campbell

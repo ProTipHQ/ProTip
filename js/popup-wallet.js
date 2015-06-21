@@ -27,6 +27,7 @@ $(document).ready(function() {
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
             setBudgetWidget(results[0], results[1]);
+            $('#bitcoin-fee').html(results[1]);
         });
     });
     setupWallet();
@@ -79,6 +80,9 @@ $(document).ready(function() {
         ]).then(function() {
             paymentManager.payAll();
             localStorage['weeklyAlarmReminder'] = false;
+            $('#payment-history').effect("highlight", {
+                color: 'rgb(100, 189, 99)'
+            }, 4000);
         });
     });
 

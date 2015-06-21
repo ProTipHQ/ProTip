@@ -184,6 +184,7 @@
                         websocket.send('{"op":"addr_sub", "addr":"' + address + '"}');
                     };
                     websocket.onmessage = function (evt) {
+
                         // Parse the new transaction
                         var json = JSON.parse(evt.data);
                         var inputs = json.x.inputs;
@@ -311,9 +312,7 @@
                         }
                         // Push the transaction to blockchain.info
                         var data = 'tx=' + Crypto.util.bytesToHex(sendTx.serialize());
-                        //alert(Crypto.util.bytesToHex(sendTx.serialize()))
-
-                        util.post('https://blockchain.info/pushtx', data).then(function () {
+                        util.post('https://blockchain.info/pushtx', data).then(function (foo) {
                             // Notify the balance listener of the changed amount immediately,
                             // but don't set the balance since the transaction will be processed by the websocket
                             if (balanceListener) balanceListener(balance - amount - fee);

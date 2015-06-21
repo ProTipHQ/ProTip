@@ -19,31 +19,31 @@ function setExampleMetaTag(){
   );
 }
 
-function initFilterLevel() {
-    if (!localStorage["filterLevel"]) {
-        localStorage["filterLevel"] = "2"
-    }
+// function initFilterLevel() {
+//     if (!localStorage["filterLevel"]) {
+//         localStorage["filterLevel"] = "2"
+//     }
+//
+//     $.each($("input[name=payment-filters]:radio"), function(key, radioBtn) {
+//         if (localStorage["filterLevel"] == radioBtn.value) {
+//             radioBtn.checked = true
+//         }
+//
+//         $(radioBtn).change(function() {
+//             localStorage["filterLevel"] = this.value
+//         });
+//     });
+// }
 
-    $.each($("input[name=payment-filters]:radio"), function(key, radioBtn) {
-        if (localStorage["filterLevel"] == radioBtn.value) {
-            radioBtn.checked = true
-        }
-
-        $(radioBtn).change(function() {
-            localStorage["filterLevel"] = this.value
-        });
-    });
-}
-
-function initPriceOfCoffee() {
-    if (!localStorage["priceOfCoffee"]) {
-        localStorage["priceOfCoffee"] = "1.0"
-    }
-    $('#price-of-coffee').change(function() {
-        localStorage["priceOfCoffee"] = $('#price-of-coffee').val();
-    });
-    $('#price-of-coffee').val(localStorage["priceOfCoffee"]);
-}
+// function initPriceOfCoffee() {
+//     if (!localStorage["priceOfCoffee"]) {
+//         localStorage["priceOfCoffee"] = "1.0"
+//     }
+//     $('#price-of-coffee').change(function() {
+//         localStorage["priceOfCoffee"] = $('#price-of-coffee').val();
+//     });
+//     $('#price-of-coffee').val(localStorage["priceOfCoffee"]);
+// }
 
 function initDefaultSubscriptionAmountFiat() {
     if (!localStorage['defaultSubscriptionAmountFiat']) {
@@ -67,8 +67,8 @@ function initialize() {
 
     initFiatCurrency();
     updateFiatCurrencyCode();
-    initFilterLevel();
-    initPriceOfCoffee();
+    //initFilterLevel();
+    //initPriceOfCoffee();
     initDefaultSubscriptionAmountFiat();
 
     allowExternalLinks();

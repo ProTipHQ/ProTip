@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ProTip</title>
+    <meta name="description" content="Keeps track of how much time you spend on various web sites and records blockchain hashes for later tipping.">
+
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/protip.css">
+
+    <script src="../lib/jquery-2.1.3.min.js"></script>
+    <script src="../assets/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="../lib/ydn-db.min.js"></script>
+    <script src="../js/schema.js"></script>
+    <script src="../js/ui-utils.js"></script>
+    <script src="../controllers/feedback.js"></script>
+</head>
+
+<body>
+
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container nav-non-responsive">
+
+            <div id="navbar" class="">
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="home.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Home</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="subscriptions" href="subscriptions.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Subscriptions</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="financial.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Wallet</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="blacklist" href="blacklist.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Ignore</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="options.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Options</div>
+                        </a>
+                    </li>
+
+                    <li class="active">
+                      <a href="recommend.html">
+                        <div class="menu-icon" style="margin-top:2px;">
+                          <i class="fa fa-group"></i>
+                        </div>
+                        <div class="menu-label">Recommended</div>
+                      </a>
+                    </li>
+
+                    <li>
+                        <a href="feedback.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Feedback</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="paywalls" href="passes.html">
+                            <div id="menu-pass-icon"></div>
+                            <div class="menu-label">Passes</div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- <div id="show-bitcoin-artists" style="display:block;overflow:hidden;" class="alert alert-info alert-dismissible fade in" role="alert">
+
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <i class="fa fa-twitter" style="font-size:64px;"></i>
+              </a>
+            </div>
+        <div class="media-body">
+              <h4 class="media-heading" id="top-aligned-media"><a class="external-link" href="https://twitter.com/singingpictures">ProTip Twitter</a>
+                <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a></h4>
+              <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate.</p>
+            </div>
+      </div>
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <i class="fa fa-reddit" style="font-size:46px;"></i>
+              </a>
+            </div>
+        <div class="media-body">
+              <h4 class="media-heading" id="top-aligned-media">
+                <a class="external-link" href="http://www.dancarlin.com/dc-donate/">ProTip Reddit</a>
+                <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+              </h4>
+              <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at.</p>
+            </div>
+      </div>
+
+    </div> -->
+
+
+
+
+    <div class="ios-subheading">
+      EARLY ADOPTERS
+    </div>
+    <div class="ios-section">
+
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <img class="media-object" src="../assets/artists/xkcd.png" style="width: 64px; height: 64px;">
+              </a>
+            </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://twitter.com/singingpictures">XKCD</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            Warning: this comic occasionally contains strong language (which may be unsuitable for children),
+            unusual humor (which may be unsuitable for adults), and advanced mathematics (which may be
+            unsuitable for liberal-arts majors).
+          </p>
+        </div>
+      </div>
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <img class="media-object" src="../assets/artists/singing_pictures.jpg" style="width: 64px; height: 64px;">
+              </a>
+            </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://twitter.com/singingpictures">Shem - Singing Pictures</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            <a href="http://www.ensink.co.uk/" target="_blank">Uk Artists The Singing Pictures Rhys Lewis &amp; Shem Booth-Spain's latest music video "Stuff" has </a>now been officially launched live from New York City! Working in colloboration with The <a href="http://www.harmonylabel.com/" target="_blank">Harmony Label</a>,&nbsp;Ensink productions the band are excited to bring to you their 2nd single from their debut masterclass album #Dream.
+          </p>
+        </div>
+      </div>
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <img class="media-object" src="../assets/artists/dan_carlin.jpg" style="width: 64px; height: 64px;">
+              </a>
+            </div>
+        <div class="media-body">
+              <h4 class="media-heading" id="top-aligned-media">
+                <a class="external-link" href="http://www.dancarlin.com/dc-donate/">Dan Carlin</a>
+                <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+              </h4>
+              <p>He’s been called a lot of things, but no one says that Dan Carlin is boring. His two long-running podcasts are among the most popular in the world. Part storyteller, part analyst, Carlin has mastered the art of looking at subjects from multiple angles and dissecting and thinking about them in original ways. He isn’t afraid to go deep or to inject historical context into modern debates. Whether it’s history or current events he’s discussing, his passion is contagious, his approach refreshing and his ideas tickle your brain in all the right places. He’ll make you mad too. You’ll like it.</p>
+            </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+              <a href="#">
+                <img class="media-object" src="../assets/artists/tom_woods.jpg" style="width: 64px; height: 64px;">
+              </a>
+            </div>
+        <div class="media-body">
+              <h4 class="media-heading" id="top-aligned-media">
+                <a class="external-link" href="http://www.dancarlin.com/dc-donate/">Tom Woods</a>
+                <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+              </h4>
+              <p>
+                Retired from teaching in corrections education. Now pursues rock hounding and jewellery making.
+              </p>
+            </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/oliver_masiosare.jpg" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://www.youtube.com/channel/UCmSziBeGk4fQHdsfuJy5klw">Masiosare Oliver</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            Translator.
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/soumitra.jpg" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="http://ananyaitsunique.blogspot.in">Soumitra</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            Here I will be sharing my thoughts through my poems and my knowledge about our culture and mythology in Hindi.
+            I am a housewife. The thought comes to my mind too comfortable and old memories, they are I through poetry in simple Hindi language with you "share" do. I prefer to read my blog and I am grateful to all of you.
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/pinguino.png" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="http://spelunk.in">Pinguino</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            The real future of cryptocurrencies – the one that nearly all of its proponents daydream about publicly or perhaps privately – lies in extending their use far beyond today’s tiny group of technologically-adept early adopters and risk-embracing speculators.  The only way for Bitcoin, Litecoin, or other systems to live up to their full potential as a transformative economic device is through widespread adoption throughout society.
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/bitcorati.png" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="http://bitcorati.com/">Bitcorati</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            We offer a professional community of leaders and experts in areas such as cryptography, digital currency, finance, economics, engineering, and law. The Bitcorati also provide insights, reviews and ratings on bitcoin business and the growing number of merchants accepting bitcoins worldwide!
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/john_light.png" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="http://p2pconnects.us/">John Light</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            Shining Light on the Peer-to-Peer Economy.
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/p_emerson.jpg" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://pemersonwilliams.wordpress.com/">P Emerson</a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            P. Emerson Williams is an artist and illustrator whose work takes shape in physical and digital media, and covers wide modes of expression. His passion is for embodying the mythic in visual media and melding visual art with narrative form. P. Emerson Williams illustrated Bedlam Stories – The Battle for Oz and Wonderland Begins, a novel set in the universe of Bedlam Stories, a twisted world of horror created by cult film director Pearry Teo (The Gene Generation, Necromentia, Witchville).
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/pink_house_music_tribe.jpg" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://soundcloud.com/pinkhousemusictribe/">Pink House Music Tribe
+            </a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            We live in a pink house...<br>We have 3 dogs...<br>2 Chairs...<br>a half of a bagel sandwich from sharky's...<br>And one awesomely fantasmic mediocre bedroom recording studio.
+          </p>
+        </div>
+      </div>
+
+      <div class="media">
+        <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="../assets/artists/histories_of_things_to_come.jpg" style="width: 64px; height: 64px;">
+          </a>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading" id="top-aligned-media">
+            <a class="external-link" href="https://http://historiesofthingstocome.blogspot.co.uk/">
+              Histories of Things to Come
+            </a>
+            <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
+          </h4>
+          <p>
+            This blog describes Metatime in the Posthuman experience, drawn from Sir Isaac Newton's secret work on the future end of times, a tract in which he described Histories of Things to Come. His hidden papers on the occult were auctioned to two private buyers in 1936 at Sotheby's, but were not available for public research until the 1990s.
+          </p>
+        </div>
+      </div>
+
+
+
+  </div>
+
+</body>
+
+</html>

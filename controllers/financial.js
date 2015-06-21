@@ -3,25 +3,7 @@ function initialize() {
     updateFiatCurrencyCode();
     allowExternalLinks();
     initCurrentWeek();
-
-    $( "#slider" ).slider({
-        range: "max",
-        min: 0.01,
-        max: 10,
-        value: parseFloat(localStorage['incidentalTotalFiat']),
-        slide: function( event, ui ) {
-          $( "#incidental-fiat-amount" ).val( ui.value );
-          $('#incidental-fiat-amount').trigger('change');
-        }
-    });
 }
-
-// function setExampleMetaTag(){
-//   $('#example-metatag').html(
-//    '<meta name="microtip" content="' + wallet.getAddress() + '" data-currency="btc">'
-//   );
-// }
-
 
 function daysTillEndOWeek(endOfWeek) {
     var now = (new Date).getTime();
@@ -95,6 +77,17 @@ $(document).ready(function() {
 
     initialize();
 
+    $( "#slider" ).slider({
+        range: "max",
+        min: 0.01,
+        max: 10,
+        value: parseFloat(localStorage['incidentalTotalFiat']),
+        slide: function( event, ui ) {
+          $( "#incidental-fiat-amount" ).val( ui.value );
+          $('#incidental-fiat-amount').trigger('change');
+        }
+    });
+
     // Setup the wallet, page values and callbacks
     var val = '',
         address = '',
@@ -122,11 +115,10 @@ $(document).ready(function() {
         if(balance == '0'){ $('#buy-bitcoins-info').show() }
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
-            setBudgetWidget(results[0], results[1]);
+            //setBudgetWidget(results[0], results[1]);
         });
     });
     setupWallet();
-
 
     $('#amount').on('keyup change', function() {
         val = Math.floor(Number($(this).val() * BTCMultiplier));
@@ -163,14 +155,19 @@ $(document).ready(function() {
         }
         $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-
+        $('#bitcoin-fee').text((10000 / BTCMultiplier + ' ' + BTCUnits));
+        if(parseInt(balance) > 0){
+          $('#max-available-balance').text((parseInt(balance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+        } else {
+          $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
+        }
         if (balance > 0) {
             currencyManager.formatAmount(balance).then(function(formattedMoney) {
                 var text = formattedMoney;
                 $('#btc-balance-to-fiat').text(text);
             });
         } else {
-            $('#btc-balance-to-fiat').text('0');
+            $('#btc-balance-to-fiat').text('0.00');
         }
     }
 
@@ -733,10 +730,10 @@ $(document).ready(function() {
         return canvas;
     }
 
-    $('#toggle-alarm').click(function() {
-        doToggleAlarm();
-        restartTheWeek();
-    });
+    // $('#toggle-alarm').click(function() {
+    //     doToggleAlarm();
+    //     restartTheWeek();
+    // });
 
     $('#incidental-fiat-amount').change(function() {
         localStorage['incidentalTotalFiat'] = $(this).val();
@@ -755,10 +752,10 @@ $(document).ready(function() {
             balanceCoversXWeeks = 0
         } // initalization with empty wallet.
 
-        // $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
-        // $('#balance-covers-weeks').effect("highlight", {
-        //     color: 'rgb(100, 189, 99)'
-        // }, 400);
+        $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
+        $('#balance-covers-weeks').effect("highlight", {
+            color: 'rgb(100, 189, 99)'
+        }, 400);
 
         $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
         $( "#slider" ).slider({value: $(this).val() });
@@ -812,3 +809,4 @@ $(document).ready(function() {
 
 
 });
+

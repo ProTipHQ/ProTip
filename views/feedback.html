@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/css/protip.css">
 
     <script src="../lib/jquery-2.1.3.min.js"></script>
@@ -22,7 +23,6 @@
 
     <script src="../lib/ydn-db.min.js"></script>
     <script src="../js/schema.js"></script>
-    <!-- // <script src="../assets/js/switchery.min.js"></script> -->
     <script src="../js/ui-utils.js"></script>
     <script src="../controllers/feedback.js"></script>
 </head>
@@ -33,14 +33,12 @@
     <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container nav-non-responsive">
-            <!-- <div class="navbar-header">
-          <a class="navbar-brand" href="#">ProGatis</a>
-        </div> -->
+
             <div id="navbar" class="">
                 <ul class="nav navbar-nav">
 
                     <li>
-                        <a href="popup.html">
+                        <a href="home.html">
                             <div class="menu-icon">
                                 <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
                             </div>
@@ -57,28 +55,12 @@
                         </a>
                     </li>
 
-                    <li class="active">
-                        <a href="feedback.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Feedback</div>
-                        </a>
-                    </li>
-
                     <li>
                         <a href="financial.html">
                             <div class="menu-icon">
                                 <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
                             </div>
                             <div class="menu-label">Wallet</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a id="paywalls" href="passes.html">
-                            <div id="menu-pass-icon"></div>
-                            <div class="menu-label">Passes</div>
                         </a>
                     </li>
 
@@ -100,43 +82,37 @@
                         </a>
                     </li>
 
+                    <li>
+                      <a href="recommend.html">
+                        <div class="menu-icon" style="margin-top:2px;">
+                          <i class="fa fa-group"></i>
+                        </div>
+                        <div class="menu-label">Recommended</div>
+                      </a>
+                    </li>
+
+                    <li class="active">
+                        <a href="feedback.html">
+                            <div class="menu-icon">
+                                <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
+                            </div>
+                            <div class="menu-label">Feedback</div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="paywalls" href="passes.html">
+                            <div id="menu-pass-icon"></div>
+                            <div class="menu-label">Passes</div>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
-            <!--/.nav-collapse -->
-            <a class="external-link" id="full-screen-link" href="feedback.html">
-          Full Screen...
-        </a>
 
         </div>
     </nav>
-
-<!--     <div class="alert alert-success alert-dismissible" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-      <h5>
-        <span style="color:#ff3b30;">Planned Development!</span>
-      </h5>
-      <h4>
-        Advanced Peer-to-Peer Discussion
-      </h4>
-      </ol>
-        For Subscribers:
-      <ol>
-        <li>
-          Only people you subscribe to can send you direct messages, each message
-          is embedded within a ~ 0.05 USD bitcoin transaction. Every message you
-          receive means 0.05 USD is added to your wallet! This deters spam and
-          ensures you a clear channel of communication.
-        </li>
-        <li>
-          Receive exclusive rewards only available to paid subscribers.
-        </li>
-        <li>
-          No need to surrender your email or social media details.
-        </li>
-      </ol>
-
-      For Artists:
+    <!--
       <ol>
         <li>
           Send secure high value messages to your loyal subscribers.

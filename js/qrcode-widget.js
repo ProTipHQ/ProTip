@@ -1,22 +1,3 @@
-function allowExternalLinks() {
-    $('.external-link').each(function(i, obj) {
-        // In a chrome popup page the links won't work without the below.
-        $(obj).click(function() {
-            chrome.tabs.create({
-                url: obj.href
-            });
-        });
-    });
-}
-
-function updateFiatCurrencyCode() {
-    currencyManager.getSymbol().then(function(symbol){
-        $.each($(".fiat-code"), function(key, element) {
-            element.textContent = symbol[0];
-        });
-    });
-}
-
 function createQRCodeCanvas(text) {
     var sizeMultiplier = 4;
     var typeNumber;
@@ -68,11 +49,3 @@ function createQRCodeCanvas(text) {
     }
     return canvas;
 }
-
-
-// function updateFiatCurrencyCode() {
-//     $.each($(".fiat-code"), function(key, element) {
-//         element.textContent = localStorage["fiatCurrencyCode"];
-//     });
-// }
-

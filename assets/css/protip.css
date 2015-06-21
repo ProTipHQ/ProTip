@@ -11,6 +11,11 @@ body {
   border-bottom: solid #eee 1px;
 }
 
+.external-link {
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
 .menu-label {
   font-size: 67%;
   font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
@@ -244,7 +249,7 @@ color: #007aff;
   cursor: pointer;
 }
 
-.progress {
+/*.progress {
   width: 24px;
   margin-bottom:3px;
   margin-top:3px;
@@ -261,9 +266,13 @@ color: #007aff;
 .coffee-cup {
   height: 14px;
 }
-
+*/
 .subscription-input {
   padding: 2px 5px 2px 5px;
+}
+
+.error {
+  color:red;
 }
 
 .ios-element-divider {
@@ -314,6 +323,12 @@ label {
   margin-bottom:0px;
 }
 
+#dismiss-manual-reminder-popover:hover {
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+}
+
 .tooltip-inner {
   background-color: #faebcc;
   color:#333;
@@ -333,7 +348,6 @@ label {
 .label {
   border-radius: 6px;
 }
-
 
 
 

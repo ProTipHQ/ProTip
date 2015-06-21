@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
     <!-- <link rel="stylesheet" href="../assets/ratchet/css/ratchet.css"> -->
     <!-- <link rel="stylesheet" href="../assets/ratchet/css/ratchet-theme-ios.css"> -->
-    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-slider.css">
+    <!-- <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-slider.css"> -->
     <link rel="stylesheet" href="../assets/css/switchery.min.css">
     <link rel="stylesheet" href="../assets/css/protip.css">
 
@@ -24,8 +24,8 @@
     <script src="../assets/jquery-ui/jquery-ui.min.js"></script>
     <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="../assets/js/switchery.min.js"></script>
-    <!-- <script src="../lib/date.js"></script> -->
-    <!-- <script src="../lib/bitcoinjs-min.js"></script> -->
+    <script src="../lib/date.js"></script>
+    <script src="../lib/bitcoinjs-min.js"></script>
 
     <script src="../lib/promise.min.js" type="text/javascript"></script>
     <script src="../lib/underscore-min.js" type="text/javascript"></script>
@@ -38,11 +38,11 @@
     <!-- // <script src="../js/budget-widget.js" type="text/javascript"></script> -->
     <script src="../js/wallet.js" type="text/javascript"></script>
 
-    <!-- <script src="../js/payment-manager.js" type="text/javascript"></script> -->
+    <script src="../js/payment-manager.js" type="text/javascript"></script>
     <script src="../js/popup-ui.js" type="text/javascript"></script>
     <script src="../js/popup-wallet.js" type="text/javascript"></script>
 
-    <!-- <script src="../js/alarm.js" type="text/javascript"></script> -->
+    <script src="../js/alarm.js" type="text/javascript"></script>
 
     <script src="../lib/ydn-db.min.js"></script>
     <script src="../js/schema.js"></script>
@@ -54,161 +54,99 @@
 
     <!-- <script src="../scratch.js"></script> -->
   </head>
-  <body>
+  <body style="margin-top:5px;width:333px;font-size:85%;min-width:initial;font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;">
 
+    <!-- *** The first link on the popup automatically catches a focus and is highlighted, which looks a little strange.
+    Using a dummy empty link to hack around this default behaviour. *** -->
+    <a href=""></a>
+    <!-- ************************************* -->
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container nav-non-responsive">
-        <!-- <div class="navbar-header">
-          <a class="navbar-brand" href="#">ProGatis</a>
-        </div> -->
-        <div id="navbar" class="">
-          <ul class="nav navbar-nav">
+    <div>
 
-            <li class="active">
-              <a href="popup.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Home</div>
-                </a>
-            </li>
-
-            <li>
-              <a id="subscriptions" href="subscriptions.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Subscriptions</div>
-              </a>
-            </li>
-
-            <li>
-              <a href="feedback.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Feedback</div>
-              </a>
-            </li>
-
-            <li>
-              <a href="financial.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">
-                  Wallet
-                  (<strong id="btc-balance-to-fiat">. </strong>)
-                </div>
-              </a>
-            </li>
-
-            <li>
-              <a id="paywalls" href="passes.html">
-                <div id="menu-pass-icon"></div>
-                <div class="menu-label">Passes</div>
-              </a>
-            </li>
-
-            <li>
-              <a id="blacklist" href="blacklist.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
-                </div>
-                 <div class="menu-label">Ignore</div>
-              </a>
-            </li>
-
-            <li>
-              <a href="options.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Options</div>
-              </a>
-            </li>
-
-          </ul>
-
-        </div><!--/.nav-collapse -->
-        <a class="external-link" id="full-screen-link" href="popup.html">
+      <div style="float:left;font-size:150%;padding-left:5px;">
+        <a class="external-link" href="home.html">
+          <span class="glyphicon glyphicon-new-window"></span>
           Full Screen...
         </a>
-
       </div>
-    </nav>
-
-        <div class="alert alert-success alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-          <a class="external-link" target="_blank" href="http://www.reddit.com/r/protipHQ">
-             Protip's subReddit
-          </a> |
 
 
-          <a class="external-link" target="_blank" href="http://xkcd.com">
-            Xkcd
-          </a> |
-          <a class="external-link" target="_blank" href="https://twitter.com/KiskaZilla">
-            KiskaZilla
-          </a> |
+      <div id="reminder-info-container" style="padding:2px;"></div>
 
+      <!-- <div style="float:right;padding:2px;">
+        Weekly spend:<span class="fiat-code"></span><strong><span id="total-fiat-amount"></span></strong>
+        (
+        Total Avail: <span class="fiat-code"></span><span id="btc-balance-to-fiat">~ Loading... </span>
+        )
+      </div> -->
 
-
-        </div>
-
-
-
-
-
-
-<!--     <div class="ios-subheading">
-      WEEKLY BUDGET
-      <span class="label label-info" style="font-size:11px;margin-left:10px;">
-
-          Bal: <strong id="btc-balance-to-fiat">~Loading... </strong>,
-        <span class="fiat-code">USD</span>
-        <span style="font-size:10px;" id="head-line-balance">Loading... BTC
-                </span>
-          ~<span style="font-weight:bold;" id="balance-covers-weeks">x</span> wks.
-
-      </span>
     </div>
- -->
 
-    <!-- <div class="ios-subheading">
-      WEEKLY BROWSING
 
-    </div> -->
+    <div id="donate-now-reminder" style="display:none;margin-bottom: 4px;margin-top: 20px;padding:4px;" class="alert alert-info" role="alert">
 
-    <table class="table table-condensed">
+      WEEKLY REMINDER
+      <button id="donate-now" style="" type="button" class="btn btn-xs btn-success">
+        Donate &amp; Reset Timer (<span class="fiat-code"></span><span id="weekly-spend-manual-pay-reminder-btn"></span>)
+      </button>
+
+      <div id="insufficient-funds-dialogue" style="display:none;margin:5px 0 0 0;" class="alert alert-warning alert-dismissible fade in" role="alert">
+        <p>
+          Insufficient funds.
+        </p>
+      </div>
+
+      <div id="confirm-donate-now-dialogue" style="display:none;margin:5px 0 0 0;" class="alert" role="alert">
+        <p>
+          You will be donating to all the websites listed in the table below.
+        </p>
+        <p>
+          You can quickly remove any websites from the list by clicking the <span class="glyphicon glyphicon-remove big-icon" style="color:#ff9500" aria-hidden="true"></span>.
+        </p>
+        <p>
+          All your previous web browsing data will be wiped clear.
+        </p>
+        <p>
+          <button type="button" data-loading-text="Sending..." id="confirm-donate-now" class="btn btn-xs btn-primary">Yes, Send My Donations</button>
+          <button type="button" id="confirm-donate-cancel" class="btn btn-xs btn-default">Cancel</button>
+        </p>
+      </div>
+
+
+    </div>
+
+    <table class="table table-condensed" style="margin-bottom:0px;">
       <thead>
         <tr>
           <th scope="col" style="text-align:center;">
-            <span class="glyphicon glyphicon-heart" aria-hidden="true" title="Subscribe"></span>
+            <span class="glyphicon glyphicon-heart" style="color:#7FE56F" aria-hidden="true" title="Subscribe"></span>
+                        Subscribe
           </th>
-          <th scope="col" style="width:100%;">
-            <button style="margin-left:10px;" id="clear-data" type="button" class="btn btn-xs btn-danger" aria-label="Center Align">
-              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-              Clear
-            </button>
+          <th scope="col" style="width: 165px;">
 
           </th>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" style="text-align:center;vertical-align:middle;">
             <span class="fiat-code">USD</span>
           </th>
-          <th scope="col" style="width:88px;"></th>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" style="text-align:center;vertical-align:middle;">
             <span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#
           </th>
-          <th scope="col" style="text-align:center;"></th>
+          <!-- <th scope="col" style="width:88px;"></th> -->
+          <th scope="col" style="text-align:center;vertical-align:middle;">
+            Ignore
+          </th>
         </tr>
       </thead>
       <tbody id="browsing-table">
       </tbody>
     </table>
+
+    <div style="float:right;padding:2px;">
+      Weekly spend:<span class="fiat-code"></span><strong><span id="total-fiat-amount"></span></strong>
+      (
+      Total Avail: </span><span id="btc-balance-to-fiat">~ Loading... </span>
+      )
+    </div>
 
   </body>
 </html>

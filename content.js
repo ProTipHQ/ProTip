@@ -1,6 +1,6 @@
 var matchText = function(node, regex, callback, excludeElements) {
 
-    excludeElements || (excludeElements = ['script', 'style', 'iframe', 'cavas', 'a']);
+    excludeElements || (excludeElements = ['script', 'style', 'iframe', 'cavas', 'a']); // exclude 'a' links search separately
     var child = node.firstChild;
 
     do {
@@ -16,6 +16,11 @@ var matchText = function(node, regex, callback, excludeElements) {
             }
             break;
         case 3:
+            // child.textContent.replace(regex, function(foo){
+            //    console.log(arguments);
+            //     var start = arguments[2];
+            //     child.textContent = 'fooooo';
+            // });
             child.data.replace(regex, function(all) {
                  var args = [].slice.call(arguments),
                      offset = args[args.length - 2],
@@ -30,6 +35,15 @@ var matchText = function(node, regex, callback, excludeElements) {
     } while (child = child.nextSibling);
 
     return node;
+}
+
+function validAddress(address){
+  try {
+      new Bitcoin.Address(address);
+  } catch (e) {
+      return false;
+  }
+  return true;
 }
 
 function starredUser(){
@@ -180,7 +194,7 @@ function scanLinks() {
             // <a href="https://blockchain.info/address/1B9c5V8Fc89qCKKznWUGh1vAxDh3RstqgC">
             //    1B9c5V8Fc89qCKKznWUGh1vAxDh3RstqgC
             // </a>
-            match = links[i].text.match(/(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)/i);
+            match = links[i].text.trim().match(/(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)/i);
             if ( match ) {
                 btcAddress = match[0];
             }
@@ -197,6 +211,7 @@ function scanLinks() {
 function scanText(){
     //if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
     var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
+
     matchText(document.body, regex, function (node, match, offset) {
          //if ( !document.getElementById( match ) ) {
             var span = highlightElement(match);
@@ -204,7 +219,6 @@ function scanText(){
             node.parentNode.insertBefore(span, node.nextSibling);
          //}
     });
-    //}
 }
 
 

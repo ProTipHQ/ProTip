@@ -907,3 +907,10 @@ input, select {
   }
 }
 
+#wallet-option-links a {
+  cursor: pointer;
+}
+
+
+
+

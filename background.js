@@ -6,43 +6,49 @@ var updateTimeOnPageInterval = 1000 * 10;  // 10 seconds // 1 minute.
 
 chrome.alarms.onAlarm.addListener(function( alarm ) {
   if(localStorage['automaticDonate'] == "true"){
-    var val = '',
-        address = '',
-        SATOSHIS = 100000000,
-        FEE = SATOSHIS * .0001,
-        BTCUnits = 'BTC',
-        BTCMultiplier = SATOSHIS;
+      var val = '',
+          address = '',
+          SATOSHIS = 100000000,
+          FEE = SATOSHIS * .0001,
+          BTCUnits = 'BTC',
+          BTCMultiplier = SATOSHIS;
 
-    Promise.all([
-      preferences.setCurrency(localStorage['fiatCurrencyCode']),
-      wallet.restoreAddress()
-    ]).then(function(){
-      paymentManager.payAll();
-      localStorage['weeklyAlarmReminder'] = false;
-      chrome.tabs.getSelected(null, function(tab) {
-        chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
-        chrome.browserAction.setBadgeText({text: 'Sent!', tabId: tab.id});
+      Promise.all([
+          preferences.setCurrency(localStorage['fiatCurrencyCode']),
+          wallet.restoreAddress()
+      ]).then(function(){
+          paymentManager.payAll();
+          localStorage['weeklyAlarmReminder'] = false;
+          doToggleAlarm();
+          //chrome.tabs.getSelected(null, function(tab) {
+          chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'}) //, tabId: tab.id});
+          chrome.browserAction.setBadgeText({text: 'Sent!'}) //', tabId: tab.id});
+          //});
       });
-    });
   } else if (localStorage['manualRemind'] == 'true') {
-    localStorage['weeklyAlarmReminder'] = true;
-    chrome.tabs.getSelected(null, function(tab) {
-      chrome.browserAction.setBadgeBackgroundColor({color:'#FF9D05'});
-      chrome.browserAction.setBadgeText({text: '....$'});
-    });
+      localStorage['weeklyAlarmReminder'] = true;
+      //chrome.tabs.getSelected(null, function(tab) {
+      chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
+      chrome.browserAction.setBadgeText({text: '....'});
+      //});
   }
 
 });
 
-// http://stackoverflow.com/questions/4945541/dynamically-deploying-content-scripts-in-chrome-extensions
-// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-//     if(changeInfo.status == "complete" && isInUserList(tab.url)) {
-//         chrome.tabs.executeScript(tabId, {file:"script.js"}, function() {
-//             //script injected
-//         });
-//     }
-// });
-
+window.addEventListener("storage", function(e){
+  // Let the user see their available balance in the browserAction
+  chrome.browserAction.setBadgeBackgroundColor({color:'#dddddd'});
+  if(localStorage['availableBalanceFiat'] == '0'){
+      chrome.browserAction.setBadgeText({text: '0.00'});
+  } else {
+      chrome.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
+  }
+  // If weekly reminder active, then show the [....] flag.
+  if (localStorage['manualRemind'] == 'true' && localStorage['weeklyAlarmReminder'] == 'true'){
+      chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
+      chrome.browserAction.setBadgeText({text: '....'});
+  }
+}, false);
 
 function checkIdleTime(newState) {
   console.log("Checking idle behaviour " + newState);
@@ -55,6 +61,7 @@ function checkIdleTime(newState) {
 }
 
 function updateTimeOnPage() {
+
   if (localStorage["paused"] == "true") {
     currentSite = null;
     return;
@@ -268,7 +275,7 @@ chrome.runtime.onMessage.addListener(
                 } else {
                     chrome.browserAction.setBadgeText({text: request.bitcoinAddress.substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 }
-                chrome.browserAction.setIcon({path: './assets/images/icon_found_btc.png', tabId: tab.id});
+                chrome.browserAction.setIcon({path: './assets/images/heart48x48.png', tabId: tab.id});
             });
         }
     }

@@ -93,6 +93,20 @@ function subscriptionSwitchCell(record) {
     return cell;
 }
 
+function subscriptionEmptyRow(domId){
+    var tbody = $('#' + domId);
+    var row = document.createElement("tr");
+    var cell = document.createElement("td");
+    cell.setAttribute("colspan",4);
+
+    var text = document.createTextNode('Your subscriptions will be collected here.');
+    cell.appendChild(text);
+
+    row.appendChild(cell);
+    return row;
+}
+
+
 function buildRow(record) {
     var row = document.createElement("tr");
 
@@ -116,18 +130,48 @@ function subscriptionTotalFiatAmount(domIdOutput) {
 }
 
 function buildTable(domId) {
-    var table = document.getElementById(domId);
-
-    var tbody = document.createElement("tbody");
-    table.appendChild(tbody);
+    var tbody = $('#' + domId);
+    tbody.empty();
 
     db.values('subscriptions').done(function(records) {
-        for (var i in records) {
-            tbody.appendChild(buildRow(records[i]));
-        };
+        if(records.length > 0) {
+            for (var i in records) {
+                tbody.append(buildRow(records[i]));
+            }
+        } else {
+            tbody.append(subscriptionEmptyRow());
+        }
     });
 }
-
+//
+// function buildTable(domId) {
+//
+//     // debugger;
+//     // var tbody = $('#' + domId);
+//     // tbody.empty();
+//     // var tbody = document.getElementById(domId);
+//     // while (tbody.hasChildNodes()) {
+//     //     tbody.removeChild(tbody.lastChild);
+//     // }
+//
+//     var table = document.getElementById(domId);
+//
+//     var tbody = document.createElement("tbody");
+//     table.appendChild(tbody);
+//     // debugger;
+//     // $(table).firstChild.empty();
+//
+//     db.values('subscriptions').done(function(records) {
+//         if(records.length > 0) {
+//             for (var i in records) {
+//                 tbody.appendChild(buildRow(records[i]));
+//             }
+//         } else {
+//             tbody.appendChild(subscriptionEmptyRow());
+//         }
+//     });
+// }
+//
 function manualSubscription() {
     db.put('subscriptions', {
         amountFiat: $('#manual-amount-fiat').val(),
@@ -137,7 +181,17 @@ function manualSubscription() {
     });
 }
 
-function initialize() {
+function proTipSubscription() {
+    db.put('subscriptions', {
+        amountFiat: $('#protip-amount-fiat').val(),
+        bitcoinAddress: $('#protip-bitcoin-address').val(),
+        title: $('#protip-label').val(),
+        url: $('#protip-url').val()
+    });
+    $('#protip-subscription-form').slideUp();
+}
+
+$(function() {
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
@@ -146,20 +200,39 @@ function initialize() {
 
     updateFiatCurrencyCode();
 
-    buildTable('subscription-table');
+    buildTable('subscription-tbody'); //('subscription-table');
 
     subscriptionTotalFiatAmount('subscriptionTotalAmount');
 
-    //$('#subscriptionTotalAmount').html(subscriptionTotalAmount());
+    $.validator.setDefaults({
+        submitHandler: function() {
+            manualSubscription();
+            buildTable('subscription-tbody'); //('subscription-table');
+        }
+    });
+    $("#manual-subscription-form").validate();
 
-    $('#manual-subscribe-btn').click(function() {
-        manualSubscription();
+    // $('#manual-subscribe-btn').click(function() {
+    //     manualSubscription();
+    // });
+
+    if (typeof localStorage['showProTipSubscription'] === "undefined") {
+        localStorage['showProTipSubscription'] = true;
+    }
+
+    $('#hideProTipSubscription').click(function() {
+       localStorage['showProTipSubscription'] = false;
+       $('#protip-subscription-form').fadeOut().slideUp();
     });
 
+    if(localStorage['showProTipSubscription'] == 'true'){
+        $('#protip-subscription-form').show();
+    }
+
+    $('#protip-subscribe-btn').click(function() {
+        proTipSubscription();
+        localStorage['showProTipSubscription'] = false;
+        //$('#protip-subscription-form').fadeOut().slideUp();
+    });
     allowExternalLinks();
-
-}
-
-$(function() {
-    initialize();
 });

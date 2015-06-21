@@ -116,6 +116,7 @@ function browseIgnoreCell(record) {
             color: '#fc0;'
         }, 1000);
     }
+    cell.style.textAlign = 'center';
     cell.appendChild(removeIcon);
     return cell;
 }
@@ -125,6 +126,7 @@ function browseAmountCell(record) {
 
     var slice = (record.timeOnPage / localStorage['totalTime']).toFixed(2);
     var amountMoney = (slice * incidentalAmount).toFixed(2);
+    if(!amountMoney){amountMoney = '0.00'}
     var text = document.createTextNode(amountMoney);
 
     var cell = document.createElement("td");
@@ -133,77 +135,14 @@ function browseAmountCell(record) {
     return cell;
 }
 
-function progressBarCell(record) {
-    var incidentalAmount = parseFloat(localStorage["incidentalTotalFiat"]);
-
-    var slice = (record.timeOnPage / localStorage['totalTime']).toFixed(2);
-    var amountMoney = (slice * incidentalAmount).toFixed(2);
-    var text = document.createTextNode(amountMoney);
-
+function timeAmountCell(record) {
+    var min = parseInt(record.timeOnPage) / 60;
+    var text = document.createTextNode(min.toFixed(1));
     var cell = document.createElement("td");
-
-    var progress = document.createElement('div');
-    progress.className = 'progress';
-    var progressBar = document.createElement('div');
-    progressBar.className = 'progress-bar';
-
-    var priceCupCoffee = localStorage['priceOfCoffee'];
-    // progress bar is three cups of coffee wide, so divide by three
-    var numberOfCupsCoffeeInProgressBar = 2;
-    var percentOfCupCoffee = (((amountMoney / priceCupCoffee) / numberOfCupsCoffeeInProgressBar) * 100).toFixed(2)
-    progressBar.style.width = percentOfCupCoffee + '%';
-
-    progress.appendChild(progressBar);
-    cell = document.createElement("td");
-    cell.appendChild(progress);
-
+    cell.className = 'time-on-page';
+    cell.appendChild(text);
+    cell.style.textAlign = 'center';
     return cell;
-}
-
-function createTotalCoffeeCupProgressBar(domId) {
-    var totalAmountProgressBar = $('#' + domId);
-    totalAmountProgressBar.empty();
-    progress = document.createElement('div');
-    progress.className = 'progress';
-    progress.style.width = '47px';
-    progressBar = document.createElement('div');
-    progressBar.className = 'progress-bar';
-
-    //amountMoney = parseFloat(localStorage["totalAmount"]).toFixed(2);
-    amountMoney = parseFloat($('#total-fiat-amount').html()).toFixed(2);
-
-    priceCupCoffee = localStorage['priceOfCoffee'];
-    //priceCupCoffee = 1.95;
-    // progress bar is nine cups of coffee wide, so divide by nine.
-    numberOfCupsCoffeeInProgressBar = 2;
-    percentOfCupCoffee = (((amountMoney / priceCupCoffee) / numberOfCupsCoffeeInProgressBar) * 100).toFixed(2)
-    progressBar.style.width = percentOfCupCoffee + '%';
-
-    progress.appendChild(progressBar);
-    totalAmountProgressBar.append(progress);
-}
-
-function refreshTotalCoffeeCupProgressBar(domId) {
-    totalAmountProgressBar = $('#' + domId);
-    totalAmountProgressBar.empty();
-    // redraw
-    progress = document.createElement('div');
-    progress.className = 'progress';
-    progress.style.width = '47px';
-    progressBar = document.createElement('div');
-    progressBar.className = 'progress-bar';
-
-    //amountMoney = parseFloat(localStorage["totalAmount"]).toFixed(2);
-    amountMoney = parseFloat($('#total-fiat-amount').html()).toFixed(2);
-
-    priceCupCoffee = localStorage['priceOfCoffee']; //1.95;
-    // progress bar is two cups of coffee wide, so divide by two.
-    numberOfCupsCoffeeInProgressBar = 2;
-    percentOfCupCoffee = (((amountMoney / priceCupCoffee) / numberOfCupsCoffeeInProgressBar) * 100).toFixed(2)
-    progressBar.style.width = percentOfCupCoffee + '%';
-
-    progress.appendChild(progressBar);
-    totalAmountProgressBar.append(progress);
 }
 
 function buildRow(record) {
@@ -211,12 +150,26 @@ function buildRow(record) {
 
     row.appendChild(subscriptionSwitchCell(record));
     row.appendChild(browseLabelCell(record));
+    row.appendChild(timeAmountCell(record));
     row.appendChild(browseAmountCell(record));
     // row.appendChild(progressBarCell(record));
     row.appendChild(subscriptionBitcoinAddressCell(record));
     row.appendChild(browseIgnoreCell(record));
 
     return row;
+}
+
+function showEmptyTableNotice(domId){
+  var tbody = $('#' + domId);
+  var row = document.createElement("tr");
+  var cell = document.createElement("td");
+  cell.setAttribute("colspan",5);
+
+  var text = document.createTextNode('Sites containing Bitcoin addresses will be collected here.');
+  cell.appendChild(text);
+
+  row.appendChild(cell);
+  tbody.append(row);
 }
 
 function buildBrowsingTable(domId) {
@@ -247,6 +200,9 @@ function buildBrowsingTable(domId) {
     });
 
     db.from('sites').order('timeOnPage').reverse().list(10).done(function(records) {
+        if(records.length < 1){
+            showEmptyTableNotice('browsing-table');
+        }
         for (var i in records) {
             tbody.append(buildRow(records[i]));
         }
