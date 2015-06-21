@@ -68,7 +68,7 @@ function initCurrentWeek() {
         var daysRemaining = daysTillEndOfWeek(endOfWeek);
 
         var remindInfo = document.createElement('div');
-        remindInfo.style.float = 'right';
+        remindInfo.style.float = 'left';
         remindInfo.style.padding = '4px';
 
         if (localStorage['automaticDonate'] == 'true') {
