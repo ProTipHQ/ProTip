@@ -137,10 +137,8 @@ function initBitcoinWallet(){
     }
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
-        if(balance == '0'){ $('#buy-bitcoins-info').show() }
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
-            //setBudgetWidget(results[0], results[1]);
         });
     });
     setupWallet();
@@ -152,7 +150,6 @@ function initBitcoinWallet(){
         }
         $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-
 
         if (balance > 0) {
             currencyManager.formatAmount(balance).then(function(formattedMoney) {
@@ -251,10 +248,6 @@ $(function() {
         $('#automaticDonate').prop('checked', true)
     }
 
-    // if (typeof localStorage['showBitcoinArtists'] === "undefined") {
-    //     localStorage['showBitcoinArtists'] = true;
-    // }
-
     if (localStorage['showBitcoinArtists'] == 'true') {
         $('#show-bitcoin-artists').show();
     }
@@ -264,9 +257,5 @@ $(function() {
     } else {
         $('#manual-remind-info').show();
     }
-
-    // $('#show-bitcoin-artists-close').click(function() {
-    //     localStorage['showBitcoinArtists'] = false;
-    // });
 
 });

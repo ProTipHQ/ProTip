@@ -102,10 +102,8 @@ function setupWalletBalance(){
 
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
-        if(balance == '0'){ $('#buy-bitcoins-info').show() }
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
-            //debugger;
             setBudgetWidget(results[0], results[1]);
         });
     });
@@ -161,12 +159,6 @@ $(function() {
     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
-
-
-    // if(!localStorage['showArtistPanel']){localStorage['showArtistPanel'] = true}
-    // if(localStorage['showArtistPanel'] == 'true'){
-    //   $('#artist-panel').show();
-    // }
 
     $( "#slider" ).slider({
         range: "max",
@@ -274,17 +266,13 @@ $(function() {
         $('#show-bitcoin-artists').show();
     }
 
-    // $('#show-bitcoin-artists-close').click(function() {
-    //     localStorage['showBitcoinArtists'] = false;
-    // });
-
     $('#hideBitcoinArtists').click(function() {
        localStorage['showBitcoinArtists'] = false;
        $('#show-bitcoin-artists').fadeOut();
     });
 
     $('#toggle-alarm').click(function() {
-        doToggleAlarm();
+        window.alarmManager.doToggleAlarm();
         restartTheWeek();
     });
 

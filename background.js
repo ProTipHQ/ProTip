@@ -19,7 +19,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
       ]).then(function(){
           paymentManager.payAll();
           localStorage['weeklyAlarmReminder'] = false;
-          doToggleAlarm();
+          window.alarmManager.doToggleAlarm();
           //chrome.tabs.getSelected(null, function(tab) {
           chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'}) //, tabId: tab.id});
           chrome.browserAction.setBadgeText({text: 'Sent!'}) //', tabId: tab.id});

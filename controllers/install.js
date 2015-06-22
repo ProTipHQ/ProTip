@@ -156,7 +156,8 @@ $(document).ready(function() {
         localStorage['proTipInstalled'] = true;
     });
 
-    doToggleAlarm();
+    // Start the clock running.
+    window.alarmManager.doToggleAlarm();
     restartTheWeek();
 
     /*

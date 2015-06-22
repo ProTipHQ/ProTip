@@ -112,7 +112,6 @@ $(document).ready(function() {
     }
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
-        if(balance == '0'){ $('#buy-bitcoins-info').show() }
         Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
             localStorage['availableBalanceFiat'] = results[0];
             //setBudgetWidget(results[0], results[1]);
@@ -729,11 +728,6 @@ $(document).ready(function() {
         }
         return canvas;
     }
-
-    // $('#toggle-alarm').click(function() {
-    //     doToggleAlarm();
-    //     restartTheWeek();
-    // });
 
     $('#incidental-fiat-amount').change(function() {
         localStorage['incidentalTotalFiat'] = $(this).val();

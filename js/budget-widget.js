@@ -12,7 +12,6 @@ function totalSubscriptionsFiatAmount() {
 
 function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
     initFiatCurrency();
-    //initPriceOfCoffee();
     initDefaultSubscriptionAmountFiat();
     localStorage['bitcoinFeeFiat'] = bitcoinFeeFiat;
     totalSubscriptionsFiatAmount().then(function(totalSubscriptionFiat) {
@@ -23,7 +22,6 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
             var incidentalTotalFiat = setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
             var weeklyTotalFiat = setWeeklyTotalFiat(incidentalTotalFiat, availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
 
-            //initBootstrapSlider(weeklyTotalFiat);
             if (weeklyTotalFiat > 0) {
                 var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
                 if (balanceCoversXWeeks < 0) {
@@ -34,7 +32,6 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
                 // bypass divide by zero error from wallet with 0 balance
                 $('#balance-covers-weeks').html(0);
             }
-            //createTotalCoffeeCupProgressBar('total-amount-progress-bar');
 
         })(totalSubscriptionFiat, availableBalanceFiat, bitcoinFeeFiat)
     });
@@ -82,13 +79,6 @@ function initFiatCurrency() {
         localStorage["fiatCurrencyCode"] = "USD";
     }
 }
-
-// function initPriceOfCoffee() {
-//     if (!localStorage["priceOfCoffee"]) {
-//         localStorage["priceOfCoffee"] = 1.95;
-//     }
-//     $('#price-of-coffee').html(localStorage["priceOfCoffee"]);
-// }
 
 function initDefaultSubscriptionAmountFiat() {
     if (!localStorage['defaultSubscriptionAmountFiat']) {
