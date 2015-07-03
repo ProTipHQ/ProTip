@@ -5,7 +5,7 @@ function initialize() {
     initCurrentWeek();
 }
 
-function daysTillEndOWeek(endOfWeek) {
+function daysTillEndOfWeek(endOfWeek) {
     var now = (new Date).getTime();
     var milliseconds = endOfWeek - now;
     return millisecondsToDays(milliseconds)
@@ -22,7 +22,7 @@ function initCurrentWeek() {
 
         var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
 
-        var daysRemaining = daysTillEndOWeek(endOfWeek)
+        var daysRemaining = daysTillEndOfWeek(endOfWeek)
 
         $('#days-till-end-of-week').html(daysRemaining);
 
@@ -45,7 +45,7 @@ function restartTheWeek() {
 
     var endOfWeek = new Date(alarm);
 
-    var daysRemaining = daysTillEndOWeek(endOfWeek);
+    var daysRemaining = daysTillEndOfWeek(endOfWeek);
 
     localStorage['endOfWeek'] = alarm;
 
@@ -395,13 +395,13 @@ $(document).ready(function() {
         });
     }
 
-    $('#confirm-donate-now').click(function() {
-        localStorage['weeklyAlarmReminder'] = false;
-        chrome.browserAction.setBadgeText({
-            text: ''
-        });
-        makePayments();
-    });
+    // $('#confirm-donate-now').click(function() {
+    //     localStorage['weeklyAlarmReminder'] = false;
+    //     chrome.browserAction.setBadgeText({
+    //         text: ''
+    //     });
+    //     makePayments();
+    // });
 
     /*
      *  Settings Menu
@@ -729,77 +729,77 @@ $(document).ready(function() {
         return canvas;
     }
 
-    $('#incidental-fiat-amount').change(function() {
-        localStorage['incidentalTotalFiat'] = $(this).val();
-        var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
-        var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
-        var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
-        var incidentalTotalFiat = parseFloat($(this).val());
+    // $('#incidental-fiat-amount').change(function() {
+    //     localStorage['incidentalTotalFiat'] = $(this).val();
+    //     var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
+    //     var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
+    //     var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
+    //     var incidentalTotalFiat = parseFloat($(this).val());
+    //
+    //     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
+    //     // if (availableBalanceFiat > 0 && weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat) {
+    //     //     weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
+    //     //     $(this).attr('max', incidentalTotalFiat);
+    //     // }
+    //     var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
+    //     if (balanceCoversXWeeks < 0) {
+    //         balanceCoversXWeeks = 0
+    //     } // initalization with empty wallet.
+    //
+    //     $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
+    //     $('#balance-covers-weeks').effect("highlight", {
+    //         color: 'rgb(100, 189, 99)'
+    //     }, 400);
+    //
+    //     $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
+    //     $( "#slider" ).slider({value: $(this).val() });
+    //     //refreshTotalCoffeeCupProgressBar('total-amount-progress-bar');
+    // });
 
-        var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-        // if (availableBalanceFiat > 0 && weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat) {
-        //     weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
-        //     $(this).attr('max', incidentalTotalFiat);
-        // }
-        var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
-        if (balanceCoversXWeeks < 0) {
-            balanceCoversXWeeks = 0
-        } // initalization with empty wallet.
+    // $("input[name=remind-me]:radio").change(function(value) {
+    //     if (this.value == 'automaticDonate') {
+    //         $('#automatic-donate-container').toggleClass('list-group-item-success');
+    //         $('#manual-remind-container').toggleClass('list-group-item-success');
+    //         localStorage['automaticDonate'] = true;
+    //         localStorage['manualRemind'] = false;
+    //     } else {
+    //         $('#automatic-donate-container').toggleClass('list-group-item-success');
+    //         $('#manual-remind-container').toggleClass('list-group-item-success');
+    //         localStorage['automaticDonate'] = false;
+    //         localStorage['manualRemind'] = true;
+    //     }
+    // });
 
-        $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
-        $('#balance-covers-weeks').effect("highlight", {
-            color: 'rgb(100, 189, 99)'
-        }, 400);
+    // $('#confirm-donate-now').click(function() {
+    //     //$(this).button('loading');
+    //     restartTheWeek();
+    //     //db.clear('sites');
+    //     $('#confirm-donate-now').button('reset')
+    //     $('#browsing-table').fadeOut();
+    //     $('#browsing-table').empty();
+    //     $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+    // });
 
-        $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
-        $( "#slider" ).slider({value: $(this).val() });
-        //refreshTotalCoffeeCupProgressBar('total-amount-progress-bar');
-    });
+    // $('#donate-now').click(function() {
+    //     var totalFiatAmount = parseFloat($('#total-fiat-amount').html());
+    //     var currentBalance = parseFloat(localStorage['availableBalanceFiat']);
+    //     if (totalFiatAmount > currentBalance) {
+    //         $('#insufficient-funds-dialogue').slideDown().fadeIn();
+    //     } else {
+    //         $('#confirm-donate-now-dialogue').slideDown().fadeIn();
+    //     }
+    // });
 
-    $("input[name=remind-me]:radio").change(function(value) {
-        if (this.value == 'automaticDonate') {
-            $('#automatic-donate-container').toggleClass('list-group-item-success');
-            $('#manual-remind-container').toggleClass('list-group-item-success');
-            localStorage['automaticDonate'] = true;
-            localStorage['manualRemind'] = false;
-        } else {
-            $('#automatic-donate-container').toggleClass('list-group-item-success');
-            $('#manual-remind-container').toggleClass('list-group-item-success');
-            localStorage['automaticDonate'] = false;
-            localStorage['manualRemind'] = true;
-        }
-    });
-
-    $('#confirm-donate-now').click(function() {
-        //$(this).button('loading');
-        restartTheWeek();
-        //db.clear('sites');
-        $('#confirm-donate-now').button('reset')
-        $('#browsing-table').fadeOut();
-        $('#browsing-table').empty();
-        $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-    });
-
-    $('#donate-now').click(function() {
-        var totalFiatAmount = parseFloat($('#total-fiat-amount').html());
-        var currentBalance = parseFloat(localStorage['availableBalanceFiat']);
-        if (totalFiatAmount > currentBalance) {
-            $('#insufficient-funds-dialogue').slideDown().fadeIn();
-        } else {
-            $('#confirm-donate-now-dialogue').slideDown().fadeIn();
-        }
-    });
-
-    $('#confirm-donate-cancel').click(function() {
-        $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-    });
-
-    $("#reset-manual-timer").click(function() {
-        restartTheWeek()
-    });
-    $("#reset-automatic-timer").click(function() {
-        restartTheWeek()
-    });
+    // $('#confirm-donate-cancel').click(function() {
+    //     $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+    // });
+    //
+    // $("#reset-manual-timer").click(function() {
+    //     restartTheWeek()
+    // });
+    // $("#reset-automatic-timer").click(function() {
+    //     restartTheWeek()
+    // });
 
 
 });

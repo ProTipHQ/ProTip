@@ -31,6 +31,13 @@ function browseLabelCell(record) {
     return cell;
 }
 
+function addToBlacklist(url) {
+    db.put('blacklist', {
+        url: url
+    });
+    db.remove('sites', url);
+}
+
 function subscriptionAmountCell(record) {
     var input = document.createElement("input");
     input.type = "number";

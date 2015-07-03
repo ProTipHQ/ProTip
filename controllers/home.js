@@ -1,79 +1,79 @@
-function addToBlacklist(url) {
-    db.put('blacklist', {
-        url: url
-    });
-    db.remove('sites', url);
-}
+// function addToBlacklist(url) {
+//     db.put('blacklist', {
+//         url: url
+//     });
+//     db.remove('sites', url);
+// }
 
-function clearBrowsingHistory() {
-    $('#browsing-table').fadeOut();
-    $('#browsing-table').empty();
-    db.clear('sites');
-}
+// function clearBrowsingHistory() {
+//     $('#browsing-table').fadeOut();
+//     $('#browsing-table').empty();
+//     db.clear('sites');
+// }
 
-function daysTillEndOWeek(endOfWeek) {
-    var now = (new Date).getTime();
-    var milliseconds = endOfWeek - now;
-    return millisecondsToDays(milliseconds)
-}
-
-function restartTheWeek() {
-    var now = (new Date).getTime();
-    var milliSecondsInWeek = 604800000;
-    var extraHour = 3600000; // add an hour to help the UI design.
-
-    var alarm = now + milliSecondsInWeek + extraHour;
-
-    var endOfWeek = new Date(alarm);
-
-    var daysRemaining = daysTillEndOWeek(endOfWeek);
-
-    localStorage['endOfWeek'] = alarm;
-
-    $('#days-till-end-of-week').html(daysRemaining);
-    $('#days-till-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-
-    $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-    $('#date-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-
-    $('#donate-now-reminder').fadeOut();
-}
-
-function millisecondsToDays(milliseconds) {
-    var seconds = Math.floor(milliseconds / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    return days;
-}
-
-function initCurrentWeek() {
-    var now = (new Date).getTime();
-    if (parseInt(localStorage['endOfWeek']) > now) {
-        // All okay, all variables set,
-        var milliSecondsInWeek = 604800000;
-        var extraHour = 3600000; // add an hour to help the UI design.
-
-        var alarm = now + milliSecondsInWeek + extraHour
-
-        var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
-
-        var daysRemaining = daysTillEndOWeek(endOfWeek)
-
-        $('#days-till-end-of-week').html(daysRemaining);
-
-        $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-
-    } else {
-        // Catch any missing variables and other rubbish, just restart.
-        // Good for initalization on first load.
-        restartTheWeek();
-    }
-}
+// function daysTillEndOWeek(endOfWeek) {
+//     var now = (new Date).getTime();
+//     var milliseconds = endOfWeek - now;
+//     return millisecondsToDays(milliseconds)
+// }
+//
+// function restartTheWeek() {
+//     var now = (new Date).getTime();
+//     var milliSecondsInWeek = 604800000;
+//     var extraHour = 3600000; // add an hour to help the UI design.
+//
+//     var alarm = now + milliSecondsInWeek + extraHour;
+//
+//     var endOfWeek = new Date(alarm);
+//
+//     var daysRemaining = daysTillEndOWeek(endOfWeek);
+//
+//     localStorage['endOfWeek'] = alarm;
+//
+//     $('#days-till-end-of-week').html(daysRemaining);
+//     $('#days-till-end-of-week').effect("highlight", {
+//         color: 'rgb(100, 189, 99)'
+//     }, 1000);
+//
+//     $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+//     $('#date-end-of-week').effect("highlight", {
+//         color: 'rgb(100, 189, 99)'
+//     }, 1000);
+//
+//     $('#donate-now-reminder').fadeOut();
+// }
+//
+// function millisecondsToDays(milliseconds) {
+//     var seconds = Math.floor(milliseconds / 1000);
+//     var minutes = Math.floor(seconds / 60);
+//     var hours = Math.floor(minutes / 60);
+//     var days = Math.floor(hours / 24);
+//     return days;
+// }
+//
+// function initCurrentWeek() {
+//     var now = (new Date).getTime();
+//     if (parseInt(localStorage['endOfWeek']) > now) {
+//         // All okay, all variables set,
+//         var milliSecondsInWeek = 604800000;
+//         var extraHour = 3600000; // add an hour to help the UI design.
+//
+//         var alarm = now + milliSecondsInWeek + extraHour
+//
+//         var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
+//
+//         var daysRemaining = daysTillEndOWeek(endOfWeek)
+//
+//         $('#days-till-end-of-week').html(daysRemaining);
+//
+//         $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+//
+//     } else {
+//         // Catch any missing variables and other rubbish, just restart.
+//         // Good for initalization on first load.
+//         restartTheWeek();
+//     }
+// }
 
 function setupWallet() {
     wallet.restoreAddress().then(setQRCodes,
@@ -215,10 +215,11 @@ $(function() {
     });
 
     $('#confirm-donate-now').click(function() {
-        //$(this).button('loading');
+        $('#donate-now').button('loading');
+        $('#notice-dialogue').hide();
         restartTheWeek();
-        //db.clear('sites');
-        $('#confirm-donate-now').button('reset')
+        db.clear('sites');
+
         $('#browsing-table').fadeOut();
         $('#browsing-table').empty();
         $('#confirm-donate-now-dialogue').slideUp().fadeOut();
@@ -277,6 +278,8 @@ $(function() {
     });
 
     $("#clear-data").click(function() {
-        clearBrowsingHistory();
+      $('#browsing-table').fadeOut();
+      $('#browsing-table').empty();
+      db.clear('sites');
     });
 });

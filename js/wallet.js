@@ -243,12 +243,38 @@
         });
     };
 
+    // function compileOutputs(unspent_response_json, decryptedPrivateKey, txOutputs){
+    //     var inputs = unspent_response_json.unspent_outputs;
+    //     var selectedOuts = [];
+    //     var eckey = new Bitcoin.ECKey(decryptedPrivateKey);
+    //     // Total cost is amount plus fee
+    //     var totalAmount = 0;
+    //     for (i = 0; i < txOutputs.length; i++) {
+    //         totalAmount += parseInt(txOutputs[i].txSatoshis);
+    //     }
+    //     var totalInt = Number(totalAmount) + Number(fee);
+    //     var txValue = new BigInteger('' + totalInt, 10);
+    //     availableValue = BigInteger.ZERO;
+    //     // Gather enough inputs so that their value is greater than or equal to the total cost
+    //     for (var i = 0; i < inputs.length; i++) {
+    //         selectedOuts.push(inputs[i]);
+    //         availableValue = availableValue.add(new BigInteger('' + inputs[i].value, 10));
+    //         if (availableValue.compareTo(txValue) >= 0) break;
+    //     }
+    //     return { availableValue: availableValue, selectedOuts; selectedOuts }
+    // }
+
     wallet.prototype.mulitpleOutputsSend = function (txOutputs, fee, password) {
         return new Promise(function (resolve, reject) {
             var decryptedPrivateKey = ret.getDecryptedPrivateKey(password);
             if (decryptedPrivateKey) {
                 // Get all unspent outputs from blockchain.info to generate our inputs
                 util.getJSON('https://blockchain.info/unspent?address=' + address).then(function (json) {
+                    if(typeof json.notice !== "undefined"){
+                        $('#notice').html(json.notice);
+                        $('#notice-dialogue').show();
+                        $('#donate-now').button('reset')
+                    }
                     var inputs = json.unspent_outputs;
                     var selectedOuts = [];
                     var eckey = new Bitcoin.ECKey(decryptedPrivateKey);
@@ -266,6 +292,7 @@
                         availableValue = availableValue.add(new BigInteger('' + inputs[i].value, 10));
                         if (availableValue.compareTo(txValue) >= 0) break;
                     }
+                    //var availableValue = compileOutputs(unspent_response_json, decryptedPrivateKey, txOutputs);
 
                     // If there aren't enough unspent outputs to available then we can't send the transaction
                     if (availableValue.compareTo(txValue) < 0) {
@@ -312,16 +339,37 @@
                         }
                         // Push the transaction to blockchain.info
                         var data = 'tx=' + Crypto.util.bytesToHex(sendTx.serialize());
-                        util.post('https://blockchain.info/pushtx', data).then(function (foo) {
+                        util.post('https://blockchain.info/pushtx', data).then(function (response) {
                             // Notify the balance listener of the changed amount immediately,
                             // but don't set the balance since the transaction will be processed by the websocket
-                            if (balanceListener) balanceListener(balance - amount - fee);
-                            resolve();
-                        }, function () {
+                            $('#notice').html(response);
+                            $('#notice-dialogue').show();
+                            $('#donate-now').button('reset');
+                            if (response.trim() != 'Transaction Submitted'){
+                                console.log(response);
+                                $('#payment-error').html(response); // this is wrong and breaks encapulation. Need to fix.
+                                $('#payment-error').slideDown();
+                            } else {
+                                $('#transaction-submitted').html(response);
+                                $('#payment-error').slideDown();
+                            }
+                            try {
+                                if (balanceListener) balanceListener(balance - amount - fee);
+                            } catch(err) {}
+                            resolve(response);
+                        }, function (response) {
+                            $('#notice').html(response.response);
+                            $('#notice-dialogue').show();
+                            $('#donate-now').button('reset');
+
                             reject(Error('Unknown error'));
                         });
                     }
-                }, function () {
+                }, function (response) {
+                    $('#notice').html(response.response);
+                    $('#notice-dialogue').show();
+                    $('#donate-now').button('reset');
+
                     reject(Error('Unknown error'));
                 });
             } else {

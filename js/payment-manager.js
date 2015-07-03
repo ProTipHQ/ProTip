@@ -187,7 +187,7 @@
                         console.log('---Automatic Payments ---');
                         console.log(paymentObjs);
                         console.log('-------------------------');
-                        db.clear('sites');
+                        //db.clear('sites');
                         resolve();
                         //return paymentObjs;
                     });
