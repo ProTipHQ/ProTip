@@ -17,13 +17,19 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
           preferences.setCurrency(localStorage['fiatCurrencyCode']),
           wallet.restoreAddress()
       ]).then(function(){
-          paymentManager.payAll();
-          localStorage['weeklyAlarmReminder'] = false;
-          //window.alarmManager.doToggleAlarm();
-          //chrome.tabs.getSelected(null, function(tab) {
-          chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'}); //, tabId: tab.id});
-          chrome.browserAction.setBadgeText({text: 'Sent!'}); //', tabId: tab.id});
-          //});
+          paymentManager.payAll().then(function(response){
+            localStorage['weeklyAlarmReminder'] = false;
+
+            // REMEMBER TO UNCOMMENT FOR RELEASE
+            // TESTING ONLY
+            //window.alarmManager.doToggleAlarm();
+
+
+            //chrome.tabs.getSelected(null, function(tab) {
+            chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'}); //, tabId: tab.id});
+            chrome.browserAction.setBadgeText({text: 'Sent!'}); //', tabId: tab.id});
+            //});
+          });
       });
   } else if (localStorage['manualRemind'] == 'true') {
       localStorage['weeklyAlarmReminder'] = true;

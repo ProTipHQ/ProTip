@@ -218,7 +218,7 @@ $(function() {
         $('#donate-now').button('loading');
         $('#notice-dialogue').hide();
         restartTheWeek();
-        db.clear('sites');
+        //db.clear('sites');
 
         $('#browsing-table').fadeOut();
         $('#browsing-table').empty();

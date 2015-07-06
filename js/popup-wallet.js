@@ -78,11 +78,13 @@ $(document).ready(function() {
             preferences.setCurrency(localStorage['fiatCurrencyCode']),
             //wallet.restoreAddress()
         ]).then(function() {
-            paymentManager.payAll();
-            localStorage['weeklyAlarmReminder'] = false;
-            $('#payment-history').effect("highlight", {
-                color: 'rgb(100, 189, 99)'
-            }, 4000);
+            paymentManager.payAll().then(function(response){
+                localStorage['weeklyAlarmReminder'] = false;
+                $('#payment-history').effect("highlight", {
+                    color: 'rgb(100, 189, 99)'
+                }, 4000);
+                resolve(response);
+            });
         });
     });
 

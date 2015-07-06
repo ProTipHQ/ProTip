@@ -271,6 +271,7 @@
                 // Get all unspent outputs from blockchain.info to generate our inputs
                 util.getJSON('https://blockchain.info/unspent?address=' + address).then(function (json) {
                     if(typeof json.notice !== "undefined"){
+                        reject(Error(json.notice));
                         $('#notice').html(json.notice);
                         $('#notice-dialogue').show();
                         $('#donate-now').button('reset')
@@ -296,7 +297,11 @@
 
                     // If there aren't enough unspent outputs to available then we can't send the transaction
                     if (availableValue.compareTo(txValue) < 0) {
-                        reject(Error('Insufficient funds'));
+                        if(typeof json.notice !== "undefined"){
+                            reject(Error(json.notice.trim()));
+                        } else {
+                            reject(Error('Insufficient funds'));
+                        }
                     } else {
                         // Create the transaction
                         var sendTx = new Bitcoin.Transaction();
@@ -362,7 +367,7 @@
                             $('#notice-dialogue').show();
                             $('#donate-now').button('reset');
 
-                            reject(Error('Unknown error'));
+                            reject(Error(response.response.trim()));
                         });
                     }
                 }, function (response) {
