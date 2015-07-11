@@ -57,8 +57,8 @@
                 text: ''
             });
             chrome.alarms.create(alarmName, {
-                delayInMinutes: 1 //10080 //0.4
-                //delayInMinutes: 10080, periodInMinutes: 1440}); // in one week, with reminders everyday after.
+                //delayInMinutes: 1 //10080 //0.4
+                delayInMinutes: 10080, periodInMinutes: 720 // in one week, with retrys every 12 hours.
             });
         },
 

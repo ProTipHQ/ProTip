@@ -137,65 +137,71 @@
         //     });
         // },
 
-        storeLastTxId: function() {
-            return new Promise( function(resolve, reject) {
-                util.getJSON('https://blockchain.info/address/' + wallet.getAddress() + '?format=json').then(function (json) {
-                    // sort decending.
-                    var lastTransactionHash = _.last(_.sortBy(json.txs, 'time')).hash;
-                    localStorage['lastTransactionHash'] = lastTransactionHash;
-                    resolve();
-                });
-            });
-        },
+        // storeLastTxId: function() {
+        //     return new Promise( function(resolve, reject) {
+        //         util.getJSON('https://blockchain.info/address/' + wallet.getAddress() + '?format=json').then(function (json) {
+        //             // sort decending.
+        //             var lastTransactionHash = _.last(_.sortBy(json.txs, 'time')).hash;
+        //             localStorage['lastTransactionHash'] = lastTransactionHash;
+        //             resolve();
+        //         });
+        //     });
+        // },
 
 
         payAll: function() {
-            Promise.all([
-                preferences.getExchangeRate(),
-                this.browsing(
-                    localStorage['incidentalTotalFiat'],
-                    localStorage['totalTime'],
-                    localStorage['fiatCurrencyCode']
-                ),
-                this.subscriptions(localStorage['fiatCurrencyCode'])
-            ]).then(function(result) {
-                var exchangeRate = result[0];
-                var browsing = result[1];
-                var subscriptions = result[2];
-                var totalSubscriptionsFiat = this.paymentManager.totalSubscriptionsFiat(subscriptions);
-                var totalIncidentalFiat = this.paymentManager.totalIncidentalFiat(browsing);
+            return new Promise(function(resolve, reject) {
+                Promise.all([
+                    preferences.getExchangeRate(),
+                    ret.browsing(
+                        localStorage['incidentalTotalFiat'],
+                        localStorage['totalTime'],
+                        localStorage['fiatCurrencyCode']
+                    ),
+                    ret.subscriptions(localStorage['fiatCurrencyCode'])
+                ]).then(function(result) {
+                    var exchangeRate = result[0];
+                    var browsing = result[1];
+                    var subscriptions = result[2];
+                    var totalSubscriptionsFiat = ret.totalSubscriptionsFiat(subscriptions);
+                    var totalIncidentalFiat = ret.totalIncidentalFiat(browsing);
 
-                var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
+                    var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
 
-                var totalWeeklyBudgetSatoshis = parseInt(totalFiat / exchangeRate * satoshis);
+                    var totalWeeklyBudgetSatoshis = parseInt(totalFiat / exchangeRate * satoshis);
 
-                var balanceSatoshis = parseInt(wallet.getBalance());
+                    var balanceSatoshis = parseInt(wallet.getBalance());
 
-                if (balanceSatoshis < fee) {
-                    // wallet is effectively empty
-                    console.log('wallet is effectively empty');
-                    return false;
-                } else if ((totalWeeklyBudgetSatoshis + fee) > balanceSatoshis) { // do not exceed current balance.
-                    totalWeeklyBudgetSatoshis = balanceSatoshis - fee; // If insufficent funds just empty the wallet.
-                }
+                    if (balanceSatoshis < fee) {
+                        // wallet is effectively empty
+                        reject(Error('Balance must at least exceed minimum Bitcoin fee.'));
+                        //console.log('wallet is effectively empty');
+                        //return false;
+                    } else if ((totalWeeklyBudgetSatoshis + fee) > balanceSatoshis) { // do not exceed current balance.
+                        totalWeeklyBudgetSatoshis = balanceSatoshis - fee; // If insufficent funds just empty the wallet.
+                    }
 
-                subscriptions = this.paymentManager.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
-                browsing = this.paymentManager.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
-                var paymentObjs = subscriptions.concat(browsing);
-                if (paymentObjs.length > 0) {
-                    wallet.mulitpleOutputsSend(paymentObjs, fee, '').then(function(response) {
-                        console.log('---Automatic Payments ---');
-                        console.log(paymentObjs);
-                        console.log('-------------------------');
-                        //db.clear('sites');
-                        resolve(response);
-                        //return paymentObjs;
-                    });
-                }
+                    subscriptions = ret.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
+                    browsing = ret.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
+                    var paymentObjs = subscriptions.concat(browsing);
+                    if (paymentObjs.length > 0) {
+                        wallet.mulitpleOutputsSend(paymentObjs, fee, '').then(function(response) {
+                            // console.log('---Automatic Payments ---');
+                            // console.log(paymentObjs);
+                            // console.log('-------------------------');
+                            db.clear('sites');
+                            resolve(response);
+                        }, function(response){
+                            reject(Error(response.message));
+                        });
+                    } else {
+                        reject(Error('No browsing history or subscriptions.'));
+                    }
+                });
             });
         }
-
     }
+
     var ret = new paymentManager();
     window.paymentManager = ret;
 

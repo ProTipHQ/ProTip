@@ -5,6 +5,14 @@
 //     db.remove('sites', url);
 // }
 
+function restartCountDown(){
+    var countDownObj = restartTheWeek();
+    $('#days-till-end-of-week').html(countDownObj.daysRemaining);
+    $('#days-till-end-of-week').effect("highlight", {
+        color: 'rgb(100, 189, 99)'
+    }, 1000);
+}
+
 function buildPopupBrowsingTable(domId) {
     var tbody = $('#' + domId);
     tbody.empty();
@@ -200,6 +208,7 @@ $(function() {
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
 
+    // These should be set on the first run page. ????
     if(!localStorage['availableBalanceFiat']){
         localStorage['availableBalanceFiat'] = 0.00;
     }
@@ -212,14 +221,49 @@ $(function() {
     if(!localStorage['incidentalTotalFiat']){
         localStorage['incidentalTotalFiat'] = 0.00
     }
+    /////////
 
     $('#confirm-donate-now').click(function() {
-        restartTheWeek();
+
+        //restartTheWeek();
+        chrome.browserAction.setBadgeText({
+            text: ''
+        });
+
+        Promise.all([
+            preferences.setCurrency(localStorage['fiatCurrencyCode']),
+            //wallet.restoreAddress()
+        ]).then(function() {
+            paymentManager.payAll().then(function(response){
+                localStorage['weeklyAlarmReminder'] = false;
+                $('#notice').html(response);
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+                if (response.trim() != 'Transaction Submitted'){
+                    $('#payment-error').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                    $('#confirm-donate-now-dialogue').fadeOut().slideUp();
+                    restartCountDown();
+                    alarmManager.doToggleAlarm();
+                    initPopupCurrentWeek();
+                } else {
+                    $('#transaction-submitted').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                    $('#browsing-table').fadeOut();
+                    $('#browsing-table').empty();
+                }
+            }, function(error){
+                $('#notice').html(error.message);
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+            });
+        });
+
         //db.clear('sites');
-        $('#confirm-donate-now').button('reset')
-        $('#browsing-table').fadeOut();
-        $('#browsing-table').empty();
-        $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+        // $('#confirm-donate-now').button('reset')
+        // $('#browsing-table').fadeOut();
+        // $('#browsing-table').empty();
+        // $('#confirm-donate-now-dialogue').slideUp().fadeOut();
     });
 
     $('#donate-now').click(function() {

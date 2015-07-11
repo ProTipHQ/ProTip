@@ -75,6 +75,32 @@
 //     }
 // }
 
+
+function initCurrentWeek() {
+    var now = (new Date).getTime();
+    if (parseInt(localStorage['endOfWeek']) > now) {
+        // All okay, all variables set,
+        var milliSecondsInWeek = 604800000;
+        var extraHour = 3600000; // add an hour to help the UI design.
+
+        var alarm = now + milliSecondsInWeek + extraHour
+
+        var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
+
+        var daysRemaining = daysTillEndOfWeek(endOfWeek)
+
+        // $('#days-till-end-of-week').html(daysRemaining);
+        //
+        // $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+
+    } else {
+        // Catch any missing variables and other rubbish, just restart.
+        // Good for initalization on first load.
+        restartTheWeek();
+    }
+    return {endOfWeek: endOfWeek, daysRemaining: daysRemaining}
+}
+
 function setupWallet() {
     wallet.restoreAddress().then(setQRCodes,
         function() {
@@ -136,6 +162,21 @@ function setupWalletBalance(){
     setBalance();
 }
 
+function restartCountDown(){
+    var countDownObj = restartTheWeek();
+    $('#days-till-end-of-week').html(countDownObj.daysRemaining);
+    $('#days-till-end-of-week').effect("highlight", {
+        color: 'rgb(100, 189, 99)'
+    }, 1000);
+
+    $('#date-end-of-week').html(countDownObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+    $('#date-end-of-week').effect("highlight", {
+        color: 'rgb(100, 189, 99)'
+    }, 1000);
+
+    $('#donate-now-reminder').fadeOut();
+}
+
 $(function() {
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
@@ -145,9 +186,46 @@ $(function() {
 
     updateFiatCurrencyCode();
     allowExternalLinks();
-    initCurrentWeek();
+
+    var currentWeekObj = initCurrentWeek();
+    $('#days-till-end-of-week').html(currentWeekObj.daysRemaining);
+    $('#date-end-of-week').html(currentWeekObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+
     setupWalletBalance();
     buildBrowsingTable('browsing-table');
+
+    $('#confirm-donate-now').click(function() {
+        //localStorage['weeklyAlarmReminder'] = false;
+        chrome.browserAction.setBadgeText({
+            text: ''
+        });
+
+        Promise.all([
+            preferences.setCurrency(localStorage['fiatCurrencyCode']),
+            //wallet.restoreAddress()
+        ]).then(function() {
+            paymentManager.payAll().then(function(response){
+                localStorage['weeklyAlarmReminder'] = false;
+                $('#payment-history').effect("highlight", {
+                    color: 'rgb(100, 189, 99)'
+                }, 4000);
+                $('#notice').html(response);
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+                if (response.trim() != 'Transaction Submitted'){
+                    $('#payment-error').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                } else {
+                    $('#transaction-submitted').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                }
+            }, function(response){
+                $('#notice').html(response);
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+            });
+        });
+    });
 
     $('#dismiss-manual-reminder-popover').click(function(){
         $('#donate-now-reminder').fadeOut('fast');
@@ -175,16 +253,18 @@ $(function() {
         if (this.value == 'automaticDonate') {
             $('#automatic-donate-container').toggleClass('list-group-item-success');
             $('#manual-remind-container').toggleClass('list-group-item-success');
-            restartTheWeek();
+            //restartTheWeek();
+
             localStorage['automaticDonate'] = true;
             localStorage['manualRemind'] = false;
         } else {
             $('#automatic-donate-container').toggleClass('list-group-item-success');
             $('#manual-remind-container').toggleClass('list-group-item-success');
-            restartTheWeek();
+            //restartTheWeek();
             localStorage['automaticDonate'] = false;
             localStorage['manualRemind'] = true;
         }
+        restartCountDown();
     });
 
     $('#incidental-fiat-amount').change(function() {
@@ -217,8 +297,9 @@ $(function() {
     $('#confirm-donate-now').click(function() {
         $('#donate-now').button('loading');
         $('#notice-dialogue').hide();
-        restartTheWeek();
-        //db.clear('sites');
+        //restartTheWeek();
+        restartCountDown();
+
 
         $('#browsing-table').fadeOut();
         $('#browsing-table').empty();
@@ -274,7 +355,8 @@ $(function() {
 
     $('#toggle-alarm').click(function() {
         window.alarmManager.doToggleAlarm();
-        restartTheWeek();
+        restartCountDown();
+        //restartTheWeek();
     });
 
     $("#clear-data").click(function() {

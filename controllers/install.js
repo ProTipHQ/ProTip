@@ -92,13 +92,13 @@ function initFiatCurrency() {
     });
 }
 
-function updateFiatCurrencyCode() {
-    currencyManager.getSymbol().then(function(symbol){
-        $.each($(".fiat-code"), function(key, element) {
-            element.textContent = symbol[0];
-        });
-    });
-}
+// function updateFiatCurrencyCode() {
+//     currencyManager.getSymbol().then(function(symbol){
+//         $.each($(".fiat-code"), function(key, element) {
+//             element.textContent = symbol[0];
+//         });
+//     });
+// }
 
 function setupWallet() {
     wallet.restoreAddress().then(setAddress,

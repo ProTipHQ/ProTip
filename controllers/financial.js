@@ -1,92 +1,92 @@
-function initialize() {
-    db = new ydn.db.Storage('protip', schema);
-    updateFiatCurrencyCode();
-    allowExternalLinks();
-    initCurrentWeek();
-}
+// function initialize() {
+//     db = new ydn.db.Storage('protip', schema);
+//     updateFiatCurrencyCode();
+//     allowExternalLinks();
+//     initCurrentWeek();
+// }
+// 
+// function daysTillEndOfWeek(endOfWeek) {
+//     var now = (new Date).getTime();
+//     var milliseconds = endOfWeek - now;
+//     return millisecondsToDays(milliseconds)
+// }
+// 
+// function initCurrentWeek() {
+//     var now = (new Date).getTime();
+//     if (parseInt(localStorage['endOfWeek']) > now) {
+//         // All okay, all variables set,
+//         var milliSecondsInWeek = 604800000;
+//         var extraHour = 3600000; // add an hour to help the UI design.
+// 
+//         var alarm = now + milliSecondsInWeek + extraHour
+// 
+//         var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
+// 
+//         var daysRemaining = daysTillEndOfWeek(endOfWeek)
+// 
+//         $('#days-till-end-of-week').html(daysRemaining);
+// 
+//         $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+// 
+//     } else {
+//         // Catch any missing variables and other rubbish, just restart.
+//         // Good for initalization on first load.
+//         restartTheWeek();
+//     }
+// }
 
-function daysTillEndOfWeek(endOfWeek) {
-    var now = (new Date).getTime();
-    var milliseconds = endOfWeek - now;
-    return millisecondsToDays(milliseconds)
-}
 
-function initCurrentWeek() {
-    var now = (new Date).getTime();
-    if (parseInt(localStorage['endOfWeek']) > now) {
-        // All okay, all variables set,
-        var milliSecondsInWeek = 604800000;
-        var extraHour = 3600000; // add an hour to help the UI design.
-
-        var alarm = now + milliSecondsInWeek + extraHour
-
-        var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
-
-        var daysRemaining = daysTillEndOfWeek(endOfWeek)
-
-        $('#days-till-end-of-week').html(daysRemaining);
-
-        $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-
-    } else {
-        // Catch any missing variables and other rubbish, just restart.
-        // Good for initalization on first load.
-        restartTheWeek();
-    }
-}
-
-
-function restartTheWeek() {
-    var now = (new Date).getTime();
-    var milliSecondsInWeek = 604800000;
-    var extraHour = 3600000; // add an hour to help the UI design.
-
-    var alarm = now + milliSecondsInWeek + extraHour;
-
-    var endOfWeek = new Date(alarm);
-
-    var daysRemaining = daysTillEndOfWeek(endOfWeek);
-
-    localStorage['endOfWeek'] = alarm;
-
-    $('#days-till-end-of-week').html(daysRemaining);
-    $('#days-till-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-
-    $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-    $('#date-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-
-    $('#donate-now-reminder').fadeOut();
-}
-
-function millisecondsToDays(milliseconds) {
-    var seconds = Math.floor(milliseconds / 1000);
-    var minutes = Math.floor(seconds / 60);
-    var hours = Math.floor(minutes / 60);
-    var days = Math.floor(hours / 24);
-    return days;
-}
+// function restartTheWeek() {
+//     var now = (new Date).getTime();
+//     var milliSecondsInWeek = 604800000;
+//     var extraHour = 3600000; // add an hour to help the UI design.
+// 
+//     var alarm = now + milliSecondsInWeek + extraHour;
+// 
+//     var endOfWeek = new Date(alarm);
+// 
+//     var daysRemaining = daysTillEndOfWeek(endOfWeek);
+// 
+//     localStorage['endOfWeek'] = alarm;
+// 
+//     $('#days-till-end-of-week').html(daysRemaining);
+//     $('#days-till-end-of-week').effect("highlight", {
+//         color: 'rgb(100, 189, 99)'
+//     }, 1000);
+// 
+//     $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+//     $('#date-end-of-week').effect("highlight", {
+//         color: 'rgb(100, 189, 99)'
+//     }, 1000);
+// 
+//     $('#donate-now-reminder').fadeOut();
+// }
+// 
+// function millisecondsToDays(milliseconds) {
+//     var seconds = Math.floor(milliseconds / 1000);
+//     var minutes = Math.floor(seconds / 60);
+//     var hours = Math.floor(minutes / 60);
+//     var days = Math.floor(hours / 24);
+//     return days;
+// }
 
 $(document).ready(function() {
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
 
-    initialize();
+    //initialize();
 
-    $( "#slider" ).slider({
-        range: "max",
-        min: 0.01,
-        max: 10,
-        value: parseFloat(localStorage['incidentalTotalFiat']),
-        slide: function( event, ui ) {
-          $( "#incidental-fiat-amount" ).val( ui.value );
-          $('#incidental-fiat-amount').trigger('change');
-        }
-    });
+    // $( "#slider" ).slider({
+    //     range: "max",
+    //     min: 0.01,
+    //     max: 10,
+    //     value: parseFloat(localStorage['incidentalTotalFiat']),
+    //     slide: function( event, ui ) {
+    //       $( "#incidental-fiat-amount" ).val( ui.value );
+    //       $('#incidental-fiat-amount').trigger('change');
+    //     }
+    // });
 
     // Setup the wallet, page values and callbacks
     var val = '',
@@ -268,132 +268,132 @@ $(document).ready(function() {
         });
     }
 
-    function subscriptions() {
-        return new Promise(function(resolve, reject) {
-            var subscriptions = [];
-            db.values('subscriptions').done(function(records) {
-                for (var i in records) {
-                    subscriptions.push({
-                        txDest: records[i].bitcoinAddress.trim(),
-                        amountFiat: records[i].amountFiat,
-                        currencyCode: localStorage['fiatCurrencyCode'],
-                        paymentType: 'subscription'
-                    });
-                }
-                resolve(subscriptions);
-            });
-        });
-    }
+    // function subscriptions() {
+    //     return new Promise(function(resolve, reject) {
+    //         var subscriptions = [];
+    //         db.values('subscriptions').done(function(records) {
+    //             for (var i in records) {
+    //                 subscriptions.push({
+    //                     txDest: records[i].bitcoinAddress.trim(),
+    //                     amountFiat: records[i].amountFiat,
+    //                     currencyCode: localStorage['fiatCurrencyCode'],
+    //                     paymentType: 'subscription'
+    //                 });
+    //             }
+    //             resolve(subscriptions);
+    //         });
+    //     });
+    // }
+    //
+    // function browsing() {
+    //     return new Promise(function(resolve, reject) {
+    //         var sites = [];
+    //         db.values('sites').done(function(records) {
+    //             localStorage['totalTime'] = 0;
+    //             for (var i in records) {
+    //                 if (records[i].timeOnPage) {
+    //                     localStorage['totalTime'] = parseInt(localStorage['totalTime']) + parseInt(records[i].timeOnPage);
+    //                 }
+    //             };
+    //             for (var i in records) {
+    //                 var slice = (records[i].timeOnPage / localStorage['totalTime']).toFixed(2);
+    //                 var amountFiat = (slice * parseFloat(localStorage["incidentalTotalFiat"])).toFixed(2);
+    //                 if (amountFiat > 0) {
+    //                     sites.push({
+    //                         txDest: records[i].bitcoinAddress.trim(),
+    //                         amountFiat: amountFiat,
+    //                         currencyCode: localStorage['fiatCurrencyCode'],
+    //                         paymentType: 'browsing'
+    //                     });
+    //                 }
+    //             }
+    //             resolve(sites);
+    //         });
+    //     });
+    // }
 
-    function browsing() {
-        return new Promise(function(resolve, reject) {
-            var sites = [];
-            db.values('sites').done(function(records) {
-                localStorage['totalTime'] = 0;
-                for (var i in records) {
-                    if (records[i].timeOnPage) {
-                        localStorage['totalTime'] = parseInt(localStorage['totalTime']) + parseInt(records[i].timeOnPage);
-                    }
-                };
-                for (var i in records) {
-                    var slice = (records[i].timeOnPage / localStorage['totalTime']).toFixed(2);
-                    var amountFiat = (slice * parseFloat(localStorage["incidentalTotalFiat"])).toFixed(2);
-                    if (amountFiat > 0) {
-                        sites.push({
-                            txDest: records[i].bitcoinAddress.trim(),
-                            amountFiat: amountFiat,
-                            currencyCode: localStorage['fiatCurrencyCode'],
-                            paymentType: 'browsing'
-                        });
-                    }
-                }
-                resolve(sites);
-            });
-        });
-    }
-
-    function makePayments() {
-        localStorage['weeklyAlarmReminder'] = false;
-        chrome.browserAction.setBadgeText({
-            text: ''
-        });
-
-        Promise.all([
-            preferences.setCurrency(localStorage['fiatCurrencyCode']),
-            preferences.getExchangeRate(),
-            browsing(),
-            subscriptions()
-        ]).then(function(result) {
-            var exchangeRate = result[1];
-            var browsing = result[2];
-            var subscriptions = result[3];
-
-            var totalWeeklyBudget = parseInt(parseFloat(localStorage['totalWeeklyBudgetFiat']) / exchangeRate * SATOSHIS);
-            totalWeeklyBudget += FEE;
-
-            if ((wallet.getBalance() + FEE) <= totalWeeklyBudget) {
-                totalWeeklyBudget = parseInt(wallet.getBalance()); // If insufficent funds just pay what can be paid.
-            }
-
-            // Add the payments *upto* fiat budget.
-            // Should always match, but this is just a extra check.
-            var paymentObjs = [];
-
-            var txTotalSatoshis = 0;
-
-            for (i in subscriptions) { // tally up subscriptions as first priority
-                subscriptions[i].exchangeRate = exchangeRate;
-                satoshisAsFloat = (parseFloat(subscriptions[i].amountFiat) / exchangeRate) * SATOSHIS;
-                subscriptions[i].txSatoshis = parseInt(satoshisAsFloat);
-                txTotalSatoshis += subscriptions[i].txSatoshis;
-            }
-
-            subscriptions = _.sortBy(subscriptions, 'txSatoshis').reverse(); // sort descending
-            // Most browsers do return properties in the same order as they were inserted,
-            // but it is explicitly not guaranteed behaviour so you should not rely upon it.
-            // In particular see section 12.6.4 of the ECMAScript specification:
-            for (var i = 0; i < subscriptions.length; i++) {
-                if (txTotalSatoshis > totalWeeklyBudget) {
-                    console.log('---------------');
-                    console.log('budget exceeded');
-                    console.log('current total =' + txTotalSatoshis);
-                    console.log(subscriptions[i]);
-                    console.log('---------------');
-                    break;
-                }
-                paymentObjs.push(subscriptions[i]);
-            }
-
-
-            // NOW DO BROWSING SITES
-            for (i in browsing) { // tally up sites as second priority
-                browsing[i].exchangeRate = exchangeRate;
-                satoshisAsFloat = (parseFloat(browsing[i].amountFiat) / exchangeRate) * SATOSHIS;
-                browsing[i].txSatoshis = parseInt(satoshisAsFloat);
-                txTotalSatoshis += browsing[i].txSatoshis;
-            }
-
-            browsing = _.sortBy(browsing, 'txSatoshis').reverse(); // sort descending
-            // Most browsers do return properties in the same order as they were inserted,
-            // but it is explicitly not guaranteed behaviour.
-            // In particular see section 12.6.4 of the ECMAScript specification:
-            for (var i = 0; i < browsing.length; i++) {
-                if (txTotalSatoshis > totalWeeklyBudget) {
-                    console.log('---------------');
-                    console.log('budget exceeded');
-                    console.log('current total =' + txTotalSatoshis);
-                    console.log(browsing[i]);
-                    console.log('---------------');
-                    break;
-                }
-                paymentObjs.push(browsing[i]);
-            }
-
-            wallet.mulitpleOutputsSend(paymentObjs, FEE, '').then(function() {
-                alert('sent');
-            });
-        });
-    }
+    // function makePayments() {
+    //     localStorage['weeklyAlarmReminder'] = false;
+    //     chrome.browserAction.setBadgeText({
+    //         text: ''
+    //     });
+    //
+    //     Promise.all([
+    //         preferences.setCurrency(localStorage['fiatCurrencyCode']),
+    //         preferences.getExchangeRate(),
+    //         browsing(),
+    //         subscriptions()
+    //     ]).then(function(result) {
+    //         var exchangeRate = result[1];
+    //         var browsing = result[2];
+    //         var subscriptions = result[3];
+    //
+    //         var totalWeeklyBudget = parseInt(parseFloat(localStorage['totalWeeklyBudgetFiat']) / exchangeRate * SATOSHIS);
+    //         totalWeeklyBudget += FEE;
+    //
+    //         if ((wallet.getBalance() + FEE) <= totalWeeklyBudget) {
+    //             totalWeeklyBudget = parseInt(wallet.getBalance()); // If insufficent funds just pay what can be paid.
+    //         }
+    //
+    //         // Add the payments *upto* fiat budget.
+    //         // Should always match, but this is just a extra check.
+    //         var paymentObjs = [];
+    //
+    //         var txTotalSatoshis = 0;
+    //
+    //         for (i in subscriptions) { // tally up subscriptions as first priority
+    //             subscriptions[i].exchangeRate = exchangeRate;
+    //             satoshisAsFloat = (parseFloat(subscriptions[i].amountFiat) / exchangeRate) * SATOSHIS;
+    //             subscriptions[i].txSatoshis = parseInt(satoshisAsFloat);
+    //             txTotalSatoshis += subscriptions[i].txSatoshis;
+    //         }
+    //
+    //         subscriptions = _.sortBy(subscriptions, 'txSatoshis').reverse(); // sort descending
+    //         // Most browsers do return properties in the same order as they were inserted,
+    //         // but it is explicitly not guaranteed behaviour so you should not rely upon it.
+    //         // In particular see section 12.6.4 of the ECMAScript specification:
+    //         for (var i = 0; i < subscriptions.length; i++) {
+    //             if (txTotalSatoshis > totalWeeklyBudget) {
+    //                 console.log('---------------');
+    //                 console.log('budget exceeded');
+    //                 console.log('current total =' + txTotalSatoshis);
+    //                 console.log(subscriptions[i]);
+    //                 console.log('---------------');
+    //                 break;
+    //             }
+    //             paymentObjs.push(subscriptions[i]);
+    //         }
+    //
+    //
+    //         // NOW DO BROWSING SITES
+    //         for (i in browsing) { // tally up sites as second priority
+    //             browsing[i].exchangeRate = exchangeRate;
+    //             satoshisAsFloat = (parseFloat(browsing[i].amountFiat) / exchangeRate) * SATOSHIS;
+    //             browsing[i].txSatoshis = parseInt(satoshisAsFloat);
+    //             txTotalSatoshis += browsing[i].txSatoshis;
+    //         }
+    //
+    //         browsing = _.sortBy(browsing, 'txSatoshis').reverse(); // sort descending
+    //         // Most browsers do return properties in the same order as they were inserted,
+    //         // but it is explicitly not guaranteed behaviour.
+    //         // In particular see section 12.6.4 of the ECMAScript specification:
+    //         for (var i = 0; i < browsing.length; i++) {
+    //             if (txTotalSatoshis > totalWeeklyBudget) {
+    //                 console.log('---------------');
+    //                 console.log('budget exceeded');
+    //                 console.log('current total =' + txTotalSatoshis);
+    //                 console.log(browsing[i]);
+    //                 console.log('---------------');
+    //                 break;
+    //             }
+    //             paymentObjs.push(browsing[i]);
+    //         }
+    //
+    //         wallet.mulitpleOutputsSend(paymentObjs, FEE, '').then(function() {
+    //             alert('sent');
+    //         });
+    //     });
+    // }
 
     // $('#confirm-donate-now').click(function() {
     //     localStorage['weeklyAlarmReminder'] = false;

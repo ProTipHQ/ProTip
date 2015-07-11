@@ -6,14 +6,14 @@
         "./lib/underscore-min.js",
         "./lib/cryptojs.min.js",
         "./lib/bitcoinjs-lib.min.js",
-        "./js/preferences.js",
+        "./lib/preferences.js",
         "./lib/util.js",
         "./lib/currency-manager.js",
-        "./js/wallet.js",
+        "./lib/wallet.js",
         "./js/payment-manager.js",
         "./lib/ydn-db.min.js",
-        "./js/schema.js",
-        "./js/alarm.js",
+        "./js/ydn-db-schema.js",
+        "./js/alarm-manager.js",
         "background.js"
       ]
    },

@@ -68,11 +68,3 @@ function createQRCodeCanvas(text) {
     }
     return canvas;
 }
-
-
-// function updateFiatCurrencyCode() {
-//     $.each($(".fiat-code"), function(key, element) {
-//         element.textContent = localStorage["fiatCurrencyCode"];
-//     });
-// }
-
