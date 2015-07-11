@@ -45,5 +45,5 @@
    "options_page": "./views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.8.1.0"
+   "version": "0.1.0.0"
 }
