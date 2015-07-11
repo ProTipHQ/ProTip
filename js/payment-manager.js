@@ -98,57 +98,6 @@
             return total;
         },
 
-        // ProcessForPayment: function() {
-        //     return new Promise(function(resolve, reject) {
-        //         Promise.all([
-        //             preferences.getExchangeRate(),
-        //             this.browsing(
-        //                 localStorage['incidentalTotalFiat'],
-        //                 localStorage['totalTime'],
-        //                 localStorage['fiatCurrencyCode']
-        //             ),
-        //             this.subscriptions(localStorage['fiatCurrencyCode'])
-        //         ]).then(function(result) {
-        //             var exchangeRate = result[0];
-        //             var browsing = result[1];
-        //             var subscriptions = result[2];
-        //             var totalSubscriptionsFiat = this.paymentManager.totalSubscriptionsFiat(subscriptions);
-        //             var totalIncidentalFiat = this.paymentManager.totalIncidentalFiat(browsing);
-        //
-        //             var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
-        //
-        //             var totalWeeklyBudgetSatoshis = parseInt(totalFiat / exchangeRate * satoshis);
-        //
-        //             var balanceSatoshis = parseInt(wallet.getBalance());
-        //
-        //             if (balanceSatoshis < fee) {
-        //                 // wallet is effectively empty
-        //                 console.log('wallet is effectively empty');
-        //                 resolve([]);
-        //             } else if ((totalWeeklyBudgetSatoshis + fee) > balanceSatoshis) { // do not exceed current balance.
-        //                 totalWeeklyBudgetSatoshis = balanceSatoshis - fee; // If insufficent funds just empty the wallet.
-        //             }
-        //
-        //             subscriptions = this.paymentManager.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
-        //             browsing = this.paymentManager.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
-        //
-        //             resolve(subscriptions.concat(browsing));
-        //         });
-        //     });
-        // },
-
-        // storeLastTxId: function() {
-        //     return new Promise( function(resolve, reject) {
-        //         util.getJSON('https://blockchain.info/address/' + wallet.getAddress() + '?format=json').then(function (json) {
-        //             // sort decending.
-        //             var lastTransactionHash = _.last(_.sortBy(json.txs, 'time')).hash;
-        //             localStorage['lastTransactionHash'] = lastTransactionHash;
-        //             resolve();
-        //         });
-        //     });
-        // },
-
-
         payAll: function() {
             return new Promise(function(resolve, reject) {
                 Promise.all([
@@ -165,9 +114,6 @@
                     var subscriptions = result[2];
                     var totalSubscriptionsFiat = ret.totalSubscriptionsFiat(subscriptions);
                     var totalIncidentalFiat = ret.totalIncidentalFiat(browsing);
-                    if (totalSubscriptionsFiat + totalIncidentalFiat > 0) {
-                        reject(Error('No funds allocated for weekly donations or subscriptions'));
-                    }
 
                     var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
 
@@ -198,7 +144,6 @@
                             reject(Error(response.message));
                         });
                     } else {
-                        debugger;
                         reject(Error('No browsing history or subscriptions.'));
                     }
                 });

@@ -48,12 +48,13 @@ window.addEventListener("storage", function(e){
         chrome.browserAction.setBadgeText({text: '0.00'});
     } else {
         chrome.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
+        // currencyManager.amount(parseFloat(localStorage['availableBalanceFiat'])).then(function(formattedMoney) {
+        //     chrome.browserAction.setBadgeText({text: formattedMoney});
+        // });
     }
 
     if(insufficientBalance()) {
-        currencyManager.amount(parseFloat(localStorage['availableBalanceFiat'])).then(function(formattedMoney) {
-            chrome.browserAction.setBadgeBackgroundColor({color:'#ff0000'});
-        });
+       chrome.browserAction.setBadgeBackgroundColor({color:'#ff0000'});
     }
 
     // If weekly reminder active, then show the [....] flag.

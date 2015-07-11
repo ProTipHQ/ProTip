@@ -132,6 +132,54 @@
       </table>
     </div>
 
+    <label class="ios-subheading">MANUAL SUBSCRIPTION</label>
+    <div class="ios-section">
+
+    <form class="" id="manual-subscription-form" method="get" action="" novalidate="novalidate">
+        <table>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputEmail1">Address</label>
+            </td>
+            <td>
+              <input type="text" required="" id="manual-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e"></input>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="amount">Amount </label>
+            </td>
+            <td>
+              <input type="number" required="" name="amount" id="manual-amount-fiat" min="0.1" step="0.01" style="width:64px;margin:5px;" placeholder="0.14"> <span class="fiat-code">USD</span> weekly <label id="manual-amount-fiat-error" class="error" for="manual-amount-fiat"></label>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="manual-label">Label</label>
+            </td>
+            <td>
+              <input type="text" id="manual-label" name="manual-label" required style="width:200px;margin:5px;" placeholder="Jane Citizen"></input>
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align:right">
+              <label for="exampleInputPassword1">URL</label>
+            </td>
+            <td>
+              <input type="url" name="manual-url" id="manual-url" required style="width:200px;margin:5px;" placeholder="http://example.com"></input>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit" class="submit btn btn-primary btn-xs" id="manual-subscribe-btn" value="Subscribe" />
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+
+
     <div id="protip-subscription-form" style="display:none;overflow:hidden;margin-top:40px;" class="alert alert-info alert-dismissible fade in" role="alert">
 
       <button type="button" id="show-protip-subscription-close" class="close" style="" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -195,52 +243,7 @@
 
     </div>
 
-    <label class="ios-subheading">MANUAL SUBSCRIPTION</label>
-    <div class="ios-section">
 
-    <form class="" id="manual-subscription-form" method="get" action="" novalidate="novalidate">
-        <table>
-          <tr>
-            <td style="text-align:right">
-              <label for="exampleInputEmail1">Address</label>
-            </td>
-            <td>
-              <input type="text" required="" id="manual-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e"></input>
-            </td>
-          </tr>
-          <tr>
-            <td style="text-align:right">
-              <label for="amount">Amount </label>
-            </td>
-            <td>
-              <input type="number" required="" name="amount" id="manual-amount-fiat" min="0.1" step="0.01" style="width:64px;margin:5px;" placeholder="0.14"> <span class="fiat-code">USD</span> weekly <label id="manual-amount-fiat-error" class="error" for="manual-amount-fiat"></label>
-            </td>
-          </tr>
-          <tr>
-            <td style="text-align:right">
-              <label for="manual-label">Label</label>
-            </td>
-            <td>
-              <input type="text" id="manual-label" name="manual-label" required style="width:200px;margin:5px;" placeholder="Jane Citizen"></input>
-            </td>
-          </tr>
-          <tr>
-            <td style="text-align:right">
-              <label for="exampleInputPassword1">URL</label>
-            </td>
-            <td>
-              <input type="url" name="manual-url" id="manual-url" required style="width:200px;margin:5px;" placeholder="http://example.com"></input>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <input type="submit" class="submit btn btn-primary btn-xs" id="manual-subscribe-btn" value="Subscribe" />
-            </td>
-          </tr>
-        </table>
-      </form>
-    </div>
 
   </body>
 </html>
