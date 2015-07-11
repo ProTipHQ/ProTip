@@ -165,6 +165,9 @@
                     var subscriptions = result[2];
                     var totalSubscriptionsFiat = ret.totalSubscriptionsFiat(subscriptions);
                     var totalIncidentalFiat = ret.totalIncidentalFiat(browsing);
+                    if (totalSubscriptionsFiat + totalIncidentalFiat > 0) {
+                        reject(Error('No funds allocated for weekly donations or subscriptions'));
+                    }
 
                     var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
 
@@ -195,6 +198,7 @@
                             reject(Error(response.message));
                         });
                     } else {
+                        debugger;
                         reject(Error('No browsing history or subscriptions.'));
                     }
                 });

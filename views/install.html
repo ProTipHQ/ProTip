@@ -38,7 +38,7 @@
       Quick Start
     </h2>
 
-    <label class="ios-subheading">1. SET YOUR CURRENCY</label>
+    <label class="ios-subheading" style="margin-top:0px;">1. SET YOUR CURRENCY</label>
     <div class="ios-section">
       <select id="fiat-currency-select" style="width:100px;" class="form-control">
         <option value="USD">USD</option>
@@ -69,15 +69,9 @@
         <div class="media">
           <div class="media-body">
             <p>
-               Bitcoin is a electronic form of payment for products
-               and services. The processing fees are lower than the
-               2–3% typically imposed by credit card processors.
-            </p>
-            <p>
-               The system is peer-to-peer; users can transact directly
+               Bitcoin is a electronic cash, the system is peer-to-peer where users can transact directly
                without needing an intermediary.
             </p>
-            <h4>TL;DR</h4>
             <p>
               This is your private key, <strong style="color:red;">save it somewhere safe and private</strong>.
             </p>
@@ -108,14 +102,14 @@
             <p>
 
 
-            <form class="form-inline">
+            <!-- <form class="form-inline">
               <div class="form-group">
                 <div class="input-group">
                   <input type="text" class="form-control" style="width:450px" id="importPrivateKeyPrivateKey" placeholder="Private Key">
                 </div>
               </div>
               <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import</button>
-            </form>
+            </form> -->
 
 
             <p>
@@ -130,11 +124,9 @@
               </div>
 
               <div class="form-group">
-                  <input type="text" class="form-control" style="width:450px" id="importPrivateKeyPrivateKey" placeholder="Private Key">
+                  <input type="text" class="form-control" style="width:450px; display:inline;" id="importPrivateKeyPrivateKey" placeholder="Private Key">
+                  <button id="importPrivateKeyConfirm" type="button" style="display:inline" class="btn btn-primary">Import</button>
               </div>
-              <p>
-                  <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import</button>
-              </p>
             </p>
           </div>
         </div>

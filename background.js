@@ -296,7 +296,7 @@ chrome.runtime.onMessage.addListener(
                 if (request.source && request.source == 'metatag') {
                     chrome.browserAction.setBadgeText({text: 'Meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 } else {
-                    chrome.browserAction.setBadgeText({text: request.bitcoinAddress.substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                    chrome.browserAction.setBadgeText({text: request.bitcoinAddress.trim().substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 }
                 chrome.browserAction.setIcon({path: './assets/images/heart48x48.png', tabId: tab.id});
             });
