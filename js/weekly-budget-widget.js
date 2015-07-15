@@ -46,16 +46,6 @@ function setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubsc
     if (availableIncidentalTotalFiat < 0) {
         availableIncidentalTotalFiat = 0
     } // Handle first time loading with empty wallet.
-    // if (total > availableBalanceFiat) {
-    //     // set upto price of coffee
-    //     if (availableIncidentalTotalFiat > localStorage["priceOfCoffee"]) {
-    //         localStorage['incidentalTotalFiat'] = localStorage["priceOfCoffee"];
-    //     } else {
-    //         localStorage['incidentalTotalFiat'] = availableIncidentalTotalFiat;
-    //     }
-    // } else if (availableIncidentalTotalFiat == 0) {
-    //     localStorage['incidentalTotalFiat'] = 0;
-    // }
     $('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
     return parseFloat(localStorage['incidentalTotalFiat']);
 }
@@ -63,9 +53,6 @@ function setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubsc
 function setWeeklyTotalFiat(incidentalTotalFiat, availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
 
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-    // if( weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat ){
-    //   weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
-    // }
     weeklyTotalFiat = parseFloat(weeklyTotalFiat).toFixed(2);
     if (weeklyTotalFiat < 0) {
         weeklyTotalFiat = 0

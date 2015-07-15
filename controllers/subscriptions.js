@@ -143,35 +143,7 @@ function buildTable(domId) {
         }
     });
 }
-//
-// function buildTable(domId) {
-//
-//     // debugger;
-//     // var tbody = $('#' + domId);
-//     // tbody.empty();
-//     // var tbody = document.getElementById(domId);
-//     // while (tbody.hasChildNodes()) {
-//     //     tbody.removeChild(tbody.lastChild);
-//     // }
-//
-//     var table = document.getElementById(domId);
-//
-//     var tbody = document.createElement("tbody");
-//     table.appendChild(tbody);
-//     // debugger;
-//     // $(table).firstChild.empty();
-//
-//     db.values('subscriptions').done(function(records) {
-//         if(records.length > 0) {
-//             for (var i in records) {
-//                 tbody.appendChild(buildRow(records[i]));
-//             }
-//         } else {
-//             tbody.appendChild(subscriptionEmptyRow());
-//         }
-//     });
-// }
-//
+
 function manualSubscription() {
     db.put('subscriptions', {
         amountFiat: $('#manual-amount-fiat').val(),

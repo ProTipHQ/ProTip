@@ -159,7 +159,6 @@ function buildRow(record) {
     row.appendChild(browseLabelCell(record));
     row.appendChild(timeAmountCell(record));
     row.appendChild(browseAmountCell(record));
-    // row.appendChild(progressBarCell(record));
     row.appendChild(subscriptionBitcoinAddressCell(record));
     row.appendChild(browseIgnoreCell(record));
 

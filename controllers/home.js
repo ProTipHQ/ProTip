@@ -12,10 +12,6 @@ function initCurrentWeek() {
 
         var daysRemaining = daysTillEndOfWeek(endOfWeek)
 
-        // $('#days-till-end-of-week').html(daysRemaining);
-        //
-        // $('#date-end-of-week').html(endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-
     } else {
         // Catch any missing variables and other rubbish, just restart.
         // Good for initalization on first load.

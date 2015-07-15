@@ -37,6 +37,8 @@ var matchText = function(node, regex, callback, excludeElements) {
     return node;
 }
 
+//https://www.flickr.com/photos/camerone/19630600352/in/dateposted-public/
+// 307E43BCAF01533CDBD43FFC61EAA49E
 function validAddress(address){
   try {
       new Bitcoin.Address(address);
@@ -200,7 +202,7 @@ function scanLinks() {
             }
         }
 
-        if ( match ) { // && !document.getElementById( match ) ) {
+        if ( match && validAddress(match) ) { // && !document.getElementById( match ) ) {
             var span = highlightElement(btcAddress);
             links[i].parentElement.insertBefore(span, links[i]);
             span.appendChild(links[i]);
@@ -213,11 +215,11 @@ function scanText(){
     var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
 
     matchText(document.body, regex, function (node, match, offset) {
-         //if ( !document.getElementById( match ) ) {
+         if ( validAddress( match ) ) {
             var span = highlightElement(match);
             span.textContent = match;
             node.parentNode.insertBefore(span, node.nextSibling);
-         //}
+         }
     });
 }
 
@@ -226,7 +228,7 @@ function scanMetatags(){
     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
     var metatags = document.getElementsByTagName('meta');
     for ( i = 0; i < metatags.length; i++ ) {
-        if( metatags[i].name == 'microtip' ) {
+        if( metatags[i].name == 'microtip' && validAddress(metatags[i].content) ) {
             chrome.runtime.sendMessage({
                 source: 'metatag',
                 bitcoinAddress: metatags[i].content,
@@ -272,4 +274,3 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     });
 
 }
-

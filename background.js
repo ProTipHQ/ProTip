@@ -179,6 +179,14 @@ function isStarredUser(url, callback){
     }
 }
 
+function validAddress(address){
+  try {
+      new Bitcoin.Address(address);
+  } catch (e) {
+      return false;
+  }
+  return true;
+}
 
 function updateTime(url, seconds) {  //function updateTime(site, seconds) {
 
@@ -283,7 +291,7 @@ chrome.runtime.onMessage.addListener(
                 chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
                 chrome.browserAction.setIcon({path: './assets/images/icon_48.png', tabId: tab.id});
             });
-        } else if(request.action && request.action == "putBitcoinAddress"){
+        } else if(request.action && request.action == "putBitcoinAddress" && validAddress(request.bitcoinAddress)){
             db.get('sites', request.url).done(function(record) {
                 if (!record) {
                     db.put('sites', {bitcoinAddress: request.bitcoinAddress, url: request.url, title: request.title});
