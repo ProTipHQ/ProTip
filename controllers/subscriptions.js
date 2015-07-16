@@ -27,38 +27,41 @@ function subscriptionLabelCell(record) {
     return cell;
 }
 
-function subscriptionAmountCell(record) {
-    var input = document.createElement("input");
-    input.type = "number";
-    input.setAttribute('step', '0.01');
-    input.setAttribute('min', '0.10');
-    input.className = "amount-fiat subscription-input";
-    input.value = record.amountFiat;
-    input.id = record.bitcoinAddress;
+// function subscriptionAmountCell(record) {
+//     var input = document.createElement("input");
+//     input.type = "number";
+//     input.setAttribute('step', '0.01');
+//     input.setAttribute('min', '0.10');
+//     input.className = "amount-fiat subscription-input";
+//     input.value = record.amountFiat;
+//     input.id = record.bitcoinAddress;
+//
+//     input.addEventListener("change", function() {
+//         record.amountFiat = this.value;
+//         db.put('subscriptions', record).done(function(){
+//             subscriptionTotalFiatAmount().then(function(totalFiatAmount){
+//                 $('#subscription-total-amount').html(totalFiatAmount);
+//             });
+//         });
+//     });
+//
+//     var cell = document.createElement("td");
+//     cell.appendChild(input);
+//     return cell;
+// }
 
-    input.addEventListener("change", function() {
-        record.amountFiat = this.value;
-        db.put('subscriptions', record);
-        $('#subscriptionTotalAmount').html(subscriptionTotalAmount());
-    });
+// function subscriptionBitcoinAddressCell(record) {
+//     var cell = document.createElement("td");
+//     cell.className = 'blockchain-address';
+//     cell.appendChild(
+//         document.createTextNode(
+//             record.bitcoinAddress.substring(0, 7) + '...'
+//         )
+//     );
+//     return cell;
+// }
 
-    var cell = document.createElement("td");
-    cell.appendChild(input);
-    return cell;
-}
-
-function subscriptionBitcoinAddressCell(record) {
-    var cell = document.createElement("td");
-    cell.className = 'blockchain-address';
-    cell.appendChild(
-        document.createTextNode(
-            record.bitcoinAddress.substring(0, 7) + '...'
-        )
-    );
-    return cell;
-}
-
-function subscriptionSwitchCell(record) {
+function subscriptionSwitchCellDefaultOn(record) {
     var cell = document.createElement("td");
     cell.style.textAlign = 'center';
 
@@ -110,7 +113,7 @@ function subscriptionEmptyRow(domId){
 function buildRow(record) {
     var row = document.createElement("tr");
 
-    row.appendChild(subscriptionSwitchCell(record));
+    row.appendChild(subscriptionSwitchCellDefaultOn(record));
     row.appendChild(subscriptionLabelCell(record));
     row.appendChild(subscriptionAmountCell(record));
     row.appendChild(subscriptionBitcoinAddressCell(record));
@@ -118,16 +121,19 @@ function buildRow(record) {
     return row;
 }
 
-function subscriptionTotalFiatAmount(domIdOutput) {
-    db.values('subscriptions').done(function(records) {
-        var total = 0.0;
-        for (var i in records) {
-            total = total + parseFloat(records[i].amountFiat);
-        };
-        localStorage['subscriptionTotalFiatAmount'] = total.toFixed(2);
-        $('#' + domIdOutput).html(total.toFixed(2));
-    });
-}
+// function subscriptionTotalFiatAmount(domIdOutput) {
+//     return new Promise(function (resolve, reject) {
+//         db.values('subscriptions').done(function(records) {
+//             var total = 0.0;
+//             for (var i in records) {
+//                 total = total + parseFloat(records[i].amountFiat);
+//             };
+//             localStorage['subscriptionTotalFiatAmount'] = total.toFixed(2);
+//             $('#' + domIdOutput).html(total.toFixed(2));
+//             resolve(total.toFixed(2));
+//         });
+//     });
+// }
 
 function buildTable(domId) {
     var tbody = $('#' + domId);
@@ -147,10 +153,24 @@ function buildTable(domId) {
 function manualSubscription() {
     db.put('subscriptions', {
         amountFiat: $('#manual-amount-fiat').val(),
-        bitcoinAddress: $('#manual-bitcoin-address').val(),
+        bitcoinAddress: $('#manualBitcoinAddress').val(),
         title: $('#manual-label').val(),
         url: $('#manual-url').val()
+    }).done(function(){
+        $('#manual-amount-fiat').val('');
+        $('#manualBitcoinAddress').val('');
+        $('#manual-label').val('');
+        $('#manual-url').val('');
     });
+}
+
+function validAddress(address){
+  try {
+      new Bitcoin.Address(address);
+  } catch (e) {
+      return false;
+  }
+  return true;
 }
 
 function proTipSubscription() {
@@ -174,19 +194,28 @@ $(function() {
 
     buildTable('subscription-tbody'); //('subscription-table');
 
-    subscriptionTotalFiatAmount('subscriptionTotalAmount');
+    subscriptionTotalFiatAmount().then(function(totalFiatAmount){
+        $('#subscription-total-amount').html(totalFiatAmount);
+    });
 
-    $.validator.setDefaults({
+    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address');
+    $('#manualSubscriptionForm').validate({
+        rules: {
+            manualBitcoinAddress: {
+                validBitcoinAddress: {
+                    depends: function(element) {
+                        return !validAddress(element.value);
+                    }
+                }
+            },
+        },
         submitHandler: function() {
             manualSubscription();
             buildTable('subscription-tbody'); //('subscription-table');
         }
     });
-    $("#manual-subscription-form").validate();
 
-    // $('#manual-subscribe-btn').click(function() {
-    //     manualSubscription();
-    // });
+    $.validator.setDefaults({});
 
     if (typeof localStorage['showProTipSubscription'] === "undefined") {
         localStorage['showProTipSubscription'] = true;

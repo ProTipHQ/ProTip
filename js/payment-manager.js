@@ -133,6 +133,7 @@
                     subscriptions = ret.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
                     browsing = ret.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
                     var paymentObjs = subscriptions.concat(browsing);
+
                     if (paymentObjs.length > 0) {
                         wallet.mulitpleOutputsSend(paymentObjs, fee, '').then(function(response) {
                             // console.log('---Automatic Payments ---');
@@ -140,8 +141,8 @@
                             // console.log('-------------------------');
                             db.clear('sites');
                             resolve(response);
-                        }, function(response){
-                            reject(Error(response.message));
+                        }, function(error){
+                            reject(Error(error.message));
                         });
                     } else {
                         reject(Error('No browsing history or subscriptions.'));
