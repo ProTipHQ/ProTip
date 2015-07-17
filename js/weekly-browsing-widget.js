@@ -38,26 +38,6 @@ function addToBlacklist(url) {
     db.remove('sites', url);
 }
 
-// function subscriptionAmountCell(record) {
-//     var input = document.createElement("input");
-//     input.type = "number";
-//     input.setAttribute('step', '0.01');
-//     input.setAttribute('min', '0.10');
-//     input.className = "amount-fiat subscription-input";
-//     input.value = record.amountFiat;
-//     input.id = record.bitcoinAddress;
-//
-//     input.addEventListener("change", function() {
-//         record.amountFiat = this.value;
-//         db.put('subscriptions', record);
-//         $('#subscription-total-amount').html(subscriptionTotalAmount());
-//     });
-//
-//     var cell = document.createElement("td");
-//     cell.appendChild(input);
-//     return cell;
-// }
-
 function subscriptionTotalFiatAmount(domIdOutput) {
     return new Promise(function (resolve, reject) {
         db.values('subscriptions').done(function(records) {

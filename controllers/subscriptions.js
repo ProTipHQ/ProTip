@@ -27,40 +27,6 @@ function subscriptionLabelCell(record) {
     return cell;
 }
 
-// function subscriptionAmountCell(record) {
-//     var input = document.createElement("input");
-//     input.type = "number";
-//     input.setAttribute('step', '0.01');
-//     input.setAttribute('min', '0.10');
-//     input.className = "amount-fiat subscription-input";
-//     input.value = record.amountFiat;
-//     input.id = record.bitcoinAddress;
-//
-//     input.addEventListener("change", function() {
-//         record.amountFiat = this.value;
-//         db.put('subscriptions', record).done(function(){
-//             subscriptionTotalFiatAmount().then(function(totalFiatAmount){
-//                 $('#subscription-total-amount').html(totalFiatAmount);
-//             });
-//         });
-//     });
-//
-//     var cell = document.createElement("td");
-//     cell.appendChild(input);
-//     return cell;
-// }
-
-// function subscriptionBitcoinAddressCell(record) {
-//     var cell = document.createElement("td");
-//     cell.className = 'blockchain-address';
-//     cell.appendChild(
-//         document.createTextNode(
-//             record.bitcoinAddress.substring(0, 7) + '...'
-//         )
-//     );
-//     return cell;
-// }
-
 function subscriptionSwitchCellDefaultOn(record) {
     var cell = document.createElement("td");
     cell.style.textAlign = 'center';
@@ -198,7 +164,7 @@ $(function() {
         $('#subscription-total-amount').html(totalFiatAmount);
     });
 
-    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address');
+    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address'); // A hack.
     $('#manualSubscriptionForm').validate({
         rules: {
             manualBitcoinAddress: {
