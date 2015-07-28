@@ -41,7 +41,7 @@ var matchText = function(node, regex, callback, excludeElements) {
 // 307E43BCAF01533CDBD43FFC61EAA49E
 function validAddress(address){
   try {
-      new Bitcoin.Address(address);
+      new Bitcoin.Address(address.trim());
   } catch (e) {
       return false;
   }
