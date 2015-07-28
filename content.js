@@ -37,17 +37,6 @@ var matchText = function(node, regex, callback, excludeElements) {
     return node;
 }
 
-//https://www.flickr.com/photos/camerone/19630600352/in/dateposted-public/
-// 307E43BCAF01533CDBD43FFC61EAA49E
-function validAddress(address){
-  try {
-      new Bitcoin.Address(address.trim());
-  } catch (e) {
-      return false;
-  }
-  return true;
-}
-
 function starredUser(){
     var twitterUserContainer = document.getElementsByClassName('ProfileHeaderCard-name')[0];
     var span = document.createElement("span");

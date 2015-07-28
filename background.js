@@ -179,15 +179,6 @@ function isStarredUser(url, callback){
     }
 }
 
-function validAddress(address){
-  try {
-      new Bitcoin.Address(address);
-  } catch (e) {
-      return false;
-  }
-  return true;
-}
-
 function updateTime(url, seconds) {  //function updateTime(site, seconds) {
 
     // Only sites with BitcoinAddresses should exist.
