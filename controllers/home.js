@@ -164,11 +164,19 @@ $(function() {
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
+
+    if(parseFloat(localStorage['incidentalTotalFiat']) >= 0.03){
+        // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
+        // Making 0.03 the min.
+        var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
+    } else {
+        var incidentalTotalFiat = 0.03;
+    }
     $( "#slider" ).slider({
         range: "max",
-        min: 0.01,
+        min: 0.03,
         max: 10,
-        value: parseFloat(localStorage['incidentalTotalFiat']),
+        value: incidentalTotalFiat,
         slide: function( event, ui ) {
           $( "#incidental-fiat-amount" ).val( ui.value );
           $('#incidental-fiat-amount').trigger('change');

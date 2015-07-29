@@ -37,6 +37,7 @@
                         var slice = (records[i].timeOnPage / totalTime).toFixed(2);
                         var amountFiat = parseFloat(slice * parseFloat(incidentalTotalFiat));
                         amountFiat = parseFloat(amountFiat.toFixed(2)); // Don't send less than 1 cent
+                        // Otherwise it can take days to confirm.
                         if (amountFiat > 0) {
                             sites.push({
                                 txDest: records[i].bitcoinAddress.trim(),
