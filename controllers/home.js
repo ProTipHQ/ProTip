@@ -1,4 +1,3 @@
-
 function initCurrentWeek() {
     var now = (new Date).getTime();
     if (parseInt(localStorage['endOfWeek']) > now) {
@@ -34,6 +33,16 @@ function setupWallet() {
         $('#textAddress').text(wallet.getAddress());
         var blockchainURL = 'https://blockchain.info/address/' + wallet.getAddress();
         $('#payment-history-link').attr('href', blockchainURL);
+    }
+}
+
+function setMinIncidentalFiatAmounts(incidentalTotalFiat){
+    if(parseFloat(incidentalTotalFiat) >= 0.03) {
+        // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
+        // Making 0.03 the min.
+        return parseFloat(incidentalTotalFiat);
+    } else {
+        return 0.03;
     }
 }
 
@@ -165,20 +174,20 @@ $(function() {
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
 
-    if(parseFloat(localStorage['incidentalTotalFiat']) >= 0.03){
-        // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
-        // Making 0.03 the min.
-        var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
-    } else {
-        var incidentalTotalFiat = 0.03;
-    }
+    // if(parseFloat(localStorage['incidentalTotalFiat']) >= 0.03){
+    //     // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
+    //     // Making 0.03 the min.
+    //     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
+    // } else {
+    //     var incidentalTotalFiat = 0.03;
+    // }
     $( "#slider" ).slider({
         range: "max",
         min: 0.03,
         max: 10,
-        value: incidentalTotalFiat,
+        value: parseFloat(localStorage['incidentalTotalFiat']),
         slide: function( event, ui ) {
-          $( "#incidental-fiat-amount" ).val( ui.value );
+          $( "#incidental-fiat-amount" ).val( parseFloat(ui.value));
           $('#incidental-fiat-amount').trigger('change');
         }
     });
@@ -202,7 +211,9 @@ $(function() {
     });
 
     $('#incidental-fiat-amount').change(function() {
-        localStorage['incidentalTotalFiat'] = $(this).val();
+        localStorage['incidentalTotalFiat'] = setMinIncidentalFiatAmounts($(this).val());
+        $(this).val(setMinIncidentalFiatAmounts($(this).val()));
+
         var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
         var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
         var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
