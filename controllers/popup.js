@@ -188,6 +188,7 @@ $(function() {
         ]).then(function() {
             paymentManager.payAll().then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
                 $('#notice').html(response);
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');

@@ -1,5 +1,6 @@
 function browseLabelCell(record) {
     var cell = document.createElement("td");
+    cell.style.wordBreak = 'break-all';
 
     if (record.title) {
         var title = document.createTextNode(record.title)

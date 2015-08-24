@@ -136,6 +136,8 @@ $(function() {
         ]).then(function() {
             paymentManager.payAll().then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
+				        restartCountDown();
                 $('#payment-history').effect("highlight", {
                     color: 'rgb(100, 189, 99)'
                 }, 4000);

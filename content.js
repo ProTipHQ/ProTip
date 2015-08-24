@@ -191,7 +191,7 @@ function scanLinks() {
             }
         }
 
-        if ( match && validAddress(match) ) { // && !document.getElementById( match ) ) {
+        if ( btcAddress && validAddress(btcAddress) ) { // && !document.getElementById( match ) ) {
             var span = highlightElement(btcAddress);
             links[i].parentElement.insertBefore(span, links[i]);
             span.appendChild(links[i]);
