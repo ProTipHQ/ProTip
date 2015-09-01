@@ -24,6 +24,10 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
             // If the isBlackedlisted function returns false.
             scanText();
             scanLinks();
+            // (1) All found bitcoin address found in the links and text are tagged with
+            // the green bordered UI.
+            // (2) We loop over all tagged elements and check and submit the
+            // correctly prioritized found bitcoin address.
             selectPrioritizedBitcoinAddress({knownBTCAddress: request.knownBTCAddress});
         } else if (request.method == 'isStarredUser' && request.response == true){
             starredUser();
@@ -158,7 +162,8 @@ function tagElementWithProTipUI(match, klass_name){
     span.style.borderRadius = '2px';
     span.style.display = 'inline-flex';
     span.className = klass_name;
-    span.id = match;
+    //span.id = match;
+    span.setAttribute('data-protip-btc-address', match);
     span.style.border = 'solid 1px #7FE56F';
 
     // Create and add the checkbox.
@@ -172,10 +177,10 @@ function tagElementWithProTipUI(match, klass_name){
                 window.postMessage(
                     {
                         action: "putBitcoinAddress",
-                        bitcoinAddress: this.parentElement.id
+                        bitcoinAddress: this.parentElement.getAttribute('data-protip-btc-address');
                     }, "*"
                 );
-                ensureSingleSelectionOfCheckbox(this.parentElement.id);
+                ensureSingleSelectionOfCheckbox(this.parentElement.getAttribute('data-protip-btc-address'));
             } else {
                 window.postMessage(
                     { action: "deleteBitcoinAddress" }, "*"
