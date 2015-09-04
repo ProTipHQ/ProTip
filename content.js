@@ -177,7 +177,7 @@ function tagElementWithProTipUI(match, klass_name){
                 window.postMessage(
                     {
                         action: "putBitcoinAddress",
-                        bitcoinAddress: this.parentElement.getAttribute('data-protip-btc-address');
+                        bitcoinAddress: this.parentElement.getAttribute('data-protip-btc-address')
                     }, "*"
                 );
                 ensureSingleSelectionOfCheckbox(this.parentElement.getAttribute('data-protip-btc-address'));
