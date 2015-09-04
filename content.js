@@ -48,10 +48,10 @@ function selectPrioritizedBitcoinAddress(options){
       // (2) Don't select any bitcoin addresses.
   } else if (firstFoundLinkBitcoinAddress) {
       // (3) Highlight the first found Link bitcoin address
-      recordAndHighlightBitcoinAddress(firstFoundLinkBitcoinAddress.id);
+      recordAndHighlightBitcoinAddress(firstFoundLinkBitcoinAddress.getAttribute('data-protip-btc-address'));
   } else if (firstFoundTextBitcoinAddress) {
       // (4) Highlight the first found Text bitcoin address
-      recordAndHighlightBitcoinAddress(firstFoundTextBitcoinAddress.id);
+      recordAndHighlightBitcoinAddress(firstFoundTextBitcoinAddress.getAttribute('data-protip-btc-address'));
   }
 }
 
