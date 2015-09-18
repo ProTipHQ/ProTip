@@ -79,8 +79,8 @@ function scanLinks() {
             }
         }
 
-        if ( btcAddress && validAddress(btcAddress) ) { // && !document.getElementById( match ) ) {
-            matchedLinks.push()
+        if ( btcAddress && validAddress(btcAddress) ) {
+            matchedLinks.push();
             var span = tagElementWithProTipUI(btcAddress, 'protip-link');
             links[i].parentElement.insertBefore(span, links[i]);
             span.appendChild(links[i]);
@@ -91,18 +91,30 @@ function scanLinks() {
 function scanText(){
     var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
 
-    matchText(document.body, regex, function (node, match, offset) {
-        var span = tagElementWithProTipUI(match, 'protip-text');
-        span.appendChild(document.createTextNode(match));
-        var parent_node = node.parentNode;
-        parent_node.textContent = '';
-        parent_node.appendChild(span);
+    matchText(document.body, regex, function (node, match) {
+
+        var words = node.textContent.split(' ');
+        var parent_span = document.createElement("span");
+        for ( i = 0; i < words.length; i++ ) {
+            if(validAddress(words[i].trim())){
+                var span = tagElementWithProTipUI(words[i], 'protip-text')
+                var content_span = document.createElement("span")
+                content_span.textContent = words[i];
+                span.appendChild(content_span);
+                parent_span.appendChild(span);
+            } else {
+                var span = document.createElement("span");
+                span.textContent = words[i] + ' ';
+                parent_span.appendChild(span);
+            }
+        }
+        node.parentElement.replaceChild(parent_span, node);
     });
 }
 
 var matchText = function(node, regex, callback, excludeElements) {
 
-    excludeElements || (excludeElements = ['script', 'style', 'iframe', 'cavas', 'a']); // exclude 'a' links search separately
+    excludeElements || (excludeElements = ['script', 'img', 'style', 'iframe', 'canvas', 'a']); // exclude 'a' links search separately
     var child = node.firstChild;
 
     do {
@@ -118,17 +130,10 @@ var matchText = function(node, regex, callback, excludeElements) {
             }
             break;
         case 3:
-            child.data.replace(regex, function(all) {
-                 var args = [].slice.call(arguments),
-                     offset = args[args.length - 2],
-                     newTextNode = child.splitText(offset);
-                 if(validAddress(args[0])){
-                      callback.apply(window, [child].concat(args));
-                 }
-
-                 child = newTextNode;
-             });
-             break;
+            if(regex.test(child.data)){
+              callback.apply(window, [child]);
+            }
+            break;
         }
     } while (child = child.nextSibling);
 
