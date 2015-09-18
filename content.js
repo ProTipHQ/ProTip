@@ -42,12 +42,13 @@ function selectPrioritizedBitcoinAddress(options){
   var firstFoundTextBitcoinAddress = document.getElementsByClassName('protip-text')[0];
 
 
-  if ( options && scanMetatags().trim() == options.knownBTCAddress.trim()){
+  //if ( options && scanMetatags().trim() == options.knownBTCAddress.trim()){
       // ***Special Case***, if there is an address in the metatag but it is also previously known
       // for this url display "META" instead of the first 4 characters of the previously known
       // address in the chrome extension icon.
       // Otherwise people don't think that Protip is detecting the metatag btc address.
-  } else if(options && options.knownBTCAddress) {
+  //} else
+  if(options && options.knownBTCAddress) {
       // (1) Highlight known bitcoin address
       recordAndHighlightBitcoinAddress(options.knownBTCAddress)
   } else if (scanMetatags()){
