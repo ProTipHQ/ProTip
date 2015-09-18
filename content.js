@@ -41,7 +41,13 @@ function selectPrioritizedBitcoinAddress(options){
   var firstFoundLinkBitcoinAddress = document.getElementsByClassName('protip-link')[0];
   var firstFoundTextBitcoinAddress = document.getElementsByClassName('protip-text')[0];
 
-  if(options && options.knownBTCAddress) {
+
+  if ( options && scanMetatags().trim() == options.knownBTCAddress.trim()){
+      // ***Special Case***, if there is an address in the metatag but it is also previously known
+      // for this url display "META" instead of the first 4 characters of the previously known
+      // address in the chrome extension icon.
+      // Otherwise people don't think that Protip is detecting the metatag btc address.
+  } else if(options && options.knownBTCAddress) {
       // (1) Highlight known bitcoin address
       recordAndHighlightBitcoinAddress(options.knownBTCAddress)
   } else if (scanMetatags()){
@@ -147,11 +153,12 @@ function scanMetatags(){
         if( metatags[i].name == 'microtip' && validAddress(metatags[i].content) ) {
             chrome.runtime.sendMessage({
                 source: 'metatag',
+                action: "putBitcoinAddress",
                 bitcoinAddress: metatags[i].content,
                 title: document.title,
                 url: document.URL
             });
-            return true // only get the first instance of a microtip metatag.
+            return metatags[i].content // only get the first instance of a microtip metatag.
         }
     }
     return false;
