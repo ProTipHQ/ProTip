@@ -294,7 +294,7 @@ chrome.runtime.onMessage.addListener(
             chrome.tabs.getSelected(null, function(tab) {
                 chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
                 if (request.source && request.source == 'metatag') {
-                    chrome.browserAction.setBadgeText({text: 'META', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                    chrome.browserAction.setBadgeText({text: 'meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 } else {
                     chrome.browserAction.setBadgeText({text: request.bitcoinAddress.trim().substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 }

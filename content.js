@@ -19,13 +19,18 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
     chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
 
+    // ProTip finds addresses in a 2 step in process using 2 different functions.
+    // 1) It scans the whole page and wraps all the bitcoin addresses it finds.
+    // 2) It loops over all the wrapped bitcoin addresses and chooses the
+    //    bitcoin address it is going to put into the database.
+
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+        // If the URL is not blackedlisted, scan the page.
         if (request.method == 'isBlacklisted' && request.response == false){
-            // If the isBlackedlisted function returns false.
             scanText();
             scanLinks();
-            // (1) All found bitcoin address found in the links and text are tagged with
-            // the green bordered UI.
+            // (1) All found bitcoin addresses found in the links and text are tagged
+            // with the green bordered UI.
             // (2) We loop over all tagged elements and check and submit the
             // correctly prioritized found bitcoin address.
             selectPrioritizedBitcoinAddress({knownBTCAddress: request.knownBTCAddress});
@@ -41,18 +46,33 @@ function selectPrioritizedBitcoinAddress(options){
   var firstFoundLinkBitcoinAddress = document.getElementsByClassName('protip-link')[0];
   var firstFoundTextBitcoinAddress = document.getElementsByClassName('protip-text')[0];
 
-
-  //if ( options && scanMetatags().trim() == options.knownBTCAddress.trim()){
-      // ***Special Case***, if there is an address in the metatag but it is also previously known
-      // for this url display "META" instead of the first 4 characters of the previously known
-      // address in the chrome extension icon.
-      // Otherwise people don't think that Protip is detecting the metatag btc address.
-  //} else
+  var metatag = scanMetatags();
+  if ( options && options.knownBTCAddress == metatag){
+      // ***Special Case*** If the previously known bitcoin address is in the
+      // metatag, display the word 'Meta' instead of the first 4 characters of
+      // the known bitcoin addresss.
+      // Otherwise people don't think that ProTip is not detecting the bitcoin
+      // address in the Metatag on repeat visits to the URL.
+      chrome.runtime.sendMessage({
+          source: 'metatag',
+          action: "putBitcoinAddress",
+          bitcoinAddress: metatag,
+          title: document.title,
+          url: document.URL
+      });
+  } else
   if(options && options.knownBTCAddress) {
       // (1) Highlight known bitcoin address
       recordAndHighlightBitcoinAddress(options.knownBTCAddress)
-  } else if (scanMetatags()){
-      // (2) Don't select any bitcoin addresses.
+  } else if (metatag){
+      // (2) Don't select any bitcoin addresses. Display 'Meta' in ProTip icon.
+      chrome.runtime.sendMessage({
+          source: 'metatag',
+          action: "putBitcoinAddress",
+          bitcoinAddress: metatag,
+          title: document.title,
+          url: document.URL
+      });
   } else if (firstFoundLinkBitcoinAddress) {
       // (3) Highlight the first found Link bitcoin address
       recordAndHighlightBitcoinAddress(firstFoundLinkBitcoinAddress.getAttribute('data-protip-btc-address'));
@@ -152,13 +172,6 @@ function scanMetatags(){
     var metatags = document.getElementsByTagName('meta');
     for ( i = 0; i < metatags.length; i++ ) {
         if( metatags[i].name == 'microtip' && validAddress(metatags[i].content) ) {
-            chrome.runtime.sendMessage({
-                source: 'metatag',
-                action: "putBitcoinAddress",
-                bitcoinAddress: metatags[i].content,
-                title: document.title,
-                url: document.URL
-            });
             return metatags[i].content // only get the first instance of a microtip metatag.
         }
     }
