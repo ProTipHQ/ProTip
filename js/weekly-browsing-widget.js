@@ -67,6 +67,7 @@ function subscriptionAmountCell(record) {
         db.put('subscriptions', record).done(function(){
             subscriptionTotalFiatAmount().then(function(totalFiatAmount){
                 $('#subscription-total-amount').html(totalFiatAmount);
+                $('#subscription-total-amount-container').effect("highlight", {color: 'rgb(100, 189, 99)'}, 100); // cannot get this to work 'out of the box'.
             });
         });
     });

@@ -12,15 +12,22 @@ function totalSubscriptionsFiatAmount() {
 
 function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
     initFiatCurrency();
+    initIncidentalTotalFiat();
     initDefaultSubscriptionAmountFiat();
     localStorage['bitcoinFeeFiat'] = bitcoinFeeFiat;
+
     totalSubscriptionsFiatAmount().then(function(totalSubscriptionFiat) {
         return (function() {
             localStorage['subscriptionTotalFiat'] = totalSubscriptionFiat;
             $('#subscription-fiat-amount').html(totalSubscriptionFiat);
 
             var incidentalTotalFiat = setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
-            var weeklyTotalFiat = setWeeklyTotalFiat(incidentalTotalFiat, availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
+            //('#incidental-fiat-amount').val(availableIncidentalTotalFiat);
+            //localStorage['incidentalTotalFiat'] = incidentalTotalFiat;
+            $('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
+
+            var weeklyTotalFiat = setWeeklyTotalFiat(localStorage['incidentalTotalFiat'], bitcoinFeeFiat, totalSubscriptionFiat);
+            $('#total-fiat-amount').html(weeklyTotalFiat); // use standard money formattor
 
             if (weeklyTotalFiat > 0) {
                 var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
@@ -38,26 +45,23 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
 }
 
 function setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
-    if (!localStorage['incidentalTotalFiat']) {
-        localStorage['incidentalTotalFiat'] = 0;
-    }
-    var total = parseFloat(localStorage['incidentalTotalFiat']) + parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat)
+    //var total = parseFloat(localStorage['incidentalTotalFiat']) + parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat)
     var availableIncidentalTotalFiat = parseFloat(availableBalanceFiat) - (parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat));
     if (availableIncidentalTotalFiat < 0) {
         availableIncidentalTotalFiat = 0
     } // Handle first time loading with empty wallet.
-    $('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
-    return parseFloat(localStorage['incidentalTotalFiat']);
+
+    //$('#incidental-fiat-amount').val(availableIncidentalTotalFiat);
+    //$('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
+    return parseFloat(availableIncidentalTotalFiat);
 }
 
-function setWeeklyTotalFiat(incidentalTotalFiat, availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
-
-    var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
+function setWeeklyTotalFiat(incidentalTotalFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
+    var weeklyTotalFiat = parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat) + parseFloat(incidentalTotalFiat);
     weeklyTotalFiat = parseFloat(weeklyTotalFiat).toFixed(2);
     if (weeklyTotalFiat < 0) {
         weeklyTotalFiat = 0
     } // fix initializations problem.
-    $('#total-fiat-amount').html(weeklyTotalFiat); // use standard money formattor
     return weeklyTotalFiat;
 }
 
@@ -70,5 +74,11 @@ function initFiatCurrency() {
 function initDefaultSubscriptionAmountFiat() {
     if (!localStorage['defaultSubscriptionAmountFiat']) {
         localStorage['defaultSubscriptionAmountFiat'] = "0.25";
+    }
+}
+
+function initIncidentalTotalFiat(){
+    if (!localStorage['incidentalTotalFiat']) {
+        localStorage['incidentalTotalFiat'] = 0;
     }
 }

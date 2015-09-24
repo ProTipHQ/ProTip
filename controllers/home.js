@@ -70,13 +70,13 @@ function setupWalletBalance(){
         $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
 
-        currencyManager.amount(10000).then(function(formattedMoney) {
+        currencyManager.amount(FEE).then(function(formattedMoney) {
             $('#bitcoin-fee').text(formattedMoney);
         });
 
         var text;
         if (balance > 0) {
-            currencyManager.formatAmount(balance).then(function(formattedMoney) {
+            currencyManager.formatCurrency(balance).then(function(formattedMoney) {
                 for(i=0;i < $('.btc-balance-to-fiat').length; i++){
                     $('.btc-balance-to-fiat')[i].textContent = formattedMoney;
                 }
@@ -137,7 +137,7 @@ $(function() {
             paymentManager.payAll().then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();
-				        restartCountDown();
+                restartCountDown();
                 $('#payment-history').effect("highlight", {
                     color: 'rgb(100, 189, 99)'
                 }, 4000);

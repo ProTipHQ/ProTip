@@ -114,7 +114,7 @@ function initBitcoinWallet(){
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
 
         if (balance > 0) {
-            currencyManager.formatAmount(balance).then(function(formattedMoney) {
+            currencyManager.formatCurrency(balance).then(function(formattedMoney) {
                 var text = formattedMoney;
                 $('#btc-balance-to-fiat').text(text);
             });

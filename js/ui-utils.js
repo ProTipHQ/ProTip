@@ -9,6 +9,27 @@ function allowExternalLinks() {
     });
 }
 
+function initAvailableCurrenciesOptions() {
+    if (!localStorage["fiatCurrencyCode"]) {
+        localStorage["fiatCurrencyCode"] = "USD"
+    }
+
+    var currencies = currencyManager.getAvailableCurrencies();
+    for (var i in currencies) {
+        var option = $('<option value="' + currencies[i] + '">' + currencies[i] + '</option>')[0];
+        $('#fiat-currency-select').append(option);
+    }
+
+    $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
+    updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+
+    $('#fiat-currency-select').change(function() {
+        preferences.setCurrency($(this.selectedOptions).val());
+        localStorage["fiatCurrencyCode"] = this.value;
+        updateFiatCurrencyCode();
+    });
+}
+
 function updateFiatCurrencyCode() {
     currencyManager.getSymbol().then(function(symbol){
         $.each($(".fiat-code"), function(key, element) {
