@@ -120,6 +120,12 @@ function scanText(){
 
     matchText(document.body, regex, function (node, match) {
 
+        if(node.textContent.trim() == node.parentElement.getAttribute('data-protip-btc-address')){
+          return
+          // This node has already been tagged/highlighted.
+          // Don't know why this code is run more than once for a given node.
+        }
+
         var words = node.textContent.split(' ');
         var parent_span = document.createElement("span");
         for ( i = 0; i < words.length; i++ ) {

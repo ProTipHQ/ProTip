@@ -131,6 +131,15 @@ function manualSubscription() {
 }
 
 function validAddress(address){
+  // Bitcoinjs doesn't do mixed normal and multisig inputs
+  // Proposed for version 2.
+  // Some patches exist:
+  // https://github.com/OutCast3k/bitcoin-multisig/issues/6
+  // An explaination is here.
+  // https://github.com/bitcoinjs/bitcoinjs-lib/issues/417
+  // Multisig addresses are defined as follows:
+  // base58(0x05 + [20-byte scripthash] + [4-byte checksum])
+  // For testnet, it's 0xC4 instead of 0x05, indeed.
   try {
       new Bitcoin.Address(address);
   } catch (e) {
