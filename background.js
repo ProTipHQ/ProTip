@@ -26,7 +26,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
                 chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
                 chrome.browserAction.setBadgeText({text: 'Sent!'});
             }, function(error){
-                // If doToggleAlarm() is not called, the alarm will fire every 12 hours after the set period.
+                // If doToggleAlarm() is not called, the alarm will fire every 2 hours after the set period.
                 // Maybe the balance is too low, or blockchain.info is not working, or there are no
                 // recorded bitcoins or subscriptions to send to.
                 console.log(error.message);
@@ -58,10 +58,10 @@ window.addEventListener("storage", function(e){
     }
 
     // If weekly reminder active, then show the [....] flag.
-    if (localStorage['manualRemind'] == 'true' && localStorage['weeklyAlarmReminder'] == 'true'){
-        chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
-        chrome.browserAction.setBadgeText({text: '....'});
-    }
+    // if (localStorage['manualRemind'] == 'true' && localStorage['weeklyAlarmReminder'] == 'true'){
+    //     chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
+    //     chrome.browserAction.setBadgeText({text: '....'});
+    // }
 }, false);
 
 function insufficientBalance() {

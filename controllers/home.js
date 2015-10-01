@@ -1,22 +1,22 @@
-function initCurrentWeek() {
-    var now = (new Date).getTime();
-    if (parseInt(localStorage['endOfWeek']) > now) {
-        // All okay, all variables set,
-        var milliSecondsInWeek = 604800000;
-        var extraHour = 3600000; // add an hour to help the UI design.
-
-        var alarm = now + milliSecondsInWeek + extraHour
-
-        var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
-
-        var daysRemaining = daysTillEndOfWeek(endOfWeek)
-
-    } else {
-        // Catch any missing variables and other rubbish, just restart.
-        // Good for initalization on first load.
-        restartTheWeek();
-    }
-    return {endOfWeek: endOfWeek, daysRemaining: daysRemaining}
+function initAlarmDisplay() {
+    alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
+        if(expired){
+            var now = (new Date).getTime();
+            var weekInTheFuture = new Date(now+(60 * 60 * 24 * 7)); // One week in the future.
+            $('#date-end-of-week').html('1 week from now, ' + weekInTheFuture.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+            $('#days-till-end-of-week').html('0');
+        } else {
+            chrome.alarms.getAll(function(objs){
+                var date = new Date(objs[0].scheduledTime);
+                $('#date-end-of-week').html('on ' + date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+                var daysRemaining = daysTillEndOfWeek(date);
+                $('#days-till-end-of-week').html(daysRemaining);
+                $('#date-end-of-week').effect("highlight", {
+                    color: 'rgb(100, 189, 99)'
+                }, 1000);
+            });
+        }
+   });
 }
 
 function setupWallet() {
@@ -91,18 +91,17 @@ function setupWalletBalance(){
 }
 
 function restartCountDown(){
-    var countDownObj = restartTheWeek();
-    $('#days-till-end-of-week').html(countDownObj.daysRemaining);
-    $('#days-till-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
+    window.alarmManager.doToggleAlarm();
+    initAlarmDisplay();
 
-    $('#date-end-of-week').html(countDownObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-    $('#date-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-
-    $('#donate-now-reminder').fadeOut();
+    // chrome.alarms.getAll(function(objs){
+    //     var date = new Date(objs[0].scheduledTime);
+    //     $('#date-end-of-week').html(date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+    //     $('#date-end-of-week').effect("highlight", {
+    //         color: 'rgb(100, 189, 99)'
+    //     }, 1000);
+    //     $('#donate-now-reminder').fadeOut();
+    // });
 }
 
 $(function() {
@@ -115,9 +114,13 @@ $(function() {
     updateFiatCurrencyCode();
     allowExternalLinks();
 
-    var currentWeekObj = initCurrentWeek();
-    $('#days-till-end-of-week').html(currentWeekObj.daysRemaining);
-    $('#date-end-of-week').html(currentWeekObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+    initAlarmDisplay();
+    // $('#days-till-end-of-week').html(currentWeekObj.daysRemaining);
+    // chrome.alarms.getAll(function(objs){
+    //     var date = new Date(objs[0].scheduledTime);
+    //     $('#date-end-of-week').html(date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
+    // });
+    //$('#date-end-of-week').html(currentWeekObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
 
     setupWalletBalance();
     buildBrowsingTable('browsing-table');
@@ -147,7 +150,7 @@ $(function() {
                 if (response.trim() != 'Transaction Submitted'){
                     $('#payment-error').html(response);
                     $('#payment-error').fadeIn().slideDown();
-                    restartCountDown();
+                    //restartCountDown();
                 } else {
                     $('#transaction-submitted').html(response);
                     $('#payment-error').fadeIn().slideDown();
@@ -196,20 +199,20 @@ $(function() {
 
     $("input[name=remind-me]:radio").change(function(value) {
         if (this.value == 'automaticDonate') {
-            $('#automatic-donate-container').toggleClass('list-group-item-success');
-            $('#manual-remind-container').toggleClass('list-group-item-success');
-            //restartTheWeek();
-
             localStorage['automaticDonate'] = true;
             localStorage['manualRemind'] = false;
+            alarmManager.alarmExpired(function(expired){
+                if (expired) {
+                    restartTheWeek();
+                    window.alarmManager.doToggleAlarm();
+                    restartCountDown();
+                }
+            });
         } else {
-            $('#automatic-donate-container').toggleClass('list-group-item-success');
-            $('#manual-remind-container').toggleClass('list-group-item-success');
-            //restartTheWeek();
             localStorage['automaticDonate'] = false;
             localStorage['manualRemind'] = true;
         }
-        restartCountDown();
+        //restartCountDown();
     });
 
     $('#incidental-fiat-amount').change(function() {
@@ -296,7 +299,6 @@ $(function() {
     $('#toggle-alarm').click(function() {
         window.alarmManager.doToggleAlarm();
         restartCountDown();
-        //restartTheWeek();
     });
 
     $("#clear-data").click(function() {

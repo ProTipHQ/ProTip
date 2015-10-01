@@ -40,6 +40,19 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     });
 }
 
+function knownBTCAddressFoundOnPage(options){
+    var firstFoundLink = Array.prototype.slice.call( document.getElementsByClassName('protip-link') );
+    var firstFoundText = Array.prototype.slice.call( document.getElementsByClassName('protip-text') );
+
+    var all = firstFoundLink.concat(firstFoundText);
+
+    if(!(all.indexOf(options.knownBTCAddress) < 0)){
+        console.log(options.knownBTCAddress + ' knownBTCAddress and found on page ' + all);
+        return true;
+    }
+    return false;
+}
+
 function selectPrioritizedBitcoinAddress(options){
   // There may be many BTC addresses on the page. We can only record one address
   // The order of priority is (1) knownBTCAddress > (2) Metatags > (3) Links > (4) Text
@@ -60,9 +73,9 @@ function selectPrioritizedBitcoinAddress(options){
           title: document.title,
           url: document.URL
       });
-  } else
-  if(options && options.knownBTCAddress) {
+  } else if(options && options.knownBTCAddress && knownBTCAddressFoundOnPage(options)) {
       // (1) Highlight known bitcoin address
+      // NOTE: The known address must still exist on the present url.
       recordAndHighlightBitcoinAddress(options.knownBTCAddress)
   } else if (metatag){
       // (2) Don't select any bitcoin addresses. Display 'Meta' in ProTip icon.
@@ -116,14 +129,16 @@ function scanLinks() {
 }
 
 function scanText(){
-    var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)", "g");
+    var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)");
 
     matchText(document.body, regex, function (node, match) {
 
-        if(node.textContent.trim() == node.parentElement.getAttribute('data-protip-btc-address')){
-          return
-          // This node has already been tagged/highlighted.
-          // Don't know why this code is run more than once for a given node.
+        if(node.textContent.trim() == node.parentElement.parentElement.parentElement.getAttribute('data-protip-btc-address')){
+            console.log('Double checkbox code called.');
+            console.log(node);
+            return
+            // This node has already been tagged/highlighted.
+            // Don't know why this code is run more than once for a given node.
         }
 
         var words = node.textContent.split(' ');
@@ -218,6 +233,16 @@ function tagElementWithProTipUI(match, klass_name){
                     { action: "deleteBitcoinAddress" }, "*"
                 );
                 this.parentElement.style.backgroundColor = 'transparent';
+                var selectedBTCAddress = this.parentElement.getAttribute('data-protip-btc-address');
+                els = document.getElementsByClassName('protip-checkbox');
+                for ( i = 0; i < els.length; i++ ) {
+                    // uncheck all other instances of the same btc address.
+                    if ( els[i].parentElement.getAttribute('data-protip-btc-address') == selectedBTCAddress ) {
+                        els[i].checked = false;
+                        els[i].parentElement.style.border = 'solid 1px #7FE56F';
+                        els[i].parentElement.style.backgroundColor = 'transparent';
+                    }
+                }
             }
         }, false
     );
@@ -269,7 +294,7 @@ function ensureSingleSelectionOfCheckbox(selectedBTCAddress){
     // Will see how user testing proceeds. :).
     els = document.getElementsByClassName('protip-checkbox');
     for ( i = 0; i < els.length; i++ ) {
-        if ( els[i].id == 'protip-checkbox-' + selectedBTCAddress ) {
+        if ( els[i].parentElement.getAttribute('data-protip-btc-address') == selectedBTCAddress ) {
             els[i].checked = true;
             els[i].parentElement.style.backgroundColor = '#7FE56F';
         } else {
