@@ -14,6 +14,8 @@ function initDefaultBlacklistedHostnames() {
         hostname: "blockchain.info"
     }, {
         hostname: "google.com"
+    }, {
+        hostname: "google.co.uk"
     }]
 
     db.put('blacklistedhostnames', hostnames);
@@ -151,9 +153,30 @@ $(document).ready(function() {
     initSponsors();
     setupWallet();
 
+    if(!localStorage['availableBalanceFiat']){
+        localStorage['availableBalanceFiat'] = 0.00;
+    }
+    if(!localStorage['bitcoinFeeFiat']){
+        localStorage['bitcoinFeeFiat'] = 0.02;
+    }
+    if(!localStorage['subscriptionTotalFiat']){
+        localStorage['subscriptionTotalFiat'] = 0.00
+    }
+    if(!localStorage['incidentalTotalFiat']){
+        localStorage['incidentalTotalFiat'] = 0.00
+    }
+
     allowExternalLinks();
-    $('#launch').click(function(){
+
+    $('#launch').click(function(obj){
         localStorage['proTipInstalled'] = true;
+        if(localStorage['protip-popup-install']){
+           chrome.tabs.create({
+                url: "./views/home.html" // obj.href
+           });
+        } else {
+           window.location.href = "./home.html";
+        }
     });
 
     // Start the clock running.
@@ -187,6 +210,8 @@ $(document).ready(function() {
             setupWallet();
             $('#successAlertLabel').text('Private key imported successfully.');
             $('#successAlertLabel').slideDown();
+            $('#private').slideUp();
+            $('#middle-aligned-media').slideUp();
         }, function(e) {
             if (e.message === 'Incorrect password') {
                 $('#importPrivateKeyBadPrivateKey').slideUp();

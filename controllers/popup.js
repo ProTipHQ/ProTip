@@ -1,12 +1,3 @@
-
-function restartCountDown(){
-    var countDownObj = restartTheWeek();
-    $('#days-till-end-of-week').html(countDownObj.daysRemaining);
-    $('#days-till-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
-}
-
 function buildPopupBrowsingTable(domId) {
     var tbody = $('#' + domId);
     tbody.empty();
@@ -56,12 +47,65 @@ function buildPopupRow(record) {
     return row;
 }
 
+function restartCountDown(){
+    var countDownObj = restartTheWeek();
+    $('#days-till-end-of-week').html(countDownObj.daysRemaining);
+    $('#days-till-end-of-week').effect("highlight", {
+        color: 'rgb(100, 189, 99)'
+    }, 1000);
+}
+
+// function initPopupCurrentWeek() {
+//     alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
+//
+//         var remindInfo = document.createElement('div');
+//         remindInfo.style.float = 'left';
+//         remindInfo.style.padding = '4px';
+//
+//         if (localStorage['automaticDonate'] == 'true') {
+//             remindInfoText = document.createTextNode('Next automatic payment in ');
+//         } else {
+//             remindInfoText = document.createTextNode('Reminder in ');
+//         }
+//         remindInfo.appendChild(remindInfoText);
+//
+//         var daysTillEndOfWeekInfo = document.createElement('span');
+//         daysTillEndOfWeekInfo.id = 'days-till-end-of-week';
+//
+//         var daysRemaining = daysTillEndOfWeek(localStorage['alarmExpireDate']);
+//
+//         daysTillEndOfWeekInfo.textContent = daysRemaining;
+//         daysTillEndOfWeekInfo.className = 'label label-info';
+//         daysTillEndOfWeekInfo.style = 'float: none;font-size:7px;border-radius:10px;';
+//         remindInfo.appendChild(daysTillEndOfWeekInfo);
+//         remindInfo.appendChild(document.createTextNode(' days.'));
+//         $('#reminder-info-container').append(remindInfo);
+//
+//         if(expired){
+//
+//         } else {
+//             var alarmExpireDate = new Date(localStorage['alarmExpireDate']);
+//             var daysRemaining = daysTillEndOfWeek(alarmExpireDate);
+//
+//             $('days-till-end-of-week');
+//
+//
+//             daysTillEndOfWeekInfo.textContent = daysRemaining;
+//             daysTillEndOfWeekInfo.className = 'label label-info';
+//             daysTillEndOfWeekInfo.style = 'float: none;font-size:7px;border-radius:10px;';
+//             remindInfo.appendChild(daysTillEndOfWeekInfo);
+//             //remindInfo.appendChild(document.createTextNode(' days.'));
+//             $('#reminder-info-container').append(remindInfo);
+//         }
+//    });
+// }
+
 function initPopupCurrentWeek() {
     var now = (new Date).getTime();
     if (parseInt(localStorage['endOfWeek']) > now) {
         var endOfWeek = new Date(parseInt(localStorage['endOfWeek']));
 
-        var daysRemaining = daysTillEndOfWeek(endOfWeek);
+        var daysRemaining = daysTillEndOfWeek(endOfWeek) - 1;
 
         var remindInfo = document.createElement('div');
         remindInfo.style.float = 'left';
@@ -139,6 +183,7 @@ function initBitcoinWallet(){
 
 $(function() {
     if(!localStorage['proTipInstalled']) {
+        localStorage['protip-popup-install'] = true;
         window.location.replace("install.html");
     }
 
@@ -161,21 +206,6 @@ $(function() {
 
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
-
-    // These should be set on the first run page. ????
-    if(!localStorage['availableBalanceFiat']){
-        localStorage['availableBalanceFiat'] = 0.00;
-    }
-    if(!localStorage['bitcoinFeeFiat']){
-        localStorage['bitcoinFeeFiat'] = 0.02;
-    }
-    if(!localStorage['subscriptionTotalFiat']){
-        localStorage['subscriptionTotalFiat'] = 0.00
-    }
-    if(!localStorage['incidentalTotalFiat']){
-        localStorage['incidentalTotalFiat'] = 0.00
-    }
-    /////////
 
     $('#confirm-donate-now').click(function() {
 

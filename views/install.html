@@ -69,18 +69,19 @@
         <div class="media">
           <div class="media-body">
             <p>
-               Bitcoin is a electronic cash, the system is peer-to-peer where users can transact directly
-               without needing an intermediary.
+              Bitcoin is like email for cash. A public address, like your email, where people can send bitcoins, and a private password to ensure only you can spend received bitcoins. You can trade in your bitcoins at an exchange for your local currency or send them to another address for goods and services.
             </p>
-            <p>
-              This is your private key, <strong style="color:red;">save it somewhere safe and private</strong>.
-            </p>
-            <p>
-              <input type="text" class="form-group has-warning" id="private-key-input"
-                style="width:450px;
-                      border-color: #F40B37;
-                      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" value="" />
-            </p>
+            <div id="private">
+              <p>
+                This is your private key, <strong style="color:red;">save it somewhere safe and private</strong>.
+              </p>
+              <p>
+                <input type="text" class="form-group has-warning" id="private-key-input"
+                  style="width:450px;
+                        border-color: #F40B37;
+                        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" value="" />
+              </p>
+            </div>
           </div>
         </div>
         <div class="media">
@@ -134,7 +135,7 @@
     </div>
 
     <div style="text-align:right;padding:20px;">
-      <a id="launch" href="./home.html" class="btn btn-lg btn-success external-link float-right">
+      <a id="launch" class="btn btn-lg btn-success float-right">
         Start ProTip
         <span class="glyphicon glyphicon-chevron-right big-icon" aria-hidden="true"></span>
       </a>

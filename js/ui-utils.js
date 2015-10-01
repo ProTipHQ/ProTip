@@ -9,6 +9,26 @@ function allowExternalLinks() {
     });
 }
 
+// function getAlarm(){
+//     chrome.alarms.getAll(function(objs){
+//         var date = new Date(objs[0].scheduledTime);
+//         console.log(
+//             'Alarm Set to ' + date.format()
+//         );
+//     });
+// }
+//
+// function setAlarm(date){
+//     // date formatt "mmm dd yyyy HH:MM:ss"
+//     var date = new Date(date);
+//     chrome.alarms.getAll(function(objs){
+//         objs[0].scheduledTime = date.getTime();
+//         console.log(
+//             'Alarm Updated! ' + date.format()
+//         );
+//     });
+// }
+
 function updateFiatCurrencyCode() {
     currencyManager.getSymbol().then(function(symbol){
         $.each($(".fiat-code"), function(key, element) {
