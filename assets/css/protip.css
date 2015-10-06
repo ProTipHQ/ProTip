@@ -102,6 +102,11 @@ color: #007aff;
   width:65px;
 }
 
+.ajax-loader {
+  display: none;
+  margin-left:10px;
+}
+
 .ios-red        { color: #ff3b30; }
 .ios-orange     { color: #ff9500; }
 .ios-yellow     { color: #fc0;    }

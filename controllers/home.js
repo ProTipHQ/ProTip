@@ -11,9 +11,6 @@ function initAlarmDisplay() {
                 $('#date-end-of-week').html('on ' + date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
                 var daysRemaining = daysTillEndOfWeek(date);
                 $('#days-till-end-of-week').html(daysRemaining);
-                $('#date-end-of-week').effect("highlight", {
-                    color: 'rgb(100, 189, 99)'
-                }, 1000);
             });
         }
    });
@@ -93,6 +90,9 @@ function setupWalletBalance(){
 function restartCountDown(){
     window.alarmManager.doToggleAlarm();
     initAlarmDisplay();
+    $('#date-end-of-week').effect("highlight", {
+        color: 'rgb(100, 189, 99)'
+    }, 1000);
 
     // chrome.alarms.getAll(function(objs){
     //     var date = new Date(objs[0].scheduledTime);
@@ -230,6 +230,7 @@ $(function() {
         //     $(this).attr('max', incidentalTotalFiat);
         // }
         var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
+
         if (balanceCoversXWeeks < 0) {
             balanceCoversXWeeks = 0
         } // initalization with empty wallet.

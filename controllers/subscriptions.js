@@ -173,6 +173,8 @@ $(function() {
         $('#subscription-total-amount').html(totalFiatAmount);
     });
 
+    $('#manual-amount-fiat').attr('placeholder', localStorage['defaultSubscriptionAmountFiat']);
+
     $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address'); // A hack.
     $('#manualSubscriptionForm').validate({
         rules: {
