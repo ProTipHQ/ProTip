@@ -137,7 +137,7 @@ $(function() {
             preferences.setCurrency(localStorage['fiatCurrencyCode']),
             //wallet.restoreAddress()
         ]).then(function() {
-            paymentManager.payAll().then(function(response){
+            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();
                 restartCountDown();

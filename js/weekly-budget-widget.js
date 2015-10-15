@@ -19,7 +19,7 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
     totalSubscriptionsFiatAmount().then(function(totalSubscriptionFiat) {
         return (function() {
             localStorage['subscriptionTotalFiat'] = totalSubscriptionFiat;
-            $('#subscription-fiat-amount').html(totalSubscriptionFiat);
+            $('#subscription-fiat-amount').html(parseFloat(totalSubscriptionFiat).formatMoney(2));
 
             var incidentalTotalFiat = setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
             //('#incidental-fiat-amount').val(availableIncidentalTotalFiat);

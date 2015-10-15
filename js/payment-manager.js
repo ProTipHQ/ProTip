@@ -6,15 +6,16 @@
 
     paymentManager.prototype = {
 
-        subscriptions: function(fiatCurrencyCode) {
+        subscriptions: function(exchangeRateToSatoshi) {
             return new Promise(function(resolve, reject) {
                 var subscriptions = [];
                 db.values('subscriptions').done(function(records) {
+                    var txSatoshis;
                     for (i = 0; i < records.length; i++) {
+                        txSatoshis = Math.floor(records[i].amountFiat / exchangeRateToSatoshi);
                         subscriptions.push({
                             txDest: records[i].bitcoinAddress.trim(),
-                            amountFiat: records[i].amountFiat,
-                            currencyCode: fiatCurrencyCode,
+                            txSatoshis: txSatoshis,
                             paymentType: 'subscription'
                         });
                     }
@@ -23,26 +24,32 @@
             });
         },
 
-        browsing: function(incidentalTotalFiat, fiatCurrencyCode) {
+        //browsing: function(incidentalTotalFiat, fiatCurrencyCode, exchangeRate) {
+        browsing: function(incidentalTotalSatoshi) {
             return new Promise(function(resolve, reject) {
                 var sites = [];
                 db.values('sites').done(function(records) {
+
+                    records = _.filter(records, function(record){ return record.timeOnPage > 0; });
+                    records = _.sortBy(records, 'timeOnPage').reverse().slice(0,9);
+
                     var totalTime = 0;
                     for (i = 0; i < records.length; i++) {
                         if (records[i].timeOnPage) {
                             totalTime += parseInt(records[i].timeOnPage);
                         }
                     };
+                    var amountCoeff;
+                    var txSatoshis;
                     for (i = 0; i < records.length; i++) {
-                        var slice = (records[i].timeOnPage / totalTime).toFixed(2);
-                        var amountFiat = parseFloat(slice * parseFloat(incidentalTotalFiat));
-                        amountFiat = parseFloat(amountFiat.toFixed(2)); // Don't send less than 1 cent
-                        // Otherwise it can take days to confirm.
-                        if (amountFiat > 0) {
+                        amountCoeff = (records[i].timeOnPage / totalTime);
+                        // Round down. Rounding errors may cause the sumation
+                        // of sites[x].txSatoshis to exceed incidentalTotalSatoshi
+                        txSatoshis = Math.floor(amountCoeff * incidentalTotalSatoshi);
+                        if (txSatoshis > 0) {
                             sites.push({
                                 txDest: records[i].bitcoinAddress.trim(),
-                                amountFiat: amountFiat,
-                                currencyCode: fiatCurrencyCode,
+                                txSatoshis: txSatoshis,
                                 paymentType: 'browsing'
                             });
                         }
@@ -51,6 +58,74 @@
                 });
             });
         },
+
+        // payAll: function(totalWeeklyBudgetFiat) {
+        //     return Promise.all([
+        //         wallet.getBalance(),
+        //         preferences.getExchangeRate()
+        //     ]).then(function(results){
+        //         var balanceSatoshis = results[0];
+        //         var exchangeRateToSatoshi = results[1];
+        //         var totalWeeklyBudgetSatoshi = Math.floor(totalWeeklyBudgetFiat / exchangeRateToSatoshi);
+        //
+        //         if(totalWeeklyBudgetSatoshi < fee){
+        //             reject(Error('Balance must at least exceed minimum Bitcoin fee.'));
+        //         }
+        //         var browsing = ret.browsing(exchangeRateToSatoshi);
+        //         var subscriptions = ret.subscriptions(exchangeRateToSatoshi);
+        //
+        //         if(balanceSatoshis < totalWeeklyBudgetSatoshi){
+        //             totalWeeklyBudgetSatoshi = balanceSatoshis; // empty the wallet of remaining funds.
+        //         }
+        //         if(totalWeeklyBudgetSatoshi < fee){
+        //             reject(Error('not enough funds to cover the fee');
+        //         }
+        //         var availableSatoshi = totalWeeklyBudgetSatoshi - fee;
+        //         var selectedPayments = [];
+        //         var runningTotal = 0;
+        //
+        //         // The Subscriptions have priority over Browsing to the totalWeeklyBudgetSatoshi
+        //         // do subscriptions first.
+        //         for(var i=0;subscriptions.length > i;i++){
+        //           if(runningTotal >= availableSatoshi){
+        //               break;
+        //           }
+        //           runningTotal += subscriptions[i].amountSatoshi;
+        //           if (runningTotal - availableSatoshi > 0){
+        //               //empty the wallet
+        //               subscriptions[i].amountSatoshi -= runningTotal - availableSatoshi;
+        //               runningTotal = availableSatoshi;
+        //           }
+        //           selectedPayments.push(subscriptions[i]);
+        //         }
+        //         // Give priority to the remainer of the funds to the largest payments.
+        //         browsing = _.sortBy(browsing, 'amountSatoshi').reverse();
+        //         for(var i=0;browsing.length > i;i++){
+        //           if(runningTotal >= availableSatoshi){
+        //               break;
+        //           }
+        //           runningTotal += browsing[i].amountSatoshi;
+        //           if (runningTotal - availableSatoshi > 0){
+        //               //empty the wallet
+        //               browsing[i].amountSatoshi -= runningTotal - availableSatoshi;
+        //               runningTotal = availableSatoshi;
+        //           }
+        //           selectedPayments.push(browsing[i]);
+        //         }
+        //         if (selectedPayments.length > 0) {
+        //             // wallet.mulitpleOutputsSend(selectedPayments, fee, '').then(function(response) {
+        //             //     db.clear('sites');
+        //             //     resolve(response);
+        //             // }, function(error){
+        //             //     reject(Error(error.message));
+        //             // });
+        //         } else {
+        //             reject(Error('No browsing history or subscriptions.'));
+        //         }
+        //     });
+        //   });
+        // },
+
 
         processPayments: function(paymentFiatData, totalWeeklyBudgetSatoshis, exchangeRate) {
             // Add the payments *upto* fiat budget.
@@ -65,7 +140,7 @@
 
             for (i = 0; i < paymentFiatData.length; i++) {
                 var satoshisAsFloat = (parseFloat(paymentFiatData[i].amountFiat) / exchangeRate) * satoshis;
-                paymentFiatData[i].txSatoshis = parseInt(satoshisAsFloat);
+                paymentFiatData[i].txSatoshis = Math.floor(parseFloat(satoshisAsFloat));
                 paymentFiatData[i].exchangeRate = exchangeRate;
                 txTotalSatoshis += paymentFiatData[i].txSatoshis;
 
@@ -81,73 +156,95 @@
             return paymentObjs;
         },
 
-        totalSubscriptionsFiat: function(subscriptions) {
-            var total = 0.0;
-            for (i = 0; i < subscriptions.length; i++) {
-                total += parseFloat(subscriptions[i].amountFiat);
-            }
-            return total
-        },
-
-        totalIncidentalFiat: function(sites) {
-            var total = 0;
-            for (i = 0; i < sites.length; i++) {
-                if (sites[i].amountFiat) {
-                    total += parseFloat(sites[i].amountFiat);
-                }
-            }
-            return total;
-        },
-
-        payAll: function() {
+        payAll: function(incidentalTotalFiat, subscriptionTotalFiat) {
+            // Very important, many currency conversions cause rounding
+            // errors, which can result in very small, but important
+            // over run of the total weekly budget.
+            //
+            // This function is intended to produce an array of payment Objects
+            // which reflect as accuately as possible the user's desired
+            // distribution of funds, and not to exceed the weekly budgets
+            // of browsing and subscriptions.
+            // The actual balance of the wallet isn't considered here. It is
+            // considered in the wallet.mulitpleOutputsSend.
             return new Promise(function(resolve, reject) {
-                Promise.all([
-                    preferences.getExchangeRate(),
-                    ret.browsing(
-                        localStorage['incidentalTotalFiat'],
-                        localStorage['totalTime'],
-                        localStorage['fiatCurrencyCode']
-                    ),
-                    ret.subscriptions(localStorage['fiatCurrencyCode'])
-                ]).then(function(result) {
-                    var exchangeRate = result[0];
-                    var browsing = result[1];
-                    var subscriptions = result[2];
-                    var totalSubscriptionsFiat = ret.totalSubscriptionsFiat(subscriptions);
-                    var totalIncidentalFiat = ret.totalIncidentalFiat(browsing);
+                preferences.getExchangeRate().then(function(exchangeRateToBTC) {
+                    var exchangeRateToSatoshi = exchangeRateToBTC / satoshis;
+                    var incidentalTotalSatoshi = Math.floor(incidentalTotalFiat / exchangeRateToSatoshi);
+                    var subscriptionTotalSatoshi = Math.floor(subscriptionTotalFiat / exchangeRateToSatoshi);
 
-                    var totalFiat = parseFloat(totalIncidentalFiat) + parseFloat(totalSubscriptionsFiat);
-
-                    var totalWeeklyBudgetSatoshis = parseInt(totalFiat / exchangeRate * satoshis);
-
-                    var balanceSatoshis = parseInt(wallet.getBalance());
-
-                    if (balanceSatoshis < fee) {
-                        // wallet is effectively empty
+                    if(fee > wallet.getBalance()){
                         reject(Error('Balance must at least exceed minimum Bitcoin fee.'));
-                        //console.log('wallet is effectively empty');
-                        //return false;
-                    } else if ((totalWeeklyBudgetSatoshis + fee) > balanceSatoshis) { // do not exceed current balance.
-                        totalWeeklyBudgetSatoshis = balanceSatoshis - fee; // If insufficent funds just empty the wallet.
                     }
-
-                    subscriptions = ret.processPayments(subscriptions, totalWeeklyBudgetSatoshis, exchangeRate); // fulfil subscriptions first.
-                    browsing = ret.processPayments(browsing, totalWeeklyBudgetSatoshis, exchangeRate);
-                    var paymentObjs = subscriptions.concat(browsing);
-
-                    if (paymentObjs.length > 0) {
-                        wallet.mulitpleOutputsSend(paymentObjs, fee, '').then(function(response) {
-                            // console.log('---Automatic Payments ---');
-                            // console.log(paymentObjs);
-                            // console.log('-------------------------');
-                            db.clear('sites');
-                            resolve(response);
-                        }, function(error){
-                            reject(Error(error.message));
-                        });
-                    } else {
-                        reject(Error('No browsing history or subscriptions.'));
+                    // If the weekly budget exceeds the total balance, then this function
+                    // just empties the wallet.
+                    return {
+                        exchangeRateToSatoshi: exchangeRateToSatoshi,
+                        incidentalTotalSatoshi: incidentalTotalSatoshi,
+                        subscriptionTotalSatoshi: subscriptionTotalSatoshi
                     }
+                }).then(function(resultObj){
+                    return Promise.all([
+                        ret.browsing(resultObj.incidentalTotalSatoshi),
+                        ret.subscriptions(resultObj.exchangeRateToSatoshi),
+                        new Promise(function (resolve) { resolve(resultObj.incidentalTotalSatoshi)}),
+                        new Promise(function (resolve) { resolve(resultObj.subscriptionTotalSatoshi)})
+                    ]).then(function(results){
+                         var browsingPaymentObjs = results[0];
+                         var subscriptionsPaymentObjs = results[1];
+                         var incidentalTotalSatoshi = results[2];
+                         var subscriptionTotalSatoshi = results[3];
+                         var availableSatoshi = incidentalTotalSatoshi + subscriptionTotalSatoshi;
+                         var selectedPayments = [];
+                         var runningTotal = 0;
+
+                       // The Subscriptions have priority over Browsing to the totalWeeklyBudgetSatoshi
+                       // do subscriptions first.
+                       for(var i=0;subscriptionsPaymentObjs.length > i;i++){
+                           if(runningTotal >= availableSatoshi){
+                               break;
+                           }
+                           runningTotal += subscriptionsPaymentObjs[i].txSatoshis;
+                           if (runningTotal - availableSatoshi > 0){
+                               //empty the wallet
+                               subscriptionsPaymentObjs[i].txSatoshis -= runningTotal - availableSatoshi;
+                               runningTotal = availableSatoshi;
+                           }
+                           selectedPayments.push(subscriptionsPaymentObjs[i]);
+                       }
+                       // Give priority to the remainer of the funds to the largest payments.
+                       browsingPaymentObjs = _.sortBy(browsingPaymentObjs, 'txSatoshis').reverse();
+                       for(var i=0;browsingPaymentObjs.length > i;i++){
+                           if(runningTotal >= availableSatoshi){
+                               break;
+                           }
+                           runningTotal += browsingPaymentObjs[i].txSatoshis;
+                           if (runningTotal - availableSatoshi > 0){
+                               //empty the wallet
+                               browsingPaymentObjs[i].txSatoshis -= runningTotal - availableSatoshi;
+                               runningTotal = availableSatoshi;
+                           }
+                           selectedPayments.push(browsingPaymentObjs[i]);
+                       }
+                       if (selectedPayments.length == 0) {
+                           reject(Error('No browsing history or subscriptions.'));
+                       }
+                       var calculatedTotalAmountSatoshi = _.reduce(selectedPayments, function(memo, obj){ return obj.txSatoshis + memo; }, 0);
+                       if (wallet.getBalance() >= calculatedTotalAmountSatoshi
+                         && availableSatoshi >= calculatedTotalAmountSatoshi) {
+                           wallet.mulitpleOutputsSend(selectedPayments, fee, '').then(function(response) {
+                               //db.clear('sites');
+                               resolve(response);
+                           }, function(error){
+                               reject(Error(error.message));
+                           });
+                       } else {
+                           return Error(
+                                 'Error: payment totals mismatch. No payments sent.' +
+                                 'Please report this error to https://github.com/Leo-ajc/ProTip.'
+                           );
+                       }
+                   });
                 });
             });
         }
