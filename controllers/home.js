@@ -20,7 +20,10 @@ function setupWallet() {
     wallet.restoreAddress().then(setQRCodes,
         function() {
             return wallet.generateAddress();
-        }).then(setQRCodes,
+        }).then(function(){
+            setQRCodes;
+            //getAvailableBalance(wallet.getAddress())
+        },
         function() {
             alert('Failed to generate wallet. Refresh and try again.');
         });
@@ -31,7 +34,27 @@ function setupWallet() {
         var blockchainURL = 'https://blockchain.info/address/' + wallet.getAddress();
         $('#payment-history-link').attr('href', blockchainURL);
     }
+
+    // function showBalancePendingConfirmation() {
+    //     var confirmationCount = 0
+    //     var blockchainInfoUrl = 'https://blockchain.info/q/addressbalance/' + wallet.getAddress() + '?confirmations=' + confirmationCount;
+    //     Promise.all([ util.get(blockchainInfoUrl),
+    //                   preferences.getLastBalance(),
+    //     ]).then(function(results){
+    //         var zeroConfirmationsBalance = results[0];
+    //         var confirmedBalance = results[1];
+    //         var pendingConfirmed = zeroConfirmationsBalance - confirmedBalance;
+    //         if(pendingConfirmed > 0){
+    //             $('#balance-pending-confirmation-container').show();
+    //         }
+    //         return currencyManager.formatCurrency(pendingConfirmed)
+    //     }).then(function(pendingConfirmed){
+    //         $('#balance-pending-confirmation').html(pendingConfirmed);
+    //     });
+    // }
 }
+
+
 
 function setMinIncidentalFiatAmounts(incidentalTotalFiat){
     if(parseFloat(incidentalTotalFiat) >= 0.03) {
@@ -43,6 +66,28 @@ function setMinIncidentalFiatAmounts(incidentalTotalFiat){
     }
 }
 
+// function getAvailableBalance(address){
+//     var host = 'https://blockchain.info/';
+//     Promise.all([
+//         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
+//         util.getJSON(host + 'unspent?address=' + address),
+//     ]).then(function (results) {
+//         var confirmedBalance = results[0];
+//         var unspentOutputs = results[1];
+//         if(typeof unspentOutputs.notice !== "undefined"){
+//           reject(Error(unspentOutputs.notice.trim()));
+//         }
+//         unspentOutputs = unspentOutputs.unspent_outputs;
+//         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+//         if(unspentBalance != confirmedBalance){
+//              $('#balance-available-container').show();
+//         }
+//         return currencyManager.formatCurrency(unspentBalance)
+//     }).then(function(unspentBalance){
+//         $('#balance-available').html(unspentBalance);
+//     });
+// }
+
 function setupWalletBalance(){
     var val = '',
         address = '',
@@ -51,20 +96,122 @@ function setupWalletBalance(){
         BTCUnits = 'BTC',
         BTCMultiplier = SATOSHIS;
 
+    // wallet.setBalanceListener(function(balance) {
+    //     var confirmedBalanceUrl = 'https://blockchain.info/q/addressbalance/' + wallet.getAddress() + '?confirmations=6';
+    //     setBalance(balance);
+    //     Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
+    //         localStorage['availableBalanceFiat'] = results[0];
+    //         setBudgetWidget(results[0], results[1]);
+    //     });
+    // });
+    setupWallet();
+
     wallet.setBalanceListener(function(balance) {
-        setBalance(balance);
-        Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-            localStorage['availableBalanceFiat'] = results[0];
-            setBudgetWidget(results[0], results[1]);
+        var host = 'https://blockchain.info/';
+        var address = wallet.getAddress();
+        util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6').then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+            setBalance(confirmedBalance);
+            localStorage['availableBalanceFiat'] = confirmedBalance;
+            currencyManager.amount(FEE).then(function(fee){
+                setBudgetWidget(confirmedBalance, fee);
+            });
+
+            util.getJSON(host + 'unspent?address=' + address).then(function(unspentOutputs){
+                return unspentOutputs;
+            }, function(){
+                return 0; // no unspent outputs returns a 500 error rather than '[]'.
+                // Maybe this makes sense to Blockchain.info. It doesn't make any
+                // sense to me. WTF.
+                // Carefull because if the extension gets too many 500 errors it
+                // will self throttle, causing more issues.
+            }).then(function(unspentOutputs){
+              unspentOutputs = unspentOutputs.unspent_outputs;
+              var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+              if(unspentBalance != confirmedBalance){
+                   $('#balance-available-container').show();
+              }
+              currencyManager.formatCurrency(unspentBalance).then(function(unspentBalanceFormatted){
+                  for(i=0;i < $('.balance-available').length; i++){
+                      $('.balance-available')[i].textContent = unspentBalanceFormatted;
+                  }
+              });
+           });
+        }, function(error){
+            $('#unknownErrorAlert').slideDown();
+            $('#unknownErrorAlertLabel').text(error.message);
+            return 0;
         });
     });
-    setupWallet();
+    //
+    //
+    // wallet.setBalanceListener(function(balance) {
+    //     var host = 'https://blockchain.info/';
+    //     var address = wallet.getAddress();
+    //     Promise.all([
+    //         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
+    //         util.getJSON(host + 'unspent?address=' + address),
+    //     ]).then(function (results) {
+    //         var confirmedBalance = results[0];
+    //         var unspentOutputs = results[1];
+    //         if(typeof unspentOutputs.notice !== "undefined"){
+    //           reject(Error(unspentOutputs.notice.trim()));
+    //         }
+    //
+    //         unspentOutputs = unspentOutputs.unspent_outputs;
+    //         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+    //         if(unspentBalance != confirmedBalance){
+    //              $('#balance-available-container').show();
+    //         }
+    //         setBalance(confirmedBalance);
+    //         Promise.all([
+    //             currencyManager.amount(confirmedBalance),
+    //             currencyManager.amount(FEE),
+    //             currencyManager.formatCurrency(unspentBalance)
+    //         ]).then(function(results) {
+    //             localStorage['availableBalanceFiat'] = results[0];
+    //             setBudgetWidget(results[0], results[1]);
+    //             //$('#balance-available').html(results[2]);
+    //             for(i=0;i < $('.balance-available').length; i++){
+    //                 $('.balance-available')[i].textContent = results[2];
+    //             }
+    //         });
+    //     }, function(error){
+    //         $('#unknownErrorAlert').slideDown(); // Hack belongs in a UI layer
+    //         $('#unknownErrorAlertLabel').text(error.message);
+    //     }); // .catch(function(error){
+    //     //           $('#unknownErrorAlertLabel').text('Network foo Erroe. Please try again later.'); // Hack belongs in a UI layer
+    //     //             $('#unknownErrorAlertLabel').text('Network foo Error: ' + req.responseURL + ' is unreachable. Please try again later.'); // Hack belongs in a UI layer
+    //     //             $('#unknownErrorAlert').slideDown(); // Hack belongs in a UI layer
+    //     //         });
+    // });
+
+    // function getAvailableBalance(address){
+    //     var host = 'https://blockchain.info/';
+    //     Promise.all([
+    //         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
+    //         util.getJSON(host + 'unspent?address=' + address),
+    //     ]).then(function (results) {
+    //         var confirmedBalance = results[0];
+    //         var unspentOutputs = results[1];
+    //         if(typeof unspentOutputs.notice !== "undefined"){
+    //           reject(Error(unspentOutputs.notice.trim()));
+    //         }
+    //         unspentOutputs = unspentOutputs.unspent_outputs;
+    //         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+    //         if(unspentBalance != confirmedBalance){
+    //              $('#balance-available-container').show();
+    //         }
+    //         return currencyManager.formatCurrency(unspentBalance)
+    //     }).then(function(unspentBalance){
+    //         $('#balance-available').html(unspentBalance);
+    //     });
+    // }
 
     function setBalance(balance) {
         if (Number(balance) < 0 || isNaN(balance)) {
             balance = 0.00;
         }
-        $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
+        $('#head-line-balance').text(BTCUnits + ' ' + parseInt(balance) / BTCMultiplier);
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
 
         currencyManager.amount(FEE).then(function(formattedMoney) {
@@ -84,8 +231,10 @@ function setupWalletBalance(){
             }
         }
     }
-    setBalance();
+    //setBalance();
 }
+
+
 
 function restartCountDown(){
     window.alarmManager.doToggleAlarm();

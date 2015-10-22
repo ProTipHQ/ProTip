@@ -72,7 +72,18 @@ $(document).ready(function() {
         $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
         $('#bitcoin-fee').text((10000 / BTCMultiplier + ' ' + BTCUnits));
         if(parseInt(balance) > 0){
-          $('#max-available-balance').text((parseInt(balance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+          var host = 'https://blockchain.info/';
+          var address = wallet.getAddress();
+          util.getJSON(host + 'unspent?address=' + address).then(function(unspentOutputs){
+              if(typeof unspentOutputs.notice !== "undefined"){
+                reject(Error(unspentOutputs.notice.trim()));
+              }
+              unspentOutputs = unspentOutputs.unspent_outputs;
+              var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+              $('#max-available-balance').text((parseInt(unspentBalance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+          }, function(){
+              $('#max-available-balance').text('0 ' + BTCUnits);
+          });
         } else {
           $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
         }

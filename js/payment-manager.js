@@ -230,8 +230,7 @@
                            reject(Error('No browsing history or subscriptions.'));
                        }
                        var calculatedTotalAmountSatoshi = _.reduce(selectedPayments, function(memo, obj){ return obj.txSatoshis + memo; }, 0);
-                       if (wallet.getBalance() >= calculatedTotalAmountSatoshi
-                         && availableSatoshi >= calculatedTotalAmountSatoshi) {
+                       if (availableSatoshi >= calculatedTotalAmountSatoshi) {
                            wallet.mulitpleOutputsSend(selectedPayments, fee, '').then(function(response) {
                                //db.clear('sites');
                                resolve(response);
