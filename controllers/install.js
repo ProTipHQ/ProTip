@@ -85,7 +85,7 @@ function initSponsors() {
 //     }
 //     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
 //     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
-// 
+//
 //     $('#fiat-currency-select').change(function() {
 //         var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
 //         localStorage["fiatCurrencyCode"] = this.value;
@@ -97,7 +97,7 @@ function initSponsors() {
 //                         records[i].amountFiat = records[i].amountFiat * exchangeRate;
 //                     }
 //                     db.put('subscriptions', records);
-// 
+//
 //                     localStorage['defaultSubscriptionAmountFiat'] = localStorage['defaultSubscriptionAmountFiat'] * exchangeRate;
 //                     $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 //                     localStorage['incidentalTotalFiat'] = localStorage['incidentalTotalFiat'] * exchangeRate;
@@ -125,9 +125,21 @@ function initFiatCurrency() {
     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
     $('#fiat-currency-select').change(function() {
-        preferences.setCurrency($(this.selectedOptions).val());
-        localStorage["fiatCurrencyCode"] = this.value;
-        updateFiatCurrencyCode();
+        $('#ajax-loader').show();
+        updateCurrency(this.value).then(function(response){
+            console.log(response.exchangeRateCoeff);
+            updateGlobalOptionsAmount(response.exchangeRateCoeff, this.value);
+            debugger;
+            localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
+
+            updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+            $('#ajax-loader').hide();
+        }, function(response){
+          // If all fails, reset to USD
+          localStorage["fiatCurrencyCode"] = 'USD';
+          $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
+          updateFiatCurrencyCode();
+        });
     });
 }
 
@@ -209,10 +221,10 @@ $(document).ready(function() {
         localStorage['proTipInstalled'] = true;
         if(localStorage['protip-popup-install']){
            chrome.tabs.create({
-                url: "./views/home.html" // obj.href
+                url: "views/home.html" // obj.href
            });
         } else {
-           window.location.href = "./home.html";
+           window.location.href = "home.html";
         }
     });
 

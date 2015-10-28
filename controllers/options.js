@@ -20,8 +20,8 @@ $(function() {
         $('#ajax-loader').show();
         updateCurrency(this.value).then(function(response){
             console.log(response.exchangeRateCoeff);
-            updateGlobalOptionsAmount(response.exchangeRateCoeff);
-            localStorage["fiatCurrencyCode"] = response.new_currency_code;
+            updateGlobalOptionsAmount(response.exchangeRateCoeff, this.value);
+            localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
             updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
             $('#ajax-loader').hide();
@@ -30,7 +30,6 @@ $(function() {
           localStorage["fiatCurrencyCode"] = 'USD';
           $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
           updateFiatCurrencyCode();
-          console.log('barrrr')
         });
     });
     //updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
@@ -48,62 +47,8 @@ $(function() {
     });
 });
 
-
-function updateCurrency(new_currency_code) {
-  var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
-  var exchangeRateCoeff;
-
-  return preferences.setCurrency(localStorage["fiatCurrencyCode"]).then(function(){
-      return currencyManager.updateExchangeRate();
-  }).then(function(exchangeToBTC){
-      return new Promise(function (resolve, reject) {
-          if (oldFiatCurrencyCode == 'BTC' && new_currency_code == 'mBTC') {
-              // from BTC to mBTC
-              exchangeRateCoeff = 1000;
-              resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-          } else if (oldFiatCurrencyCode == 'mBTC' && new_currency_code == 'BTC') {
-              // from mBTC to BTC
-              exchangeRateCoeff = 1/1000;
-              resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-          } else if (new_currency_code == 'BTC') {
-              // from fiat to BTC
-              currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
-                  exchangeRateCoeff = 1/rateObj['24h_avg'];
-                  resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-              });
-          } else if (new_currency_code == 'mBTC'){
-              currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
-                  // from fiat to mBTC
-                  exchangeRateCoeff = 1000/rateObj['24h_avg'];
-                  resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-              });
-          } else if (oldFiatCurrencyCode == 'BTC') {
-              currencyManager.getExchangeRate(new_currency_code).then(function(rateObj) {
-                  // from BTC to fiat
-                  exchangeRateCoeff = rateObj['24h_avg'];
-                  resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-              });
-          } else if (oldFiatCurrencyCode == 'mBTC') {
-            currencyManager.getExchangeRate(new_currency_code).then(function(rateObj) {
-                // from mBTC to fiat
-                exchangeRateCoeff = rateObj['24h_avg']/1000;
-                resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-            });
-          } else { // fiat to fiat
-              util.getJSON('http://api.fixer.io/latest?symbols=' + new_currency_code + ',' + oldFiatCurrencyCode)
-              .then(function(ratesData){
-                  exchangeRateCoeff = ratesData.rates[new_currency_code] / ratesData.rates[oldFiatCurrencyCode];
-                  resolve({exchangeRateCoeff: exchangeRateCoeff, new_currency_code: new_currency_code});
-              });
-          }
-      });
-  });
-}
-
-
-
-
-// function updateCurrency(new_currency_code) {
+//
+// function updateCurrency(newCurrencyCode) {
 //   var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
 //   var exchangeRateCoeff;
 //
@@ -111,64 +56,130 @@ function updateCurrency(new_currency_code) {
 //       return currencyManager.updateExchangeRate();
 //   }).then(function(exchangeToBTC){
 //       return new Promise(function (resolve, reject) {
-//       if (oldFiatCurrencyCode == 'BTC' && new_currency_code == 'mBTC') {
+//           if (oldFiatCurrencyCode == 'BTC' && newCurrencyCode == 'mBTC') {
+//               // from BTC to mBTC
+//               exchangeRateCoeff = 1000;
+//               resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//           } else if (oldFiatCurrencyCode == 'mBTC' && newCurrencyCode == 'BTC') {
+//               // from mBTC to BTC
+//               exchangeRateCoeff = 1/1000;
+//               resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//           } else if (newCurrencyCode == 'BTC') {
+//               // from fiat to BTC
+//               currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
+//                   exchangeRateCoeff = 1/rateObj['24h_avg'];
+//                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//               });
+//           } else if (newCurrencyCode == 'mBTC'){
+//               currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
+//                   // from fiat to mBTC
+//                   exchangeRateCoeff = 1000/rateObj['24h_avg'];
+//                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//               });
+//           } else if (oldFiatCurrencyCode == 'BTC') {
+//               currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
+//                   // from BTC to fiat
+//                   exchangeRateCoeff = rateObj['24h_avg'];
+//                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//               });
+//           } else if (oldFiatCurrencyCode == 'mBTC') {
+//             currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
+//                 // from mBTC to fiat
+//                 exchangeRateCoeff = rateObj['24h_avg']/1000;
+//                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//             });
+//           } else { // fiat to fiat
+//               util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
+//               .then(function(ratesData){
+//                   exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
+//                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+//               });
+//           }
+//       });
+//   });
+// }
+//
+
+
+
+// function updateCurrency(newCurrencyCode) {
+//   var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
+//   var exchangeRateCoeff;
+//
+//   return preferences.setCurrency(localStorage["fiatCurrencyCode"]).then(function(){
+//       return currencyManager.updateExchangeRate();
+//   }).then(function(exchangeToBTC){
+//       return new Promise(function (resolve, reject) {
+//       if (oldFiatCurrencyCode == 'BTC' && newCurrencyCode == 'mBTC') {
 //           // from BTC to mBTC
 //           exchangeRateCoeff = 1000;
 //           resolve(exchangeRateCoeff);
-//       } else if (oldFiatCurrencyCode == 'mBTC' && new_currency_code == 'BTC') {
+//       } else if (oldFiatCurrencyCode == 'mBTC' && newCurrencyCode == 'BTC') {
 //           // from mBTC to BTC
 //           exchangeRateCoeff = 1/1000;
 //           resolve(exchangeRateCoeff);
-//       } else if (new_currency_code == 'BTC') {
+//       } else if (newCurrencyCode == 'BTC') {
 //           // from fiat to BTC
 //           currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
 //               exchangeRateCoeff = 1/rateObj['24h_avg'];
 //               resolve(exchangeRateCoeff);
 //           });
-//       } else if (new_currency_code == 'mBTC'){
+//       } else if (newCurrencyCode == 'mBTC'){
 //           currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
 //               // from fiat to mBTC
 //               exchangeRateCoeff = 1000/rateObj['24h_avg'];
 //               resolve(exchangeRateCoeff);
 //           });
 //       } else if (oldFiatCurrencyCode == 'BTC') {
-//           currencyManager.getExchangeRate(new_currency_code).then(function(rateObj) {
+//           currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
 //               // from BTC to fiat
 //               exchangeRateCoeff = rateObj['24h_avg'];
 //               resolve(exchangeRateCoeff);
 //           });
 //       } else if (oldFiatCurrencyCode == 'mBTC') {
-//         currencyManager.getExchangeRate(new_currency_code).then(function(rateObj) {
+//         currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
 //             // from mBTC to fiat
 //             exchangeRateCoeff = rateObj['24h_avg']/1000;
 //             resolve(exchangeRateCoeff);
 //         });
 //       } else { // fiat to fiat
-//           util.getJSON('http://api.fixer.io/latest?symbols=' + new_currency_code + ',' + oldFiatCurrencyCode)
+//           util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
 //           .then(function(ratesData){
-//               exchangeRateCoeff = ratesData.rates[new_currency_code] / ratesData.rates[oldFiatCurrencyCode];
+//               exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
 //               resolve(exchangeRateCoeff);
 //           });
 //       }
 //     }).then(function(exchangeRateCoeff){
 //       console.log(exchangeRateCoeff);
 //       updateGlobalOptionsAmount(exchangeRateCoeff);
-//       localStorage["fiatCurrencyCode"] = new_currency_code;
+//       localStorage["fiatCurrencyCode"] = newCurrencyCode;
 //     });
 //   });
 // }
 
-function updateGlobalOptionsAmount(exchangeRateCoeff){
-    localStorage['defaultSubscriptionAmountFiat'] = exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat'];
-    $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
-    localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
-    db.values('subscriptions').done(function(records) {
-        for (var i in records) {
-            records[i].amountFiat = exchangeRateCoeff * records[i].amountFiat;
-        }
-        db.put('subscriptions', records);
-    });
-}
+// function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){
+//     currencyManager.getSymbol(newCurrencyCode).then(function(currencyDetails){
+//         var roundingFactor = currencyDetails[2];
+//         if(roundingFactor){
+//             localStorage['defaultSubscriptionAmountFiat'] = parseFloat(exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat']).toFixed(roundingFactor);
+//         } else {
+//             localStorage['defaultSubscriptionAmountFiat'] = exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat'];
+//         }
+//         $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
+//         localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
+//         db.values('subscriptions').done(function(records) {
+//             for (var i in records) {
+//                 if(roundingFactor){
+//                     records[i].amountFiat = parseFloat(exchangeRateCoeff * records[i].amountFiat).toFixed(roundingFactor);
+//                     if(records[i].amountFiat < 0.05){ records[i].amountFiat = 0.05 }
+//                 } else {
+//                     records[i].amountFiat = exchangeRateCoeff * records[i].amountFiat;
+//                 }
+//             }
+//             db.put('subscriptions', records);
+//         });
+//     });
+// }
 
 function setExampleMetaTag(){
   $('#example-metatag').html(
@@ -188,9 +199,9 @@ function initDefaultSubscriptionAmountFiat() {
     });
 }
 
-// function updateCurrency(new_currency_code) {
+// function updateCurrency(newCurrencyCode) {
 //   var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
-//   localStorage["fiatCurrencyCode"] = new_currency_code;
+//   localStorage["fiatCurrencyCode"] = newCurrencyCode;
 //
 //   return preferences.setCurrency(localStorage["fiatCurrencyCode"]).then(function(){
 //       return currencyManager.updateExchangeRate();
@@ -241,9 +252,9 @@ function initDefaultSubscriptionAmountFiat() {
 
 
 
-// function updateCurrency(new_currency_code) {
+// function updateCurrency(newCurrencyCode) {
 //   var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
-//   localStorage["fiatCurrencyCode"] = new_currency_code;
+//   localStorage["fiatCurrencyCode"] = newCurrencyCode;
 //
 //   preferences.setCurrency(localStorage["fiatCurrencyCode"]).then(function(){
 //       return currencyManager.updateExchangeRate();
@@ -410,26 +421,26 @@ function initDefaultSubscriptionAmountFiat() {
 //     });
 // }
 
-// function fiatToFiatConversion(old_currency_code, new_currency_code){
+// function fiatToFiatConversion(old_currency_code, newCurrencyCode){
 //     var old = old_currency_code != 'mBTC' && old_currency_code != 'BTC'
-//     var current = new_currency_code != 'mBTC' && new_currency_code != 'BTC'
+//     var current = newCurrencyCode != 'mBTC' && newCurrencyCode != 'BTC'
 //     if(old && current){
 //       return true
 //     }
 //     return false
 // }
 
-// function fiatToFiatConversion(old_currency_code, new_currency_code){
+// function fiatToFiatConversion(old_currency_code, newCurrencyCode){
 //     var old = old_currency_code != 'mBTC' && old_currency_code != 'BTC'
-//     var current = new_currency_code != 'mBTC' && new_currency_code != 'BTC'
+//     var current = newCurrencyCode != 'mBTC' && newCurrencyCode != 'BTC'
 //     if(old && current){
 //       return true
 //     }
 //     return false
 // }
 
-// function updateCurrencyDefaults(exchangeToBTC, old_currency_code, new_currency_code) {
-//     if(new_currency_code == 'BTC'){
+// function updateCurrencyDefaults(exchangeToBTC, old_currency_code, newCurrencyCode) {
+//     if(newCurrencyCode == 'BTC'){
 //         // Only have the exchange rate FROM fiat TO Bitcoin,
 //         //      NOT
 //         // FROM bitcoin TO fiat
@@ -449,8 +460,8 @@ function initDefaultSubscriptionAmountFiat() {
 // }
 
 
-// function updateCurrencyDefaults(exchangeToBTC, old_currency_code, new_currency_code) {
-//   if (new_currency_code == 'mBTC' && old_currency_code == 'BTC') {
+// function updateCurrencyDefaults(exchangeToBTC, old_currency_code, newCurrencyCode) {
+//   if (newCurrencyCode == 'mBTC' && old_currency_code == 'BTC') {
 //       localStorage['defaultSubscriptionAmountFiat'] = localStorage['defaultSubscriptionAmountFiat'] * 1000;
 //       $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 //       localStorage['incidentalTotalFiat'] = localStorage['incidentalTotalFiat'] * 1000;
@@ -460,7 +471,7 @@ function initDefaultSubscriptionAmountFiat() {
 //           }
 //           db.put('subscriptions', records);
 //       });
-//   } else if(new_currency_code == 'BTC' && old_currency_code == 'mBTC') {
+//   } else if(newCurrencyCode == 'BTC' && old_currency_code == 'mBTC') {
 //       localStorage['defaultSubscriptionAmountFiat'] = localStorage['defaultSubscriptionAmountFiat'] * 0.0001;
 //       $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 //       localStorage['incidentalTotalFiat'] = localStorage['incidentalTotalFiat'] * 0.0001;
@@ -470,7 +481,7 @@ function initDefaultSubscriptionAmountFiat() {
 //           }
 //           db.put('subscriptions', records);
 //       });
-//     } else if(new_currency_code == 'BTC'){
+//     } else if(newCurrencyCode == 'BTC'){
 //         localStorage['defaultSubscriptionAmountFiat'] = localStorage['defaultSubscriptionAmountFiat'] / exchangeToBTC;
 //         $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 //         localStorage['incidentalTotalFiat'] = localStorage['incidentalTotalFiat'] / exchangeToBTC;
@@ -480,7 +491,7 @@ function initDefaultSubscriptionAmountFiat() {
 //             }
 //             db.put('subscriptions', records);
 //         });
-//     } else if(new_currency_code == 'mBTC') {
+//     } else if(newCurrencyCode == 'mBTC') {
 //         localStorage['defaultSubscriptionAmountFiat'] = (localStorage['defaultSubscriptionAmountFiat'] / exchangeToBTC) * 1000;
 //         $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 //         localStorage['incidentalTotalFiat'] = (localStorage['incidentalTotalFiat'] / exchangeToBTC) * 1000;

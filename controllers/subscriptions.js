@@ -165,15 +165,16 @@ $(function() {
 
     db = new ydn.db.Storage('protip', schema);
 
-    updateFiatCurrencyCode();
-
     buildTable('subscription-tbody'); //('subscription-table');
+
+
 
     subscriptionTotalFiatAmount().then(function(totalFiatAmount){
         $('#subscription-total-amount').html(totalFiatAmount);
     });
 
     $('#manual-amount-fiat').attr('placeholder', localStorage['defaultSubscriptionAmountFiat']);
+    $('#protip-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 
     $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address'); // A hack.
     $('#manualSubscriptionForm').validate({
@@ -213,4 +214,5 @@ $(function() {
         //$('#protip-subscription-form').fadeOut().slideUp();
     });
     allowExternalLinks();
+    updateFiatCurrencyCode();
 });

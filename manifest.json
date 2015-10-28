@@ -1,20 +1,20 @@
 {
    "background": {
       "scripts": [
-        "./lib/jquery-2.1.3.min.js",
-        "./lib/promise.min.js",
-        "./lib/underscore-min.js",
-        "./lib/cryptojs.min.js",
-        "./lib/bitcoinjs-lib.min.js",
-        "./lib/preferences.js",
-        "./lib/util.js",
-        "./lib/currency-manager.js",
-        "./lib/wallet.js",
-        "./js/payment-manager.js",
-        "./lib/ydn-db.min.js",
-        "./js/ydn-db-schema.js",
-        "./js/alarm-manager.js",
-        "./js/utils-bitcoin.js",
+        "lib/jquery-2.1.3.min.js",
+        "lib/promise.min.js",
+        "lib/underscore-min.js",
+        "lib/cryptojs.min.js",
+        "lib/bitcoinjs-lib.min.js",
+        "lib/preferences.js",
+        "lib/util.js",
+        "lib/currency-manager.js",
+        "lib/wallet.js",
+        "js/payment-manager.js",
+        "lib/ydn-db.min.js",
+        "js/ydn-db-schema.js",
+        "js/alarm-manager.js",
+        "js/utils-bitcoin.js",
         "background.js"
       ]
    },
@@ -22,20 +22,20 @@
    "content_scripts": [
        {
            "matches": ["http://*/*", "https://*/*"],
-           "js": ["./lib/jquery-2.1.3.min.js","content.js", "./js/utils-bitcoin.js", "./lib/bitcoinjs-lib.min.js"]
+           "js": ["lib/jquery-2.1.3.min.js","content.js", "js/utils-bitcoin.js", "lib/bitcoinjs-lib.min.js"]
        }
    ],
-  "icons": { "16": "./assets/images/heart16x16.png",
-             "48": "./assets/images/heart48x48.png",
-            "128": "./assets/images/heart128x128.png" },
+  "icons": { "16": "assets/images/heart16x16.png",
+             "48": "assets/images/heart48x48.png",
+            "128": "assets/images/heart128x128.png" },
    "browser_action": {
-      "default_icon": "./assets/images/heart48x48_passive.png",
-      "default_popup": "./views/popup.html",
+      "default_icon": "assets/images/heart48x48_passive.png",
+      "default_popup": "views/popup.html",
       "default_title": "ProTip"
    },
    "description": "ProTip is peer to peer crowd funding. ProTip provides tipping, weekly subscriptions and content passes for premium work.",
    "icons": {
-      "128": "./assets/images/heart128x128.png"
+      "128": "assets/images/heart128x128.png"
    },
    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
    "permissions": [
@@ -44,8 +44,8 @@
    "manifest_version": 2,
    "name": "ProTip peer-to-peer crowd-funding",
    "short_name": "ProTip",
-   "options_page": "./views/options.html",
+   "options_page": "views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0.0.18"
+   "version": "1.0.0.24"
 }

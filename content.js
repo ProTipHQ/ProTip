@@ -311,7 +311,7 @@ function starredUser(){
     span.style.backgroundColor = '#7FE56F';
 
     //Code for displaying <extensionDir>/images/myimage.png:
-    var imgURL = chrome.extension.getURL("./assets/images/star.png");
+    var imgURL = chrome.extension.getURL("assets/images/star.png");
     var img = document.createElement("img");
     img.setAttribute("src", imgURL);
 

@@ -39,6 +39,18 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
     }
 });
 
+chrome.runtime.onInstalled.addListener(function(details){
+    //if(details.reason == "update"){
+        preferences.convert();
+        var thisVersion = chrome.runtime.getManifest().version;
+        console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+    //}
+});
+
+// chrome.runtime.onInstalled.addListener(function() {
+//   console.log('Install fired convert done.');
+// });
+
 window.addEventListener("storage", function(e){
     // Let the user see their available balance in the browserAction
     // Doesn't have to be super accurate. Certainly don't need to hit
@@ -280,7 +292,7 @@ chrome.runtime.onMessage.addListener(
             chrome.tabs.getSelected(null, function(tab) {
                 chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
                 chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
-                chrome.browserAction.setIcon({path: './assets/images/icon_48.png', tabId: tab.id});
+                chrome.browserAction.setIcon({path: 'assets/images/icon_48.png', tabId: tab.id});
             });
         } else if(request.action && request.action == "putBitcoinAddress" && validAddress(request.bitcoinAddress)){
             db.get('sites', request.url).done(function(record) {
@@ -298,7 +310,7 @@ chrome.runtime.onMessage.addListener(
                 } else {
                     chrome.browserAction.setBadgeText({text: request.bitcoinAddress.trim().substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 }
-                chrome.browserAction.setIcon({path: './assets/images/heart48x48.png', tabId: tab.id});
+                chrome.browserAction.setIcon({path: 'assets/images/heart48x48.png', tabId: tab.id});
             });
         }
     }
