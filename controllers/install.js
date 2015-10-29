@@ -126,20 +126,23 @@ function initFiatCurrency() {
 
     $('#fiat-currency-select').change(function() {
         $('#ajax-loader').show();
-        updateCurrency(this.value).then(function(response){
-            console.log(response.exchangeRateCoeff);
-            updateGlobalOptionsAmount(response.exchangeRateCoeff, this.value);
-            debugger;
-            localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
-
-            updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
-            $('#ajax-loader').hide();
-        }, function(response){
-          // If all fails, reset to USD
-          localStorage["fiatCurrencyCode"] = 'USD';
-          $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
-          updateFiatCurrencyCode();
+        currencyManager.getExchangeRateCoeff({
+            newCurrencyCode: this.value,
+            oldFiatCurrencyCode: localStorage["fiatCurrencyCode"]
+        }).then(function(response){
+            perferences.setCurrency(response.newCurrencyCode).then(function(){
+                updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
+                localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
+                updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+                $('#ajax-loader').hide();
+            });
         });
+        // }, function(response){
+        //   // If all fails, reset to USD
+        //   localStorage["fiatCurrencyCode"] = 'USD';
+        //   $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
+        //   updateFiatCurrencyCode();
+        // });
     });
 }
 
