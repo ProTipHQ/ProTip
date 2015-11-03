@@ -39,7 +39,11 @@
    },
    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
    "permissions": [
-       "http://blockchain.info/*", "https://blockchain.info/*", "wss://ws.blockchain.info:*", "https://api.bitcoinaverage.com/ticker/*"
+        "https://api.blockcypher.com/*",
+        "http://blockchain.info/*",
+        "https://blockchain.info/*",
+        "wss://ws.blockchain.info:*",
+        "https://api.bitcoinaverage.com/ticker/*"
      ],
    "manifest_version": 2,
    "name": "ProTip Edge",

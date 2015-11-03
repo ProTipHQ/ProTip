@@ -74,7 +74,7 @@ $(document).ready(function() {
         if(parseInt(balance) > 0){
           var host = 'https://blockchain.info/';
           var address = wallet.getAddress();
-          util.getJSON(host + 'unspent?address=' + address).then(function(unspentOutputs){
+          util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
               if(typeof unspentOutputs.notice !== "undefined"){
                 reject(Error(unspentOutputs.notice.trim()));
               }

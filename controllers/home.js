@@ -109,14 +109,16 @@ function setupWalletBalance(){
     wallet.setBalanceListener(function(balance) {
         var host = 'https://blockchain.info/';
         var address = wallet.getAddress();
-        util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6').then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+        util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/' + address ).then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+        //util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6').then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
             setBalance(confirmedBalance);
             localStorage['availableBalanceFiat'] = confirmedBalance;
             currencyManager.amount(FEE).then(function(fee){
                 setBudgetWidget(confirmedBalance, fee);
             });
 
-            util.getJSON(host + 'unspent?address=' + address).then(function(unspentOutputs){
+            util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/' + address + '?unspentOnly=trues').then(function(unspentOutputs){
+            //util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
                 return unspentOutputs;
             }, function(){
                 return 0; // no unspent outputs returns a 500 error rather than '[]'.
