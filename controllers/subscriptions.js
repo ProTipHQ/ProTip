@@ -141,7 +141,7 @@ function validAddress(address){
   // base58(0x05 + [20-byte scripthash] + [4-byte checksum])
   // For testnet, it's 0xC4 instead of 0x05, indeed.
   try {
-      new Bitcoin.Address(address);
+			new bitcoin.address.fromBase58Check(address);
   } catch (e) {
       return false;
   }

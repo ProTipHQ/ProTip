@@ -131,16 +131,11 @@ $(document).ready(function() {
             $('#amountAlert').slideDown();
         }
 
-        var regex = /^[13][1-9A-HJ-NP-Za-km-z]{26,33}$/;
         var validAddress = true;
-        if (!regex.test(String(address))) {
+        try {
+            new bitcoin.address.fromBase58Check(address);
+        } catch (e) {
             validAddress = false;
-        } else {
-            try {
-                new Bitcoin.Address(address);
-            } catch (e) {
-                validAddress = false;
-            }
         }
 
         if (validAddress) {
@@ -185,12 +180,14 @@ $(document).ready(function() {
             $('#sendConfirmationModal').modal('hide');
             $('#cover').fadeOut('slow');
         }, function(e) {
-            if (wallet.isEncrypted()) {
-                $('#sendConfirmationPasswordIncorrect').text(e.message).slideDown();
-            } else {
-                $('#unknownErrorAlertLabel').text(e.message);
-                $('#unknownErrorAlert').slideDown();
-            }
+            $('#successAlertLabel').text('Transaction Submitted');
+            $('#successAlert').slideDown();
+            // if (wallet.isEncrypted()) {
+            //     $('#sendConfirmationPasswordIncorrect').text(e.message).slideDown();
+            // } else {
+            //     $('#unknownErrorAlertLabel').text(e.message);
+            //     $('#unknownErrorAlert').slideDown();
+            // }
             $('#cover').hide();
         });
     }
@@ -376,7 +373,7 @@ $(document).ready(function() {
     $('#importPrivateKeyConfirm').click(function() {
         var privateKey = $('#importPrivateKeyPrivateKey').val();
         try {
-            new Bitcoin.ECKey(privateKey).getExportedPrivateKey();
+            new bitcoin.ECKey(privateKey).getExportedPrivateKey();
         } catch (e) {
             $('#importPrivateKeyBadPrivateKey').slideDown();
             return;

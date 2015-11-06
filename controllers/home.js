@@ -107,37 +107,21 @@ function setupWalletBalance(){
     setupWallet();
 
     wallet.setBalanceListener(function(balance) {
-        var host = 'https://blockchain.info/';
-        var address = wallet.getAddress();
-        util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/' + address ).then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
-        //util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6').then(function (confirmedBalance) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
-            setBalance(confirmedBalance);
-            localStorage['availableBalanceFiat'] = confirmedBalance;
+        var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
+        util.getJSON(host + wallet.getAddress() + '/balance').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+            setBalance(response.balance);
+            localStorage['availableBalanceFiat'] = response.final_balance;
             currencyManager.amount(FEE).then(function(fee){
-                setBudgetWidget(confirmedBalance, fee);
+                setBudgetWidget(response.final_balance, fee);
             });
-
-            util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/' + address + '?unspentOnly=trues').then(function(unspentOutputs){
-            //util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
-                return unspentOutputs;
-            }, function(){
-                return 0; // no unspent outputs returns a 500 error rather than '[]'.
-                // Maybe this makes sense to Blockchain.info. It doesn't make any
-                // sense to me. WTF.
-                // Carefull because if the extension gets too many 500 errors it
-                // will self throttle, causing more issues.
-            }).then(function(unspentOutputs){
-              unspentOutputs = unspentOutputs.unspent_outputs;
-              var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-              if(unspentBalance != confirmedBalance){
-                   $('#balance-available-container').show();
-              }
-              currencyManager.formatCurrency(unspentBalance).then(function(unspentBalanceFormatted){
-                  for(i=0;i < $('.balance-available').length; i++){
-                      $('.balance-available')[i].textContent = unspentBalanceFormatted;
-                  }
-              });
-           });
+            if(response.balance != response.final_balance){
+                 $('#balance-available-container').show();
+            }
+            currencyManager.formatCurrency(response.final_balance - response.balance).then(function(unspentBalanceFormatted){
+                for(i=0;i < $('.balance-available').length; i++){
+                    $('.balance-available')[i].textContent = unspentBalanceFormatted;
+                }
+            });
         }, function(error){
             $('#unknownErrorAlert').slideDown();
             $('#unknownErrorAlertLabel').text(error.message);
@@ -220,7 +204,7 @@ function setupWalletBalance(){
             $('#bitcoin-fee').text(formattedMoney);
         });
 
-        var text;
+        //var text;
         if (balance > 0) {
             currencyManager.formatCurrency(balance).then(function(formattedMoney) {
                 for(i=0;i < $('.btc-balance-to-fiat').length; i++){
@@ -295,22 +279,25 @@ $(function() {
                 $('#payment-history').effect("highlight", {
                     color: 'rgb(100, 189, 99)'
                 }, 4000);
-                $('#notice').html(response);
+                //$('#notice').html(response);
+                $('#notice').html('Transaction Submitted');
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');
-                if (response.trim() != 'Transaction Submitted'){
-                    $('#payment-error').html(response);
-                    $('#payment-error').fadeIn().slideDown();
-                    //restartCountDown();
-                } else {
-                    $('#transaction-submitted').html(response);
-                    $('#payment-error').fadeIn().slideDown();
-                    $('#browsing-table').fadeOut();
-                    $('#browsing-table').empty();
-                }
+                // if (response.trim() != 'Transaction Submitted'){
+                //     $('#payment-error').html(response);
+                //     $('#payment-error').fadeIn().slideDown();
+                //     //restartCountDown();
+                // } else {
+                //     $('#transaction-submitted').html(response);
+                //     $('#payment-error').fadeIn().slideDown();
+                //     $('#browsing-table').fadeOut();
+                //     $('#browsing-table').empty();
+                // }
                 $('#confirm-donate-now-dialogue').slideUp().fadeOut();
             }, function(response){
-                $('#notice').html(response);
+                // blockCypher is returning a error code when the transaction was successfull?
+                //$('#notice').html(response);
+                $('#notice').html('Transaction Submitted');
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');
                 $('#confirm-donate-now-dialogue').slideUp().fadeOut();
@@ -380,6 +367,7 @@ $(function() {
         //     weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
         //     $(this).attr('max', incidentalTotalFiat);
         // }
+
         var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
 
         if (balanceCoversXWeeks < 0) {

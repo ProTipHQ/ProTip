@@ -28,17 +28,18 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
 
             var weeklyTotalFiat = setWeeklyTotalFiat(localStorage['incidentalTotalFiat'], bitcoinFeeFiat, totalSubscriptionFiat);
             $('#total-fiat-amount').html(weeklyTotalFiat); // use standard money formattor
-
-            if (weeklyTotalFiat > 0) {
-                var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
-                if (balanceCoversXWeeks < 0) {
-                    balanceCoversXWeeks = 0
+            currencyManager.amount(availableBalanceFiat).then(function(amountFiat) {
+                if (weeklyTotalFiat > 0) {
+                    var balanceCoversXWeeks = (amountFiat - weeklyTotalFiat) / weeklyTotalFiat;
+                    if (balanceCoversXWeeks < 0) {
+                        balanceCoversXWeeks = 0
+                    }
+                    $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
+                } else {
+                    // bypass divide by zero error from wallet with 0 balance
+                    $('#balance-covers-weeks').html(0);
                 }
-                $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
-            } else {
-                // bypass divide by zero error from wallet with 0 balance
-                $('#balance-covers-weeks').html(0);
-            }
+            });
 
         })(totalSubscriptionFiat, availableBalanceFiat, bitcoinFeeFiat)
     });
