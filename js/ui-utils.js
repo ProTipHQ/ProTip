@@ -77,6 +77,8 @@ function updateCurrency(newCurrencyCode) {
               .then(function(ratesData){
                   exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
+              }, function(error){
+                  debugger;
               });
           }
       });
@@ -84,21 +86,21 @@ function updateCurrency(newCurrencyCode) {
 }
 
 function exportSubscriptions(){
-		db.values('subscriptions').done(function(records) {
-		    var savedSubscriptions = [];
-		    for (var i in records) {
-		        savedSubscriptions.push(records[i])
-		    }
-		    savedSubscriptions = JSON.stringify(savedSubscriptions);
-		    console.log(savedSubscriptions);
-		});
+    db.values('subscriptions').done(function(records) {
+        var savedSubscriptions = [];
+        for (var i in records) {
+            savedSubscriptions.push(records[i])
+        }
+        savedSubscriptions = JSON.stringify(savedSubscriptions);
+        console.log(savedSubscriptions);
+    });
 }
 
 function importSubscriptions(subscriptionRecords){
     //var subscriptionRecords = JSON.parse(subscriptionRecords);
-		for(var i in subscriptionRecords){
-				db.put('subscriptions', subscriptionRecords[i]);
-		}	
+    for(var i in subscriptionRecords){
+        db.put('subscriptions', subscriptionRecords[i]);
+    }
 }
 
 function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){

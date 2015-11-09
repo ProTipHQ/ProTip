@@ -253,7 +253,8 @@ $(document).ready(function() {
     $('#importPrivateKeyConfirm').click(function() {
         var privateKey = $('#importPrivateKeyPrivateKey').val();
         try {
-            new bitcoin.ECKey(privateKey).getExportedPrivateKey();
+            new bitcoin.ECPair.fromWIF(privateKey);
+            //new bitcoin.ECPair(privateKey).getExportedPrivateKey();
         } catch (e) {
             $('#importPrivateKeyBadPrivateKey').slideDown();
             return;

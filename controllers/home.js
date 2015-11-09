@@ -117,7 +117,7 @@ function setupWalletBalance(){
             if(response.balance != response.final_balance){
                  $('#balance-available-container').show();
             }
-            currencyManager.formatCurrency(response.final_balance - response.balance).then(function(unspentBalanceFormatted){
+            currencyManager.formatCurrency(response.unconfirmed_balance).then(function(unspentBalanceFormatted){
                 for(i=0;i < $('.balance-available').length; i++){
                     $('.balance-available')[i].textContent = unspentBalanceFormatted;
                 }

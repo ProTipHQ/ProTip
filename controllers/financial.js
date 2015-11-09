@@ -68,33 +68,36 @@ $(document).ready(function() {
         if (Number(balance) < 0 || isNaN(balance)) {
             balance = 0;
         }
-        $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-        $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
+
         $('#bitcoin-fee').text((10000 / BTCMultiplier + ' ' + BTCUnits));
-        if(parseInt(balance) > 0){
-          var host = 'https://blockchain.info/';
+
           var address = wallet.getAddress();
-          util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
-              if(typeof unspentOutputs.notice !== "undefined"){
-                reject(Error(unspentOutputs.notice.trim()));
+          util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/'+address+'/balance').then(function(response){
+              if(parseInt(response.final_balance) > 0){
+                  $('#head-line-balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
+                  $('#balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
+                  $('#max-available-balance').text((parseInt(response.final_balance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+                  currencyManager.formatAmount(response.final_balance).then(function(formattedMoney) {
+                      var text = formattedMoney;
+                      $('#btc-balance-to-fiat').text(text);
+                  });
+              } else {
+                  $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
+                  $('#btc-balance-to-fiat').text('0.00');
               }
-              unspentOutputs = unspentOutputs.unspent_outputs;
-              var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-              $('#max-available-balance').text((parseInt(unspentBalance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
-          }, function(){
-              $('#max-available-balance').text('0 ' + BTCUnits);
           });
-        } else {
-          $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
-        }
-        if (balance > 0) {
-            currencyManager.formatAmount(balance).then(function(formattedMoney) {
-                var text = formattedMoney;
-                $('#btc-balance-to-fiat').text(text);
-            });
-        } else {
-            $('#btc-balance-to-fiat').text('0.00');
-        }
+          // var host = 'https://blockchain.info/';
+          // var address = wallet.getAddress();
+          // util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
+          //     if(typeof unspentOutputs.notice !== "undefined"){
+          //       reject(Error(unspentOutputs.notice.trim()));
+          //     }
+          //     unspentOutputs = unspentOutputs.unspent_outputs;
+          //     var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
+          //     $('#max-available-balance').text((parseInt(unspentBalance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+          // function(){
+          //     $('#max-available-balance').text('0 ' + BTCUnits);
+          // });
     }
 
     $('#successAlertClose').click(function() {
@@ -373,7 +376,7 @@ $(document).ready(function() {
     $('#importPrivateKeyConfirm').click(function() {
         var privateKey = $('#importPrivateKeyPrivateKey').val();
         try {
-            new bitcoin.ECKey(privateKey).getExportedPrivateKey();
+            new bitcoin.ECPair(privateKey).getExportedPrivateKey();
         } catch (e) {
             $('#importPrivateKeyBadPrivateKey').slideDown();
             return;

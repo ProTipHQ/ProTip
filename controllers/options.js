@@ -20,6 +20,9 @@ $(function() {
         $('#ajax-loader').show();
         updateCurrency(this.value).then(function(response){
             console.log(response.exchangeRateCoeff);
+            if(!response.exchangeRateCoeff){
+                debugger;
+            }
             updateGlobalOptionsAmount(response.exchangeRateCoeff, this.value);
             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
