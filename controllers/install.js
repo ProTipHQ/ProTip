@@ -79,37 +79,6 @@ function initSponsors() {
     db.put('sponsors', sponsorTwitterHandles);
 }
 
-// function initFiatCurrency() {
-//     if (!localStorage["fiatCurrencyCode"]) {
-//         localStorage["fiatCurrencyCode"] = "USD"
-//     }
-//     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
-//     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
-//
-//     $('#fiat-currency-select').change(function() {
-//         var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
-//         localStorage["fiatCurrencyCode"] = this.value;
-//         db.values('subscriptions').done(function(records) {
-//             util.getJSON('http://api.fixer.io/latest?symbols=' + localStorage["fiatCurrencyCode"] + ',' + oldFiatCurrencyCode).then(
-//                 function(ratesData){
-//                     var exchangeRate = ratesData.rates[localStorage["fiatCurrencyCode"]] / ratesData.rates[oldFiatCurrencyCode];
-//                     for (var i in records) {
-//                         records[i].amountFiat = records[i].amountFiat * exchangeRate;
-//                     }
-//                     db.put('subscriptions', records);
-//
-//                     localStorage['defaultSubscriptionAmountFiat'] = localStorage['defaultSubscriptionAmountFiat'] * exchangeRate;
-//                     $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
-//                     localStorage['incidentalTotalFiat'] = localStorage['incidentalTotalFiat'] * exchangeRate;
-//                 }
-//             ).then(function(){
-//                 preferences.setCurrency($(this.selectedOptions).val());
-//                 updateFiatCurrencyCode();
-//             });
-//         });
-//     });
-// }
-
 function initFiatCurrency() {
     if (!localStorage["fiatCurrencyCode"]) {
         localStorage["fiatCurrencyCode"] = "USD"

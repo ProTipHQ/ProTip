@@ -87,20 +87,6 @@ function buildRow(record) {
     return row;
 }
 
-// function subscriptionTotalFiatAmount(domIdOutput) {
-//     return new Promise(function (resolve, reject) {
-//         db.values('subscriptions').done(function(records) {
-//             var total = 0.0;
-//             for (var i in records) {
-//                 total = total + parseFloat(records[i].amountFiat);
-//             };
-//             localStorage['subscriptionTotalFiatAmount'] = total.toFixed(2);
-//             $('#' + domIdOutput).html(total.toFixed(2));
-//             resolve(total.toFixed(2));
-//         });
-//     });
-// }
-
 function buildTable(domId) {
     var tbody = $('#' + domId);
     tbody.empty();
@@ -141,7 +127,7 @@ function validAddress(address){
   // base58(0x05 + [20-byte scripthash] + [4-byte checksum])
   // For testnet, it's 0xC4 instead of 0x05, indeed.
   try {
-			new bitcoin.address.fromBase58Check(address);
+      new bitcoin.address.fromBase58Check(address);
   } catch (e) {
       return false;
   }

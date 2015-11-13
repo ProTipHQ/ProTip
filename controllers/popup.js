@@ -55,51 +55,6 @@ function restartCountDown(){
     }, 1000);
 }
 
-// function initPopupCurrentWeek() {
-//     alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
-//
-//         var remindInfo = document.createElement('div');
-//         remindInfo.style.float = 'left';
-//         remindInfo.style.padding = '4px';
-//
-//         if (localStorage['automaticDonate'] == 'true') {
-//             remindInfoText = document.createTextNode('Next automatic payment in ');
-//         } else {
-//             remindInfoText = document.createTextNode('Reminder in ');
-//         }
-//         remindInfo.appendChild(remindInfoText);
-//
-//         var daysTillEndOfWeekInfo = document.createElement('span');
-//         daysTillEndOfWeekInfo.id = 'days-till-end-of-week';
-//
-//         var daysRemaining = daysTillEndOfWeek(localStorage['alarmExpireDate']);
-//
-//         daysTillEndOfWeekInfo.textContent = daysRemaining;
-//         daysTillEndOfWeekInfo.className = 'label label-info';
-//         daysTillEndOfWeekInfo.style = 'float: none;font-size:7px;border-radius:10px;';
-//         remindInfo.appendChild(daysTillEndOfWeekInfo);
-//         remindInfo.appendChild(document.createTextNode(' days.'));
-//         $('#reminder-info-container').append(remindInfo);
-//
-//         if(expired){
-//
-//         } else {
-//             var alarmExpireDate = new Date(localStorage['alarmExpireDate']);
-//             var daysRemaining = daysTillEndOfWeek(alarmExpireDate);
-//
-//             $('days-till-end-of-week');
-//
-//
-//             daysTillEndOfWeekInfo.textContent = daysRemaining;
-//             daysTillEndOfWeekInfo.className = 'label label-info';
-//             daysTillEndOfWeekInfo.style = 'float: none;font-size:7px;border-radius:10px;';
-//             remindInfo.appendChild(daysTillEndOfWeekInfo);
-//             //remindInfo.appendChild(document.createTextNode(' days.'));
-//             $('#reminder-info-container').append(remindInfo);
-//         }
-//    });
-// }
-
 function initPopupCurrentWeek() {
     var now = (new Date).getTime();
     if (parseInt(localStorage['endOfWeek']) > now) {
@@ -216,7 +171,7 @@ $(function() {
         Promise.all([
             preferences.setCurrency(localStorage['fiatCurrencyCode']),
         ]).then(function() {
-            paymentManager.payAll().then(function(response){
+            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();
                 $('#notice').html(response);
@@ -236,9 +191,27 @@ $(function() {
                     $('#browsing-table').empty();
                 }
             }, function(error){
-                $('#notice').html(error.message);
+                localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
+                $('#notice').html(response);
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');
+                if (response.trim() != 'Transaction Submitted'){
+                    $('#payment-error').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                    $('#confirm-donate-now-dialogue').fadeOut().slideUp();
+                    restartCountDown();
+                    alarmManager.doToggleAlarm();
+                    initPopupCurrentWeek();
+                } else {
+                    $('#transaction-submitted').html(response);
+                    $('#payment-error').fadeIn().slideDown();
+                    $('#browsing-table').fadeOut();
+                    $('#browsing-table').empty();
+                }
+                // $('#notice').html(error.message);
+                // $('#notice-dialogue').fadeIn().slideDown();
+                // $('#donate-now').button('reset');
             });
         });
     });

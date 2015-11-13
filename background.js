@@ -17,9 +17,8 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
             preferences.setCurrency(localStorage['fiatCurrencyCode']),
             wallet.restoreAddress()
         ]).then(function(){
-            paymentManager.payAll().then(function(response){
+            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
-
                 window.alarmManager.doToggleAlarm();
 
                 db.clear('sites');
@@ -29,6 +28,12 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
                 // If doToggleAlarm() is not called, the alarm will fire every 2 hours after the set period.
                 // Maybe the balance is too low, or blockchain.info is not working, or there are no
                 // recorded bitcoins or subscriptions to send to.
+                localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
+
+                db.clear('sites');
+                chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
+                chrome.browserAction.setBadgeText({text: 'Sent!'});
                 console.log(error.message);
             });
         });

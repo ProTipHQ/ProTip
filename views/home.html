@@ -108,21 +108,16 @@
               </a>
             </li>
 
-            <!-- <li>
-              <a href="feedback.html">
-                <div class="menu-icon">
-                  <span class="glyphicon glyphicon-comment big-icon" aria-hidden="true"></span>
-                </div>
-                <div class="menu-label">Feedback</div>
-              </a>
-            </li>
+            <!--
 
             <li>
               <a id="paywalls" href="passes.html">
                 <div id="menu-pass-icon"></div>
                 <div class="menu-label">Passes</div>
               </a>
-            </li> -->
+            </li>
+
+            -->
 
           </ul>
 
@@ -280,7 +275,7 @@
             </td>
             <td>
               <span class="fiat-code"></span>
-              <input id="incidental-fiat-amount" style="width:57px;" class="amount-fiat" type="number" min="0.00" step="0.01"/>
+              <input id="incidental-fiat-amount" style="width:77px;" class="amount-fiat" type="number" min="0.00" step="0.01"/>
             </td>
             <td>
               <div id="slider" style="width:150px;"></div>
@@ -350,7 +345,7 @@
             </td>
             <td style="font-size:85%;width:230px;">
               (
-                  Total Avail: <span class="balance-available" id="btc-balance-to-fiat">~ Loading... </span>
+                  Total Avail: <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ Loading... </span>
                   ~ <span style="font-weight:bold;" id="balance-covers-weeks">x</span> wks.
               )
             </td>
@@ -369,10 +364,10 @@
           Top-up your Bitcoin Wallet.
           <div>
               <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ ... </span>
-              [<small><span id="head-line-balance">...</span></small>]
+              <!-- [<small><span id="head-line-balance">...</span></small>] -->
           </div>
-          <div id="balance-available-container" class='alert alert-info' style="padding:2px;margin-bottom:0px;display:none;">
-            <small><span class="balance-available" id="balance-available">...</span> Pending Confirmation</small>
+          <div id="balance-pending-confirmation-container" class='alert alert-info' style="padding:2px;margin-bottom:0px;display:none;">
+            <small><span class="balance-pending-confirmation" id="balance-pending-confirmation">...</span> Pending Confirmation</small>
           </div>
         </div>
         <div class="panel-body">

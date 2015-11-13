@@ -78,7 +78,7 @@ function updateCurrency(newCurrencyCode) {
                   exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               }, function(error){
-                  debugger;
+                  //debugger;
               });
           }
       });
@@ -108,11 +108,13 @@ function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){
         var roundingFactor = currencyDetails[2];
         if(roundingFactor){
             localStorage['defaultSubscriptionAmountFiat'] = parseFloat(exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat']).toFixed(roundingFactor);
+            localStorage['incidentalTotalFiat'] = parseFloat(exchangeRateCoeff * localStorage['incidentalTotalFiat']).toFixed(roundingFactor);
         } else {
             localStorage['defaultSubscriptionAmountFiat'] = exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat'];
+            localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
         }
         $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
-        localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
+        //localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
         db.values('subscriptions').done(function(records) {
             for (var i in records) {
                 if(roundingFactor){
@@ -126,27 +128,6 @@ function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){
         });
     });
 }
-
-
-// function getAlarm(){
-//     chrome.alarms.getAll(function(objs){
-//         var date = new Date(objs[0].scheduledTime);
-//         console.log(
-//             'Alarm Set to ' + date.format()
-//         );
-//     });
-// }
-//
-// function setAlarm(date){
-//     // date formatt "mmm dd yyyy HH:MM:ss"
-//     var date = new Date(date);
-//     chrome.alarms.getAll(function(objs){
-//         objs[0].scheduledTime = date.getTime();
-//         console.log(
-//             'Alarm Updated! ' + date.format()
-//         );
-//     });
-// }
 
 function updateFiatCurrencyCode() {
     currencyManager.getSymbol().then(function(symbol){

@@ -31,7 +31,13 @@
         },
 
         setAlarm: function(delayInMinutes) {
+            // is for testing only.
             this.cancelAlarm();
+            // Globals must be set, some the issues with this method 'not working' is
+            // because people had ProTip set to manual Remind when testing automatic
+            // donate.
+            localStorage['automaticDonate'] = true;
+            localStorage['manualRemind'] = false;
 
             var delayInMilliseconds = delayInMinutes * 60 * 1000; // convert to milliseconds
             var now = (new Date).getTime();
@@ -44,7 +50,7 @@
             localStorage['alarmExpireDate'] = new Date(now + delayInMilliseconds);
 
             chrome.alarms.create(alarmName, {
-                delayInMinutes: delayInMinutes, periodInMinutes: 1
+                delayInMinutes: delayInMinutes, periodInMinutes: null
             });
             chrome.alarms.getAll(function(objs){
                 var date = new Date(objs[0].scheduledTime);

@@ -17,16 +17,20 @@ function initAlarmDisplay() {
 }
 
 function setupWallet() {
-    wallet.restoreAddress().then(setQRCodes,
+    wallet.restoreAddress().then(function(){
+        setQRCodes();
+        updateBalance(wallet.getAddress());
+        },
         function() {
             return wallet.generateAddress();
-        }).then(function(){
+        }).then(function(address){
             setQRCodes;
-            //getAvailableBalance(wallet.getAddress())
+            updateBalance(wallet.getAddress());
         },
         function() {
             alert('Failed to generate wallet. Refresh and try again.');
-        });
+        }
+    );
 
     function setQRCodes() {
         $('#qrcode').html(createQRCodeCanvas(wallet.getAddress()));
@@ -35,26 +39,49 @@ function setupWallet() {
         $('#payment-history-link').attr('href', blockchainURL);
     }
 
-    // function showBalancePendingConfirmation() {
-    //     var confirmationCount = 0
-    //     var blockchainInfoUrl = 'https://blockchain.info/q/addressbalance/' + wallet.getAddress() + '?confirmations=' + confirmationCount;
-    //     Promise.all([ util.get(blockchainInfoUrl),
-    //                   preferences.getLastBalance(),
-    //     ]).then(function(results){
-    //         var zeroConfirmationsBalance = results[0];
-    //         var confirmedBalance = results[1];
-    //         var pendingConfirmed = zeroConfirmationsBalance - confirmedBalance;
-    //         if(pendingConfirmed > 0){
-    //             $('#balance-pending-confirmation-container').show();
-    //         }
-    //         return currencyManager.formatCurrency(pendingConfirmed)
-    //     }).then(function(pendingConfirmed){
-    //         $('#balance-pending-confirmation').html(pendingConfirmed);
-    //     });
-    // }
 }
 
+function updateBalance(address) {
+    var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
+    util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
 
+        if(response.txrefs){
+            response.balance = _.reduce(response.txrefs, function(memo, obj){ return obj.value + memo; }, 0);
+        } else {
+            response.balance = 0;
+        }
+
+        if(!response.unconfirmed_txrefs && !response.txrefs){
+            // The wallet is empty
+            response.balance = 0;
+        } else if(response.unconfirmed_txrefs){
+            // The attribute 'unconfirmed_balance' from Blockcypher does not
+            // indicate the total of the unconfirmed unspent outputs.
+            // Even from http://dev.blockcypher.com/#address I cannot workout
+            // what this number really represents.
+            //
+            var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj){ return obj.value + memo; }, 0);
+            $('#balance-pending-confirmation-container').show();
+            currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation){
+                $('#balance-pending-confirmation').html(balancePendingConfirmation);
+            });
+        }
+        currencyManager.amount(response.balance).then(function(moneyWithoutSymbol) {
+            localStorage['availableBalanceFiat'] = moneyWithoutSymbol;
+            currencyManager.amount(FEE).then(function(bitcoinFeeFiat) {
+                $('#bitcoin-fee').text(bitcoinFeeFiat);
+                setBudgetWidget(localStorage['availableBalanceFiat'], bitcoinFeeFiat);
+            });
+            chrome.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
+        });
+        //$('#head-line-balance').text('BTC ' + response.balance);
+        currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
+            for(i=0;i < $('.btc-balance-to-fiat').length; i++){
+                $('.btc-balance-to-fiat')[i].textContent = formattedMoney;
+            }
+        });
+    });
+}
 
 function setMinIncidentalFiatAmounts(incidentalTotalFiat){
     if(parseFloat(incidentalTotalFiat) >= 0.03) {
@@ -66,183 +93,19 @@ function setMinIncidentalFiatAmounts(incidentalTotalFiat){
     }
 }
 
-// function getAvailableBalance(address){
-//     var host = 'https://blockchain.info/';
-//     Promise.all([
-//         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
-//         util.getJSON(host + 'unspent?address=' + address),
-//     ]).then(function (results) {
-//         var confirmedBalance = results[0];
-//         var unspentOutputs = results[1];
-//         if(typeof unspentOutputs.notice !== "undefined"){
-//           reject(Error(unspentOutputs.notice.trim()));
-//         }
-//         unspentOutputs = unspentOutputs.unspent_outputs;
-//         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-//         if(unspentBalance != confirmedBalance){
-//              $('#balance-available-container').show();
-//         }
-//         return currencyManager.formatCurrency(unspentBalance)
-//     }).then(function(unspentBalance){
-//         $('#balance-available').html(unspentBalance);
-//     });
-// }
-
-function setupWalletBalance(){
-    var val = '',
-        address = '',
-        SATOSHIS = 100000000,
-        FEE = SATOSHIS * .0001,
-        BTCUnits = 'BTC',
-        BTCMultiplier = SATOSHIS;
-
-    // wallet.setBalanceListener(function(balance) {
-    //     var confirmedBalanceUrl = 'https://blockchain.info/q/addressbalance/' + wallet.getAddress() + '?confirmations=6';
-    //     setBalance(balance);
-    //     Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-    //         localStorage['availableBalanceFiat'] = results[0];
-    //         setBudgetWidget(results[0], results[1]);
-    //     });
-    // });
-    setupWallet();
-
-    wallet.setBalanceListener(function(balance) {
-        var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
-        util.getJSON(host + wallet.getAddress() + '/balance').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
-            setBalance(response.balance);
-            localStorage['availableBalanceFiat'] = response.final_balance;
-            currencyManager.amount(FEE).then(function(fee){
-                setBudgetWidget(response.final_balance, fee);
-            });
-            if(response.balance != response.final_balance){
-                 $('#balance-available-container').show();
-            }
-            currencyManager.formatCurrency(response.unconfirmed_balance).then(function(unspentBalanceFormatted){
-                for(i=0;i < $('.balance-available').length; i++){
-                    $('.balance-available')[i].textContent = unspentBalanceFormatted;
-                }
-            });
-        }, function(error){
-            $('#unknownErrorAlert').slideDown();
-            $('#unknownErrorAlertLabel').text(error.message);
-            return 0;
-        });
-    });
-    //
-    //
-    // wallet.setBalanceListener(function(balance) {
-    //     var host = 'https://blockchain.info/';
-    //     var address = wallet.getAddress();
-    //     Promise.all([
-    //         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
-    //         util.getJSON(host + 'unspent?address=' + address),
-    //     ]).then(function (results) {
-    //         var confirmedBalance = results[0];
-    //         var unspentOutputs = results[1];
-    //         if(typeof unspentOutputs.notice !== "undefined"){
-    //           reject(Error(unspentOutputs.notice.trim()));
-    //         }
-    //
-    //         unspentOutputs = unspentOutputs.unspent_outputs;
-    //         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-    //         if(unspentBalance != confirmedBalance){
-    //              $('#balance-available-container').show();
-    //         }
-    //         setBalance(confirmedBalance);
-    //         Promise.all([
-    //             currencyManager.amount(confirmedBalance),
-    //             currencyManager.amount(FEE),
-    //             currencyManager.formatCurrency(unspentBalance)
-    //         ]).then(function(results) {
-    //             localStorage['availableBalanceFiat'] = results[0];
-    //             setBudgetWidget(results[0], results[1]);
-    //             //$('#balance-available').html(results[2]);
-    //             for(i=0;i < $('.balance-available').length; i++){
-    //                 $('.balance-available')[i].textContent = results[2];
-    //             }
-    //         });
-    //     }, function(error){
-    //         $('#unknownErrorAlert').slideDown(); // Hack belongs in a UI layer
-    //         $('#unknownErrorAlertLabel').text(error.message);
-    //     }); // .catch(function(error){
-    //     //           $('#unknownErrorAlertLabel').text('Network foo Erroe. Please try again later.'); // Hack belongs in a UI layer
-    //     //             $('#unknownErrorAlertLabel').text('Network foo Error: ' + req.responseURL + ' is unreachable. Please try again later.'); // Hack belongs in a UI layer
-    //     //             $('#unknownErrorAlert').slideDown(); // Hack belongs in a UI layer
-    //     //         });
-    // });
-
-    // function getAvailableBalance(address){
-    //     var host = 'https://blockchain.info/';
-    //     Promise.all([
-    //         util.getJSON(host + 'q/addressbalance/' + address + '?confirmations=6'),
-    //         util.getJSON(host + 'unspent?address=' + address),
-    //     ]).then(function (results) {
-    //         var confirmedBalance = results[0];
-    //         var unspentOutputs = results[1];
-    //         if(typeof unspentOutputs.notice !== "undefined"){
-    //           reject(Error(unspentOutputs.notice.trim()));
-    //         }
-    //         unspentOutputs = unspentOutputs.unspent_outputs;
-    //         var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-    //         if(unspentBalance != confirmedBalance){
-    //              $('#balance-available-container').show();
-    //         }
-    //         return currencyManager.formatCurrency(unspentBalance)
-    //     }).then(function(unspentBalance){
-    //         $('#balance-available').html(unspentBalance);
-    //     });
-    // }
-
-    function setBalance(balance) {
-        if (Number(balance) < 0 || isNaN(balance)) {
-            balance = 0.00;
-        }
-        $('#head-line-balance').text(BTCUnits + ' ' + parseInt(balance) / BTCMultiplier);
-        $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-
-        currencyManager.amount(FEE).then(function(formattedMoney) {
-            $('#bitcoin-fee').text(formattedMoney);
-        });
-
-        //var text;
-        if (balance > 0) {
-            currencyManager.formatCurrency(balance).then(function(formattedMoney) {
-                for(i=0;i < $('.btc-balance-to-fiat').length; i++){
-                    $('.btc-balance-to-fiat')[i].textContent = formattedMoney;
-                }
-            });
-        } else {
-            for(i=0;i < $('.btc-balance-to-fiat').length; i++){
-                $('.btc-balance-to-fiat')[i].textContent = '0.00';
-            }
-        }
-    }
-    //setBalance();
-}
-
-
-
 function restartCountDown(){
     window.alarmManager.doToggleAlarm();
     initAlarmDisplay();
     $('#date-end-of-week').effect("highlight", {
         color: 'rgb(100, 189, 99)'
     }, 1000);
-
-    // chrome.alarms.getAll(function(objs){
-    //     var date = new Date(objs[0].scheduledTime);
-    //     $('#date-end-of-week').html(date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-    //     $('#date-end-of-week').effect("highlight", {
-    //         color: 'rgb(100, 189, 99)'
-    //     }, 1000);
-    //     $('#donate-now-reminder').fadeOut();
-    // });
 }
 
 $(function() {
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
+    window.FEE = 10000;
 
     db = new ydn.db.Storage('protip', schema);
 
@@ -250,15 +113,16 @@ $(function() {
     allowExternalLinks();
 
     initAlarmDisplay();
-    // $('#days-till-end-of-week').html(currentWeekObj.daysRemaining);
-    // chrome.alarms.getAll(function(objs){
-    //     var date = new Date(objs[0].scheduledTime);
-    //     $('#date-end-of-week').html(date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
-    // });
-    //$('#date-end-of-week').html(currentWeekObj.endOfWeek.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
 
-    setupWalletBalance();
+    setupWallet();
     buildBrowsingTable('browsing-table');
+
+    var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
+    var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
+    var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
+    var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
+    var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
+    $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
     $('#confirm-donate-now').click(function() {
         $('#donate-now').button('Sending...');
@@ -268,40 +132,36 @@ $(function() {
             text: ''
         });
 
-        Promise.all([
-            preferences.setCurrency(localStorage['fiatCurrencyCode']),
-            //wallet.restoreAddress()
-        ]).then(function() {
-            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
-                localStorage['weeklyAlarmReminder'] = false;
-                window.alarmManager.doToggleAlarm();
-                restartCountDown();
-                $('#payment-history').effect("highlight", {
-                    color: 'rgb(100, 189, 99)'
-                }, 4000);
-                //$('#notice').html(response);
-                $('#notice').html('Transaction Submitted');
-                $('#notice-dialogue').fadeIn().slideDown();
-                $('#donate-now').button('reset');
-                // if (response.trim() != 'Transaction Submitted'){
-                //     $('#payment-error').html(response);
-                //     $('#payment-error').fadeIn().slideDown();
-                //     //restartCountDown();
-                // } else {
-                //     $('#transaction-submitted').html(response);
-                //     $('#payment-error').fadeIn().slideDown();
-                //     $('#browsing-table').fadeOut();
-                //     $('#browsing-table').empty();
-                // }
-                $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-            }, function(response){
-                // blockCypher is returning a error code when the transaction was successfull?
-                //$('#notice').html(response);
-                $('#notice').html('Transaction Submitted');
-                $('#notice-dialogue').fadeIn().slideDown();
-                $('#donate-now').button('reset');
-                $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-            });
+        paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
+            localStorage['weeklyAlarmReminder'] = false;
+            window.alarmManager.doToggleAlarm();
+            restartCountDown();
+            $('#payment-history').effect("highlight", {
+                color: 'rgb(100, 189, 99)'
+            }, 4000);
+            //$('#notice').html(response);
+            db.clear('sites');
+            $('#notice').html('Transaction Submitted');
+            $('#notice-dialogue').fadeIn().slideDown();
+            $('#donate-now').button('reset');
+            $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+            updateBalance(wallet.getAddress());
+
+        }, function(response){
+            // blockCypher is returning a error code when the transaction was successfull?
+            //$('#notice').html(response);
+            localStorage['weeklyAlarmReminder'] = false;
+            window.alarmManager.doToggleAlarm();
+            restartCountDown();
+            $('#payment-history').effect("highlight", {
+                color: 'rgb(100, 189, 99)'
+            }, 4000);
+            db.clear('sites');
+            updateBalance(wallet.getAddress());
+            $('#notice').html('Transaction Submitted');
+            $('#notice-dialogue').fadeIn().slideDown();
+            $('#donate-now').button('reset');
+            $('#confirm-donate-now-dialogue').slideUp().fadeOut();
         });
     });
 
@@ -309,21 +169,6 @@ $(function() {
         $('#donate-now-reminder').fadeOut('fast');
     });
 
-    var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
-    var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
-    var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
-    var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
-    var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-    $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
-
-
-    // if(parseFloat(localStorage['incidentalTotalFiat']) >= 0.03){
-    //     // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
-    //     // Making 0.03 the min.
-    //     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
-    // } else {
-    //     var incidentalTotalFiat = 0.03;
-    // }
     $( "#slider" ).slider({
         range: "max",
         min: 0.03,
@@ -339,7 +184,7 @@ $(function() {
         if (this.value == 'automaticDonate') {
             localStorage['automaticDonate'] = true;
             localStorage['manualRemind'] = false;
-            alarmManager.alarmExpired(function(expired){
+            alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
                 if (expired) {
                     restartTheWeek();
                     window.alarmManager.doToggleAlarm();

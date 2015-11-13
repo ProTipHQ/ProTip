@@ -24,7 +24,6 @@
             });
         },
 
-        //browsing: function(incidentalTotalFiat, fiatCurrencyCode, exchangeRate) {
         browsing: function(incidentalTotalSatoshi) {
             return new Promise(function(resolve, reject) {
                 var sites = [];
@@ -58,74 +57,6 @@
                 });
             });
         },
-
-        // payAll: function(totalWeeklyBudgetFiat) {
-        //     return Promise.all([
-        //         wallet.getBalance(),
-        //         preferences.getExchangeRate()
-        //     ]).then(function(results){
-        //         var balanceSatoshis = results[0];
-        //         var exchangeRateToSatoshi = results[1];
-        //         var totalWeeklyBudgetSatoshi = Math.floor(totalWeeklyBudgetFiat / exchangeRateToSatoshi);
-        //
-        //         if(totalWeeklyBudgetSatoshi < fee){
-        //             reject(Error('Balance must at least exceed minimum Bitcoin fee.'));
-        //         }
-        //         var browsing = ret.browsing(exchangeRateToSatoshi);
-        //         var subscriptions = ret.subscriptions(exchangeRateToSatoshi);
-        //
-        //         if(balanceSatoshis < totalWeeklyBudgetSatoshi){
-        //             totalWeeklyBudgetSatoshi = balanceSatoshis; // empty the wallet of remaining funds.
-        //         }
-        //         if(totalWeeklyBudgetSatoshi < fee){
-        //             reject(Error('not enough funds to cover the fee');
-        //         }
-        //         var availableSatoshi = totalWeeklyBudgetSatoshi - fee;
-        //         var selectedPayments = [];
-        //         var runningTotal = 0;
-        //
-        //         // The Subscriptions have priority over Browsing to the totalWeeklyBudgetSatoshi
-        //         // do subscriptions first.
-        //         for(var i=0;subscriptions.length > i;i++){
-        //           if(runningTotal >= availableSatoshi){
-        //               break;
-        //           }
-        //           runningTotal += subscriptions[i].amountSatoshi;
-        //           if (runningTotal - availableSatoshi > 0){
-        //               //empty the wallet
-        //               subscriptions[i].amountSatoshi -= runningTotal - availableSatoshi;
-        //               runningTotal = availableSatoshi;
-        //           }
-        //           selectedPayments.push(subscriptions[i]);
-        //         }
-        //         // Give priority to the remainer of the funds to the largest payments.
-        //         browsing = _.sortBy(browsing, 'amountSatoshi').reverse();
-        //         for(var i=0;browsing.length > i;i++){
-        //           if(runningTotal >= availableSatoshi){
-        //               break;
-        //           }
-        //           runningTotal += browsing[i].amountSatoshi;
-        //           if (runningTotal - availableSatoshi > 0){
-        //               //empty the wallet
-        //               browsing[i].amountSatoshi -= runningTotal - availableSatoshi;
-        //               runningTotal = availableSatoshi;
-        //           }
-        //           selectedPayments.push(browsing[i]);
-        //         }
-        //         if (selectedPayments.length > 0) {
-        //             // wallet.mulitpleOutputsSend(selectedPayments, fee, '').then(function(response) {
-        //             //     db.clear('sites');
-        //             //     resolve(response);
-        //             // }, function(error){
-        //             //     reject(Error(error.message));
-        //             // });
-        //         } else {
-        //             reject(Error('No browsing history or subscriptions.'));
-        //         }
-        //     });
-        //   });
-        // },
-
 
         processPayments: function(paymentFiatData, totalWeeklyBudgetSatoshis, exchangeRate) {
             // Add the payments *upto* fiat budget.
@@ -232,7 +163,6 @@
                        var calculatedTotalAmountSatoshi = _.reduce(selectedPayments, function(memo, obj){ return obj.txSatoshis + memo; }, 0);
                        if (availableSatoshi >= calculatedTotalAmountSatoshi) {
                            wallet.mulitpleOutputsSend(selectedPayments, fee, '').then(function(response) {
-                               //db.clear('sites');
                                resolve(response);
                            }, function(error){
                                reject(Error(error.message));
