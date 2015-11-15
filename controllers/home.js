@@ -84,12 +84,12 @@ function updateBalance(address) {
 }
 
 function setMinIncidentalFiatAmounts(incidentalTotalFiat){
-    if(parseFloat(incidentalTotalFiat) >= 0.03) {
+    if(parseFloat(incidentalTotalFiat) >= 0.00) {
         // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
         // Making 0.03 the min.
         return parseFloat(incidentalTotalFiat);
     } else {
-        return 0.03;
+        return 0.00;
     }
 }
 

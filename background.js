@@ -52,10 +52,6 @@ chrome.runtime.onInstalled.addListener(function(details){
     //}
 });
 
-// chrome.runtime.onInstalled.addListener(function() {
-//   console.log('Install fired convert done.');
-// });
-
 window.addEventListener("storage", function(e){
     // Let the user see their available balance in the browserAction
     // Doesn't have to be super accurate. Certainly don't need to hit
