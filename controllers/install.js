@@ -124,17 +124,28 @@ function updateFiatCurrencyCode() {
 }
 
 function setupWallet() {
-    wallet.restoreAddress().then(setAddress,
+
+    wallet.restoreAddress().then(setAddress(),
         function() {
+            console.log('bazzz');
             return wallet.generateAddress();
-        }).then(setAddress,
+        }).then(function(){
+            console.log('barr');
+            setAddress();
+        },
         function() {
             alert('Failed to generate wallet. Refresh and try again.');
-        });
+        }
+    );
+
 
     function setAddress() {
-        $('#textAddress').text(wallet.getAddress());
-        $('#private-key-input').val(wallet.getDecryptedPrivateKey(''));
+        preferences.getPrivateKey().then(function(privateKey){
+            $('#private-key-input').val(privateKey);
+        });
+        preferences.getAddress().then(function(address){
+            $('#textAddress').text(address());
+        });
     }
 }
 
