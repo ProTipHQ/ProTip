@@ -29,9 +29,12 @@ $(document).ready(function() {
     }
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
-        Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-            localStorage['availableBalanceFiat'] = results[0];
-        });
+
+        // Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
+        //     localStorage['availableBalanceFiat'] = results[0];
+        //     debugger;
+        //     //chrome.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
+        // });
     });
     setupWallet();
 

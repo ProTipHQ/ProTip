@@ -16,14 +16,13 @@ $(function() {
     db = new ydn.db.Storage('protip', schema);
 
     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
+
     $('#fiat-currency-select').change(function() {
         $('#ajax-loader').show();
-        updateCurrency(this.value).then(function(response){
-            console.log(response.exchangeRateCoeff);
-            if(!response.exchangeRateCoeff){
-                //debugger;
-            }
-            updateGlobalOptionsAmount(response.exchangeRateCoeff, this.value);
+        var old = 'f00';
+        updateCurrency(this.value, localStorage["fiatCurrencyCode"]).then(function(response){
+
+            updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
             updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
@@ -31,8 +30,10 @@ $(function() {
         }, function(response){
           // If all fails, reset to USD
           localStorage["fiatCurrencyCode"] = 'USD';
+          preferences.setCurrency(localStorage['fiatCurrencyCode']);
           $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
           updateFiatCurrencyCode();
+          $('#ajax-loader').hide();
         });
     });
     //updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
@@ -54,6 +55,17 @@ function setExampleMetaTag(){
   $('#example-metatag').html(
    '<meta name="microtip" content="' + wallet.getAddress() + '" data-currency="btc">'
   );
+}
+
+function resetToDefaults(){
+    localStorage['defaultSubscriptionAmountFiat'] = "0.25"
+    localStorage["fiatCurrencyCode"] = 'USD';
+    localStorage["incidentalTotalFiat"] = '1';
+    perferences.set({
+        currency: 'USD',
+
+    });
+
 }
 
 function initDefaultSubscriptionAmountFiat() {

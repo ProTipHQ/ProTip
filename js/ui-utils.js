@@ -24,19 +24,21 @@ function initAvailableCurrenciesOptions() {
     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
     updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
-    $('#fiat-currency-select').change(function() {
-        preferences.setCurrency($(this.selectedOptions).val());
-        localStorage["fiatCurrencyCode"] = this.value;
-        updateFiatCurrencyCode();
-    });
+    // $('#fiat-currency-select').change(function() {
+    //     preferences.setCurrency($(this.selectedOptions).val());
+    //     localStorage["fiatCurrencyCode"] = this.value;
+    //     updateFiatCurrencyCode();
+    // });
 }
 
 
-function updateCurrency(newCurrencyCode) {
-  var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
+function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
+  //var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
   var exchangeRateCoeff;
 
-  return preferences.setCurrency(localStorage["fiatCurrencyCode"]).then(function(){
+  //return preferences.setCurrency(oldFiatCurrencyCode).then(function(){
+
+  return preferences.setCurrency(newCurrencyCode).then(function(){
       return currencyManager.updateExchangeRate();
   }).then(function(exchangeToBTC){
       return new Promise(function (resolve, reject) {
@@ -75,6 +77,9 @@ function updateCurrency(newCurrencyCode) {
           } else { // fiat to fiat
               util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
               .then(function(ratesData){
+                  if(newCurrencyCode == 'EUR' || oldFiatCurrencyCode == 'EUR'){
+                      resolve({exchangeRateCoeff: ratesData.rates[Object.keys(ratesData.rates)[0]], newCurrencyCode: newCurrencyCode});
+                  }
                   exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               }, function(error){

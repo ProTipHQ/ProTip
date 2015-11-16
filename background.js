@@ -14,7 +14,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
             BTCMultiplier = SATOSHIS;
 
         Promise.all([
-            preferences.setCurrency(localStorage['fiatCurrencyCode']),
+            preferences.setCurrency(localStorage["fiatCurrencyCode"]),
             wallet.restoreAddress()
         ]).then(function(){
             paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){

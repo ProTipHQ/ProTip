@@ -169,7 +169,7 @@ $(function() {
         });
 
         Promise.all([
-            preferences.setCurrency(localStorage['fiatCurrencyCode']),
+            preferences.setCurrency(localStorage["fiatCurrencyCode"]),
         ]).then(function() {
             paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
                 localStorage['weeklyAlarmReminder'] = false;
