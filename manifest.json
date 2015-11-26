@@ -47,10 +47,10 @@
         "https://api.bitcoinaverage.com/ticker/*"
      ],
    "manifest_version": 2,
-   "name": "ProTip Staging, Release Candidate",
+   "name": "ProTip, Staging",
    "short_name": "ProTip",
    "options_page": "views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0.0.33"
+   "version": "1.0.0.34"
 }

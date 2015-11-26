@@ -12,34 +12,6 @@ window.addEventListener("message", function (event) {
      });
 }, false);
 
-// var observeDOM = (function(){
-//     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-//         eventListenerSupported = window.addEventListener;
-//
-//     return function(obj, callback){
-//         if( MutationObserver ){
-//             // define a new observer
-//             var obs = new MutationObserver(function(mutations, observer){
-//                 if( mutations[0].addedNodes.length || mutations[0].removedNodes.length )
-//                     callback();
-//             });
-//             // have the observer observe foo for changes in children
-//             obs.observe( obj, { childList:true, subtree:true });
-//         }
-//         else if( eventListenerSupported ){
-//             obj.addEventListener('DOMNodeInserted', callback, false);
-//             obj.addEventListener('DOMNodeRemoved', callback, false);
-//         }
-//     }
-// })();
-//
-// https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-// // Observe a specific DOM element:
-// observeDOM( document.body ,function(){
-//     console.log('dom changed');
-//     scanText();
-// });
-
 var port = chrome.runtime.connect();
 
 if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
@@ -55,13 +27,14 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
         // If the URL is not blackedlisted, scan the page.
         if (request.method == 'isBlacklisted' && request.response == false){
-            scanText();
+            scanText(document.body);
             scanLinks();
             // (1) All found bitcoin addresses found in the links and text are tagged
             // with the green bordered UI.
             // (2) We loop over all tagged elements and check and submit the
             // correctly prioritized found bitcoin address.
             selectPrioritizedBitcoinAddress({knownBTCAddress: request.knownBTCAddress});
+
         } else if (request.method == 'isStarredUser' && request.response == true){
             starredUser();
         } // else page is blacklisted and no need to scan anything.
@@ -156,22 +129,24 @@ function scanLinks() {
     }
 }
 
-function scanText(){
+function scanText(target){
     var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)");
 
-    matchText(document.body, regex, function (node, match) {
-
-        if(node.textContent.trim() == node.parentElement.parentElement.parentElement.getAttribute('data-protip-btc-address')){
-            console.log('Double checkbox code called.');
-            console.log(node);
-            return
-            // This node has already been tagged/highlighted.
-            // Don't know why this code is run more than once for a given node.
+    matchText(target, regex, function (node, match) {
+        if(node.parentNode.parentNode.className.match(/protip/g)){
+            debugger;
+            return;
         }
 
+
+        // if(node.textContent == 'beta test wallet this is the donation address: 1BdxLjmsJg6iGkj7wFa64U6bokWL44iHCN'){
+        //     debugger;
+        // }
         var words = node.textContent.split(' ');
         var parent_span = document.createElement("span");
         for ( i = 0; i < words.length; i++ ) {
+            //if(words[i].trim() == 'and'){
+            //debugger;
             if(validAddress(words[i].trim())){
                 var span = tagElementWithProTipUI(words[i], 'protip-text')
                 var content_span = document.createElement("span")
@@ -184,6 +159,7 @@ function scanText(){
                 parent_span.appendChild(span);
             }
         }
+
         node.parentElement.replaceChild(parent_span, node);
     });
 }
@@ -191,30 +167,100 @@ function scanText(){
 var matchText = function(node, regex, callback, excludeElements) {
 
     excludeElements || (excludeElements = ['script', 'img', 'style', 'iframe', 'canvas', 'a']); // exclude 'a' links search separately
-    var child = node.firstChild;
 
-    do {
-        switch (child.nodeType) {
-        case 1:
-            if (excludeElements.indexOf(child.tagName.toLowerCase()) > -1) {
-                continue;
+    try {
+        var child = node.firstChild;
+        do {
+            switch (child.nodeType) {
+            case 1:
+                if (excludeElements.indexOf(child.tagName.toLowerCase()) > -1) {
+                    continue;
+                }
+                // Weird hack, running scanLinks() prior to matchText messes up the reference to child.firstChild
+                // Maybe something to do with the moving the newly created elements post loading... Really not sure
+                if(child.firstChild && !(excludeElements.indexOf(child.firstChild.nodeName.toLowerCase()) > -1)){ //
+                    matchText(child, regex, callback, excludeElements);
+                }
+                break;
+            case 3:
+                if(regex.test(child.data)){
+                    callback.apply(window, [child]);
+                }
+                break;
             }
-            // Weird hack, running scanLinks() prior to matchText messes up the reference to child.firstChild
-            // Maybe something to do with the moving the newly created elements post loading... Really not sure
-            if(child.firstChild){ //
-                matchText(child, regex, callback, excludeElements);
-            }
-            break;
-        case 3:
-            if(regex.test(child.data)){
-              callback.apply(window, [child]);
-            }
-            break;
-        }
-    } while (child = child.nextSibling);
+        } while (child = child.nextSibling);
+    }
+    catch(err) {
+        //debugger;
+    }
 
-    return node;
+   return;
 }
+
+// var observeDOM = (function(){
+//     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+//         eventListenerSupported = window.addEventListener;
+//
+//     return function(obj, callback){
+//         if( MutationObserver ){
+//             // define a new observer
+//             var obs = new MutationObserver(function(mutations, observer){
+//                 if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
+//                     if(mutations[0].addedNodes.length > 0){
+//                         callback(mutations[0].addedNodes, observer);
+//                     }
+//                 }
+//             });
+//             // have the observer observe foo for changes in children
+//             obs.observe( obj, { childList:true, subtree:true });
+//         }
+//         else if( eventListenerSupported ){
+//             obj.addEventListener('DOMNodeInserted', callback, false);
+//             obj.addEventListener('DOMNodeRemoved', callback, false);
+//         }
+//     }
+// })();
+
+
+
+//window.onload = function () {
+
+  observeDOM = (function(){
+      var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+          eventListenerSupported = window.addEventListener;
+
+      return function(obj, callback){
+          if( MutationObserver ){
+              // define a new observer
+              obs = new MutationObserver(function(mutations, observer){ // set as global
+              //var obs = new MutationObserver(function(mutations, observer){
+                  if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
+                      if(mutations[0].addedNodes.length > 0){
+                          observer.disconnect();
+                          callback(mutations[0].addedNodes, observer);
+                          observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+                      }
+                  }
+              });
+              // have the observer observe foo for changes in children
+              obs.observe( obj,  { childList:true, subtree:true, attributes: false, characterData: false });
+          }
+          else if( eventListenerSupported ){
+              obj.addEventListener('DOMNodeInserted', callback, false);
+              obj.addEventListener('DOMNodeRemoved', callback, false);
+          }
+      }
+  })();
+
+  observeDOM( document.body, function(addedNodes, observer){
+      //observer.disconnect();
+      for(var i=0;i < addedNodes.length;i++){
+          scanText(addedNodes[i]);
+      }
+      //observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+  });
+//}
+
 
 function scanMetatags(){
     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
@@ -248,6 +294,7 @@ function tagElementWithProTipUI(match, klass_name){
     checkbox.id = 'protip-checkbox-' + match;
     checkbox.addEventListener("click",
         function () {
+            //obs.disconnect();
             if( this.checked ) { // state changed before 'click' is fired
                 window.postMessage(
                     {
@@ -272,10 +319,13 @@ function tagElementWithProTipUI(match, klass_name){
                     }
                 }
             }
+            //obs.observe( document.body, { childList:true, subtree:true });
         }, false
     );
 
+    //obs.disconnect();
     span.insertBefore(checkbox, span.firstChild);
+    //obs.observe( document.body,  { childList: true, subtree:true, attributes: false, characterData: false });
 
     return span;
 }
@@ -320,7 +370,7 @@ function ensureSingleSelectionOfCheckbox(selectedBTCAddress){
     // #3 Edge Case #1 takes priority over Edge Case #2
     //
     // Will see how user testing proceeds. :).
-    els = document.getElementsByClassName('protip-checkbox');
+    var els = document.getElementsByClassName('protip-checkbox');
     for ( i = 0; i < els.length; i++ ) {
         if ( els[i].parentElement.getAttribute('data-protip-btc-address') == selectedBTCAddress ) {
             els[i].checked = true;

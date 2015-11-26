@@ -75,16 +75,22 @@ function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
             });
           } else { // fiat to fiat
-              util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
+              resolve(util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
               .then(function(ratesData){
                   if(newCurrencyCode == 'EUR' || oldFiatCurrencyCode == 'EUR'){
-                      resolve({exchangeRateCoeff: ratesData.rates[Object.keys(ratesData.rates)[0]], newCurrencyCode: newCurrencyCode});
+                      if(oldFiatCurrencyCode == 'EUR'){
+                          return {exchangeRateCoeff: ratesData.rates[Object.keys(ratesData.rates)[0]], newCurrencyCode: newCurrencyCode}
+                      } else {
+                          return {exchangeRateCoeff: 1/ratesData.rates[Object.keys(ratesData.rates)[0]], newCurrencyCode: newCurrencyCode}
+                      }
+                  } else {
+                      var exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
+                      return {exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode};
                   }
-                  exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
-                  resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               }, function(error){
                   //debugger;
-              });
+                  console.log(error);
+              }));
           }
       });
   });
