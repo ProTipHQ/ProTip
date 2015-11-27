@@ -1,0 +1,4 @@
+v1.0.0.35, 27 November 2015. Git Ref following 6f22a604cc629c86b5297a397152ce4eb820711a.
+Fixing issue related to a failure to load external CSS and JS files on first load.
+Functions allowing the search of dynamically loaded content have been disable on
+this release because they are not yet tested and stable.

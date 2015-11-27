@@ -4,6 +4,14 @@ var startTime = null;
 
 var updateTimeOnPageInterval = 1000 * 10;  // 10 seconds // 1 minute.
 
+// console.error = function () {
+//     // Try to use
+//     var key = Date.now();
+//     var value = JSON.stringify([].slice.call(arguments));
+//     localStorage.setItem(key, value);
+//     console.log.apply(console, arguments);
+// }
+
 chrome.alarms.onAlarm.addListener(function( alarm ) {
     if(localStorage['automaticDonate'] == "true"){
         var val = '',
