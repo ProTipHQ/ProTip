@@ -16,7 +16,6 @@ Many thanks to the very talented Rock Barcellos for the creation and use of the 
 ProTip Release Candidate has the following features.
 
 - **Weekly subscriptions** for your loyal audience
-- **Content passes** for your most premium work
 - **Platform independent** will work with your: YouTube, Soundcloud, WordPress/Blogger, Tumblr, Twitter, Deviant Art, Flickr, Patreon and self hosted websites and many more.  
 
 For installation instructions go to this [handy guide](https://docs.google.com/presentation/d/1Uo37gP_EKJTfhqkV7cU0rKlUX14aXLLdVz9MjTb0VcE/pub?start=false&loop=false&delayms=3000).
