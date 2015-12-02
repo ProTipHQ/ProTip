@@ -2,6 +2,10 @@
 
 ProTip is a peer to peer crowd funding app for the web. 
 
+<p align="center">
+  <img src="/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true" style="border:1px #333 solid" />
+</p>
+
 ![Protip Promotional Image 1](/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
 
 ![Protip Promotional Image 2](/assets/promotional/2_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
