@@ -1,7 +1,5 @@
 # A Chrome Extension for peer-to-peer crowd funding.
 
-ProTip is a peer to peer crowd funding app for the web. 
-
 <p align="center">
   <img src="/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true" />
   <img src="/assets/promotional/2_protip_cartoon_rock_barcellos.jpg?raw=true" />
@@ -12,7 +10,7 @@ ProTip is a peer to peer crowd funding app for the web.
   <img src="/assets/promotional/7_protip_cartoon_rock_barcellos.jpg?raw=true" />
 </p>
 
-Many thanks to the very talented Rock Barcellos to the creation and use of the above images. [https://twitter.com/rockbarcellos](https://twitter.com/rockbarcellos)
+Many thanks to the very talented Rock Barcellos for the creation and use of the above images. [https://twitter.com/rockbarcellos](https://twitter.com/rockbarcellos)
 
 ## Tipping & online donations for doing the work you love
 ProTip Release Candidate has the following features.
