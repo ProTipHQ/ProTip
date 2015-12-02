@@ -1,6 +1,7 @@
 {
    "background": {
       "scripts": [
+        "init/error-log.js",
         "lib/jquery-2.1.3.min.js",
         "lib/promise.min.js",
         "lib/underscore-min.js",
@@ -23,7 +24,13 @@
    "content_scripts": [
        {
            "matches": ["http://*/*", "https://*/*"],
-           "js": ["lib/jquery-2.1.3.min.js","content.js", "js/utils-bitcoin.js", "lib/bitcoinjs-lib.min.js"]
+           "js": [
+                "init/error-log.js",
+                "lib/jquery-2.1.3.min.js",
+                "content.js",
+                "js/utils-bitcoin.js",
+                "lib/bitcoinjs-lib.min.js"
+            ]
        }
    ],
   "icons": { "16": "assets/images/heart16x16.png",
@@ -47,10 +54,10 @@
         "https://api.bitcoinaverage.com/ticker/*"
      ],
    "manifest_version": 2,
-   "name": "ProTip peer-to-peer crowd-funding",
+   "name": "ProTip, Staging",
    "short_name": "ProTip",
    "options_page": "views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "1.0.0.35"
+   "version": "1.0.0.36"
 }

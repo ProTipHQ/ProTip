@@ -14,6 +14,25 @@
         //     })
         // },
 
+        // alarmExpired: function (alarmExpireDate, callback) {
+        //     chrome.alarms.getAll(function(alarms) {
+        //         debugger;
+        //                alarms[0].scheduledTime
+        //                Date.now()
+        //         //var alarmExpires = new Date(alarmExpireDate);
+        //         //var now = (new Date).getTime();
+        //
+        //         if(alarms[0].scheduledTime >= Date.now())){
+        //             localStorage['weeklyAlarmReminder'] = false;
+        //             callback(false)
+        //         } else {
+        //             // if alarms is for some reason empty [].length, conclude that it has expired.
+        //             localStorage['weeklyAlarmReminder'] = true;
+        //             callback(true)
+        //         }
+        //     });
+        // },
+
         alarmExpired: function (alarmExpireDate, callback) {
             chrome.alarms.getAll(function(alarms) {
                 var alarmExpires = new Date(alarmExpireDate);
@@ -57,6 +76,17 @@
                 console.log(
                     'New alarm created for ' + date.format()
                 );
+            });
+        },
+
+        listAlarms: function() {
+            chrome.alarms.getAll(function(objs){
+                for(var i=0;i<objs.length;i++){
+                    var date = new Date(objs[i].scheduledTime);
+                    console.log(
+                        'Alarm for: ' + date.format()
+                    );
+                }
             });
         },
 

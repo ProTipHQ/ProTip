@@ -19,7 +19,6 @@ $(function() {
 
     $('#fiat-currency-select').change(function() {
         $('#ajax-loader').show();
-        var old = 'f00';
         updateCurrency(this.value, localStorage["fiatCurrencyCode"]).then(function(response){
 
             updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
@@ -36,12 +35,15 @@ $(function() {
           $('#ajax-loader').hide();
         });
     });
+
+    $('#clear-log').click(function(){clearLog()});
     //updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
     // initFiatCurrency();
     //updateFiatCurrencyCode();
     initAvailableCurrenciesOptions();
     initDefaultSubscriptionAmountFiat();
+    initErrorLog();
 
     allowExternalLinks();
 
@@ -79,3 +81,18 @@ function initDefaultSubscriptionAmountFiat() {
         localStorage['defaultSubscriptionAmountFiat'] = this.value;
     });
 }
+
+function initErrorLog() {
+    var errors = JSON.parse(localStorage.getItem("errorLog"));
+    errors.forEach(function(element) {
+      $('#console-log').append(element + '&#xA;');
+    });
+}
+
+function clearLog(){
+    localStorage.setItem("errorLog", JSON.stringify([]));
+    $('#console-log').empty();
+}
+
+
+

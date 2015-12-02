@@ -4,20 +4,12 @@ var startTime = null;
 
 var updateTimeOnPageInterval = 1000 * 10;  // 10 seconds // 1 minute.
 
-// console.error = function () {
-//     // Try to use
-//     var key = Date.now();
-//     var value = JSON.stringify([].slice.call(arguments));
-//     localStorage.setItem(key, value);
-//     console.log.apply(console, arguments);
-// }
-
 chrome.alarms.onAlarm.addListener(function( alarm ) {
     if(localStorage['automaticDonate'] == "true"){
         var val = '',
             address = '',
             SATOSHIS = 100000000,
-            FEE = SATOSHIS * .0001,
+            FEE = SATOSHIS * 0.0001,
             BTCUnits = 'BTC',
             BTCMultiplier = SATOSHIS;
 
@@ -34,7 +26,7 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
                 chrome.browserAction.setBadgeText({text: 'Sent!'});
             }, function(error){
                 // If doToggleAlarm() is not called, the alarm will fire every 2 hours after the set period.
-                // Maybe the balance is too low, or blockchain.info is not working, or there are no
+                // Maybe the balance is too low, or blockcypher.com is not working, or there are no
                 // recorded bitcoins or subscriptions to send to.
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();

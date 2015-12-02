@@ -1,6 +1,22 @@
 # A Chrome Extension for peer-to-peer crowd funding.
 
-ProTip is a peer to peer crowd funding app for the web. This version is a release candidate intended for the Priority Access supporters on our [Indiegogo Crowd Fund](https://www.indiegogo.com/projects/protip-peer-to-peer-tipping-for-the-web).
+ProTip is a peer to peer crowd funding app for the web. 
+
+![Protip Promotional Image 1](/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 2](/assets/promotional/2_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 3](/assets/promotional/3_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 4](/assets/promotional/4_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 5](/assets/promotional/5_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 6](/assets/promotional/6_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+![Protip Promotional Image 7](/assets/promotional/7_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
+
+Many thanks to the very talented Rock Barcellos to the creation and use of the above images. [https://twitter.com/rockbarcellos](https://twitter.com/rockbarcellos)
 
 ## Tipping & online donations for doing the work you love
 ProTip Release Candidate has the following features.
@@ -21,7 +37,7 @@ We also support the use of metatags in the HTML header for added security:
 ```
 
 ## Special Thanks
-Andrew Toth, for releasing his bitcoin wallet under the MIT license.
+Andrew Toth, for releasing his bitcoin wallet under the MIT license. His architecture and code greatly influenced the technical design of ProTip. Further, Toth's code introduced me to the Promise pattern which greatly simplified and improved the performance of ProTip.
 [https://github.com/andrewtoth/BitcoinWallet](https://github.com/andrewtoth/BitcoinWallet)
 
 ## Licence
