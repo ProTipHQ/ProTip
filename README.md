@@ -3,22 +3,14 @@
 ProTip is a peer to peer crowd funding app for the web. 
 
 <p align="center">
-  <img src="/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true" style="border:1px #333 solid" />
+  <img src="/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/2_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/3_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/4_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/5_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/6_protip_cartoon_rock_barcellos.jpg?raw=true" />
+  <img src="/assets/promotional/7_protip_cartoon_rock_barcellos.jpg?raw=true" />
 </p>
-
-![Protip Promotional Image 1](/assets/promotional/1_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 2](/assets/promotional/2_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 3](/assets/promotional/3_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 4](/assets/promotional/4_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 5](/assets/promotional/5_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 6](/assets/promotional/6_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
-
-![Protip Promotional Image 7](/assets/promotional/7_protip_cartoon_rock_barcellos.jpg?raw=true "Protip Promotional Image")
 
 Many thanks to the very talented Rock Barcellos to the creation and use of the above images. [https://twitter.com/rockbarcellos](https://twitter.com/rockbarcellos)
 
