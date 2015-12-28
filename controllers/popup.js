@@ -86,42 +86,91 @@ function initPopupCurrentWeek() {
 
 function initBitcoinWallet(){
   // Setup the wallet, page values and callbacks
-    var val = '',
-        address = '',
-        SATOSHIS = 100000000,
-        FEE = SATOSHIS * .0001,
-        BTCUnits = 'BTC',
-        BTCMultiplier = SATOSHIS;
+    // var val = '',
+    //     address = '',
+    //     SATOSHIS = 100000000,
+    //     FEE = SATOSHIS * .0001,
+    //     BTCUnits = 'BTC',
+    //     BTCMultiplier = SATOSHIS;
+    //
+    // function setupWallet() {
+    //     wallet.restoreAddress();
+    // }
+    // wallet.setBalanceListener(function(balance) {
+    //
+    //     setBalance(balance);
+    //     Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
+    //         localStorage['availableBalanceFiat'] = results[0];
+    //     });
+    // });
+    // setupWallet();
+    //
+    //
+    // function setBalance(balance) {
+    //     if (Number(balance) < 0 || isNaN(balance)) {
+    //         balance = 0;
+    //     }
+    //     $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
+    //     $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
+    //
+    //     if (balance > 0) {
+    //         currencyManager.formatCurrency(balance).then(function(formattedMoney) {
+    //             var text = formattedMoney;
+    //             $('#btc-balance-to-fiat').text(text);
+    //         });
+    //     } else {
+    //         $('#btc-balance-to-fiat').text('0.00');
+    //     }
+    // }
+    // setBalance();
 
-    function setupWallet() {
-        wallet.restoreAddress();
-    }
-    wallet.setBalanceListener(function(balance) {
-        setBalance(balance);
-        Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-            localStorage['availableBalanceFiat'] = results[0];
-        });
-    });
-    setupWallet();
-
-
-    function setBalance(balance) {
-        if (Number(balance) < 0 || isNaN(balance)) {
-            balance = 0;
+    wallet.restoreAddress().then(function(){
+        //updateBalance(wallet.getAddress());
+        },
+        function() {
+            return wallet.generateAddress();
+        }).then(function(address){
+            updateBalance(wallet.getAddress());
+        },
+        function() {
+            alert('Failed to generate wallet. Refresh and try again.');
         }
-        $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-        $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
+    );
 
-        if (balance > 0) {
-            currencyManager.formatCurrency(balance).then(function(formattedMoney) {
-                var text = formattedMoney;
-                $('#btc-balance-to-fiat').text(text);
+    function updateBalance(address) {
+        var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
+        util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+
+            if(response.txrefs){
+                response.balance = _.reduce(response.txrefs, function(memo, obj){ return obj.value + memo; }, 0);
+            } else {
+                response.balance = 0;
+            }
+
+            if(!response.unconfirmed_txrefs && !response.txrefs){
+                // The wallet is empty
+                response.balance = 0;
+            } else if(response.unconfirmed_txrefs){
+                // The attribute 'unconfirmed_balance' from Blockcypher does not
+                // indicate the total of the unconfirmed unspent outputs.
+                // Even from http://dev.blockcypher.com/#address I cannot workout
+                // what this number really represents.
+                //
+                var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj){ return obj.value + memo; }, 0);
+                $('#balance-pending-confirmation-container').show();
+                currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation){
+                    $('#balance-pending-confirmation').html(balancePendingConfirmation);
+                });
+            }
+            currencyManager.amount(response.balance).then(function(moneyWithoutSymbol) {
+                localStorage['availableBalanceFiat'] = moneyWithoutSymbol;
+                chrome.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
             });
-        } else {
-            $('#btc-balance-to-fiat').text('0.00');
-        }
+            currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
+                $('#btc-balance-to-fiat').html(formattedMoney);
+            });
+        });
     }
-    setBalance();
 
     function setBudgetAmounts(){
 
