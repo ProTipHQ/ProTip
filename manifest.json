@@ -54,7 +54,7 @@
         "https://api.bitcoinaverage.com/ticker/*"
      ],
    "manifest_version": 2,
-   "name": "ProTip, Staging",
+   "name": "ProTip peer-to-peer crowd-funding",
    "short_name": "ProTip",
    "options_page": "views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],

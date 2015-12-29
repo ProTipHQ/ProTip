@@ -1,4 +1,4 @@
-v1.0.0.37 29 December 2015. Git Ref b709a4bb74d475ad70e66ca836b3422c4d2ad975
+v1.0.0.37 29 December 2015. Git Ref 1ab69b1399ed8a862327778e99f225832fd51162
 Bug: When Subscriptions and Weekly Browsing are empty ProTip sends the balance in the wallet to itself minus the miner fee. Fixed.
 
 v1.0.0.36 28 December 2015. Git Ref 33cb58775df31ccf71cf2eab04e202e5d08bf732
