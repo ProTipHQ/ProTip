@@ -130,15 +130,20 @@ function scanLinks() {
 }
 
 function scanText(target){
-    var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)");
+    //var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s)");
+    var regex = new RegExp("(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\\s|\W)");
+    //var regex = new RegExp(/(^|\\s)[13][a-km-zA-HJ-NP-Z0-9]{26,33}($|\W)/gm);
 
+    //.replace(/(\W)/gm,"");
     matchText(target, regex, function (node, match) {
         if(node.parentNode.parentNode.className.match(/protip/g)){
 
             return;
         }
 
-        var words = node.textContent.split(' ');
+        //var words = node.textContent.split(' ');
+        //var words = node.textContent.split(/(\r\n|\n|\r|\s)/gm)
+        var words = node.textContent.split(/(\r\n|\n|\r|\s|\,|\;|\.)/gm)
         var parent_span = document.createElement("span");
         for ( i = 0; i < words.length; i++ ) {
             //if(words[i].trim() == 'and'){

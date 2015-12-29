@@ -1,4 +1,9 @@
-v1.0.0.37 29 December 2015. Git Ref 1ab69b1399ed8a862327778e99f225832fd51162
+# v1.0.0.39 29 December 2015. Git Ref <to be added>
+# BUG: Bitcoin address not being detected in a Span tag here: https://ploum.net/a-ceux-qui-sont-morts-pour-rien/
+# This is because the bitcoin address has a ',' after the bitcoin address '12uAH27PhWepyzZ8kzY9rMAZzwpfsWSxXt,' a bitcoin address needs either a space or
+# end or beginning of a tag container. I have updated the regex to include ',', '.' and ';'
+
+v1.0.0.37 29 December 2015. Git Ref 9b5413ed6beac5a858c2cf37fe478298f2a778ee
 Bug: When Subscriptions and Weekly Browsing are empty ProTip sends the balance in the wallet to itself minus the miner fee. Fixed.
 
 v1.0.0.36 28 December 2015. Git Ref 33cb58775df31ccf71cf2eab04e202e5d08bf732
