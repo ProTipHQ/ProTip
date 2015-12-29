@@ -1,3 +1,11 @@
+v1.0.0.37 29 December 2015. Git Ref <to be added>
+Bug: When Subscriptions and Weekly Browsing are empty ProTip sends the balance in the wallet to itself minus the miner fee. Fixed.
+
+v1.0.0.36 28 December 2015. Git Ref 33cb58775df31ccf71cf2eab04e202e5d08bf732
+Bug: Extension incorrectly displays balance amount as zero until user enters Full Screen mode.
+Fixed.
+https://twitter.com/dMnyc/status/678982723311136769
+
 v1.0.0.35, 27 November 2015. Git Ref following 6f22a604cc629c86b5297a397152ce4eb820711a.
 Fixing issue related to a failure to load external CSS and JS files on first load.
 Functions allowing the search of dynamically loaded content have been disable on
