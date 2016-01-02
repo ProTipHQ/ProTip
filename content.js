@@ -13,7 +13,7 @@ window.addEventListener("message", function (event) {
 }, false);
 
 var port = chrome.runtime.connect();
-
+knownBTCAddress = '' // set global
 if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
 
     chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
@@ -25,6 +25,7 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     //    bitcoin address it is going to put into the database.
 
     chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+        knownBTCAddress = request.knownBTCAddress // Set global
         // If the URL is not blackedlisted, scan the page.
         if (request.method == 'isBlacklisted' && request.response == false){
             scanText(document.body);
@@ -198,44 +199,88 @@ var matchText = function(node, regex, callback, excludeElements) {
    return;
 }
 
+$(function() {
 
-//window.onload = function () {
+  observeDOM = (function(){
+      var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+          eventListenerSupported = window.addEventListener;
 
-  // observeDOM = (function(){
-  //     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
-  //         eventListenerSupported = window.addEventListener;
-  //
-  //     return function(obj, callback){
-  //         if( MutationObserver ){
-  //             // define a new observer
-  //             obs = new MutationObserver(function(mutations, observer){ // set as global
-  //             //var obs = new MutationObserver(function(mutations, observer){
-  //                 if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
-  //                     if(mutations[0].addedNodes.length > 0){
-  //                         observer.disconnect();
-  //                         callback(mutations[0].addedNodes, observer);
-  //                         observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
-  //                     }
-  //                 }
-  //             });
-  //             // have the observer observe foo for changes in children
-  //             obs.observe( obj,  { childList:true, subtree:true, attributes: false, characterData: false });
-  //         }
-  //         else if( eventListenerSupported ){
-  //             obj.addEventListener('DOMNodeInserted', callback, false);
-  //             obj.addEventListener('DOMNodeRemoved', callback, false);
-  //         }
-  //     }
-  // })();
-  //
-  // observeDOM( document.body, function(addedNodes, observer){
-  //     //observer.disconnect();
-  //     for(var i=0;i < addedNodes.length;i++){
-  //         scanText(addedNodes[i]);
-  //     }
-  //     //observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
-  // });
-//}
+      return function(obj, callback){
+          if( MutationObserver ){
+              // define a new observer
+              obs = new MutationObserver(function(mutations, observer){ // set as global
+              //var obs = new MutationObserver(function(mutations, observer){
+                  if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
+                      if(mutations[0].addedNodes.length > 0){
+                          observer.disconnect();
+                          callback(mutations[0].addedNodes, observer);
+                          observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+                      }
+                  }
+              });
+              // have the observer observe foo for changes in children
+              obs.observe( obj,  { childList:true, subtree:true, attributes: false, characterData: false });
+          }
+          else if( eventListenerSupported ){
+              obj.addEventListener('DOMNodeInserted', callback, false);
+              obj.addEventListener('DOMNodeRemoved', callback, false);
+          }
+      }
+  })();
+
+  observeDOM( document.body, function(addedNodes, observer){
+      //observer.disconnect();
+      for(var i=0;i < addedNodes.length;i++){
+        scanText(addedNodes[i]);
+        scanLinks();
+        // (1) All found bitcoin addresses found in the links and text are tagged
+        // with the green bordered UI.
+        // (2) We loop over all tagged elements and check and submit the
+        // correctly prioritized found bitcoin address.
+        selectPrioritizedBitcoinAddress({knownBTCAddress: knownBTCAddress});
+        //scanText(addedNodes[i]);
+      }
+      //observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+  });
+});
+
+// window.onload = function () {
+//
+//   observeDOM = (function(){
+//       var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
+//           eventListenerSupported = window.addEventListener;
+//
+//       return function(obj, callback){
+//           if( MutationObserver ){
+//               // define a new observer
+//               obs = new MutationObserver(function(mutations, observer){ // set as global
+//               //var obs = new MutationObserver(function(mutations, observer){
+//                   if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
+//                       if(mutations[0].addedNodes.length > 0){
+//                           observer.disconnect();
+//                           callback(mutations[0].addedNodes, observer);
+//                           observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+//                       }
+//                   }
+//               });
+//               // have the observer observe foo for changes in children
+//               obs.observe( obj,  { childList:true, subtree:true, attributes: false, characterData: false });
+//           }
+//           else if( eventListenerSupported ){
+//               obj.addEventListener('DOMNodeInserted', callback, false);
+//               obj.addEventListener('DOMNodeRemoved', callback, false);
+//           }
+//       }
+//   })();
+//
+//   observeDOM( document.body, function(addedNodes, observer){
+//       //observer.disconnect();
+//       for(var i=0;i < addedNodes.length;i++){
+//           scanText(addedNodes[i]);
+//       }
+//       //observer.observe( document.body, { childList: true , subtree:true, attributes: false, characterData: false });
+//   });
+// }
 
 
 function scanMetatags(){
