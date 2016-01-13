@@ -1,4 +1,4 @@
-v.1.0.0.40 2 January 2016. Git Ref <to be added>
+v.1.0.0.40 2 January 2016. Git Ref 9862179a5515dd51fc35abc75b6f016b1e8ca4ad
 Adding the ability to search dynamic loaded content for bitcoin addresses, first to be deployed to Staging.
 
 v1.0.0.39 29 December 2015. Git Ref 39b15d704fcfc8100e84c0b86ad7748ac68bd8ff

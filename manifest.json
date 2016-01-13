@@ -53,6 +53,7 @@
         "wss://ws.blockchain.info:*",
         "https://api.bitcoinaverage.com/ticker/*"
      ],
+   "incognito": "not_allowed",
    "manifest_version": 2,
    "name": "ProTip peer-to-peer crowd-funding",
    "short_name": "ProTip",
