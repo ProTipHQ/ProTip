@@ -53,25 +53,25 @@ function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
           } else if (newCurrencyCode == 'BTC') {
               // from fiat to BTC
               currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
-                  exchangeRateCoeff = 1/rateObj['24h_avg'];
+                  exchangeRateCoeff = 1/rateObj[Object.keys(rateObj)[0]]['averages']['day'];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               });
           } else if (newCurrencyCode == 'mBTC'){
               currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
                   // from fiat to mBTC
-                  exchangeRateCoeff = 1000/rateObj['24h_avg'];
+                  exchangeRateCoeff = 1000/rateObj[Object.keys(rateObj)[0]]['averages']['day'];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               });
           } else if (oldFiatCurrencyCode == 'BTC') {
               currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
                   // from BTC to fiat
-                  exchangeRateCoeff = rateObj['24h_avg'];
+                  exchangeRateCoeff = rateObj[Object.keys(rateObj)[0]]['averages']['day'];
                   resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
               });
           } else if (oldFiatCurrencyCode == 'mBTC') {
             currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
                 // from mBTC to fiat
-                exchangeRateCoeff = rateObj['24h_avg']/1000;
+                exchangeRateCoeff = rateObj[Object.keys(rateObj)[0]]['averages']['day']/1000;
                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
             });
           } else { // fiat to fiat

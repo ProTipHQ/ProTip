@@ -51,7 +51,7 @@
         "http://blockchain.info/*",
         "https://blockchain.info/*",
         "wss://ws.blockchain.info:*",
-        "https://api.bitcoinaverage.com/ticker/*"
+        "https://apiv2.bitcoinaverage.com/indices/global/ticker/short"
      ],
    "incognito": "not_allowed",
    "manifest_version": 2,
