@@ -226,10 +226,10 @@ function initialize() {
     }
 
 
-    chrome.tabs.onSelectionChanged.addListener(
-    function(tabId, selectionInfo) {
+    chrome.tabs.onActivated.addListener(
+    function(activeInfo) {
         console.log("Tab changed");
-        currentTabId = tabId;
+        currentTabId = activeInfo.tabId;
         updateTimeOnPage();
     });
 
@@ -244,10 +244,13 @@ function initialize() {
     chrome.windows.onFocusChanged.addListener(
     function(windowId) {
         console.log("Detected window focus changed.");
-        chrome.tabs.getSelected(windowId,
-        function(tab) {
+        chrome.tabs.query({windowId: windowId, active: true},
+        function(tabs) {
             console.log("Window/Tab changed");
-            currentTabId = tab.id;
+            var tab = tabs[0];
+            if (tab !== undefined) {
+              currentTabId = tab.id;
+            }
             updateTimeOnPage();
         });
     });
@@ -268,14 +271,15 @@ chrome.runtime.onMessage.addListener(
 
         if(request.action && request.action == "isBlacklisted") {
             isBlacklisted(request.url, function(blacklistFound){
-                chrome.tabs.getSelected(null, function(tab) {
+                chrome.tabs.query({active: true}, function(tabs) {
+                    var tab = tabs[0];
                     if(blacklistFound){
                         chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
                         chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
                     } else {
                         hasKnownBtcAddress(request.url, function(record){
                             // give permission for the content script to scan the DOM for BTC addresses
-                            chrome.tabs.sendRequest(tab.id, {method: 'isBlacklisted', response: false, knownBTCAddress: record.bitcoinAddress});
+                            chrome.tabs.sendMessage(tab.id, {method: 'isBlacklisted', response: false, knownBTCAddress: record.bitcoinAddress});
                         })
                     }
                 });
@@ -283,15 +287,17 @@ chrome.runtime.onMessage.addListener(
         } else if(request.action && request.action == "isStarredUser") {
             isStarredUser(request.url, function(starredFound){
                 if( starredFound ) {
-                    chrome.tabs.getSelected(null, function(tab) {
-                        chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
+                    chrome.tabs.query({active: true}, function(tabs) {
+                        var tab = tabs[0];
+                        chrome.tabs.sendMessage(tab.id, {method: 'isStarredUser', response: true});
                     });
                 }
             });
         } else if(request.action && request.action == "deleteBitcoinAddress"){
             db.remove('sites', request.url);
             db.put('blacklist', { url: request.url });
-            chrome.tabs.getSelected(null, function(tab) {
+            chrome.tabs.query({active: true}, function(tabs) {
+                var tab = tabs[0];
                 chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
                 chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
                 chrome.browserAction.setIcon({path: 'assets/images/icon_48.png', tabId: tab.id});
@@ -305,7 +311,8 @@ chrome.runtime.onMessage.addListener(
                 }
                 db.remove('blacklist', request.url);
             });
-            chrome.tabs.getSelected(null, function(tab) {
+            chrome.tabs.query({active: true}, function(tabs) {
+                var tab = tabs[0];
                 chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
                 if (request.source && request.source == 'metatag') {
                     chrome.browserAction.setBadgeText({text: 'meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});

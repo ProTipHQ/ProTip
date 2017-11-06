@@ -24,7 +24,7 @@ if(document.URL.match(/http/)){ // only send http or https urls no chrome:// typ
     // 2) It loops over all the wrapped bitcoin addresses and chooses the
     //    bitcoin address it is going to put into the database.
 
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         knownBTCAddress = request.knownBTCAddress // Set global
         // If the URL is not blackedlisted, scan the page.
         if (request.method == 'isBlacklisted' && request.response == false){
