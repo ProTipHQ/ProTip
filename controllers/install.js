@@ -1,6 +1,6 @@
 
 function initDefaultBlacklistedHostnames() {
-    hostnames = [{
+    var hostnames = [{
         hostname: "www.bitfinex.com"
     }, {
         hostname: "btc-e.com"
@@ -22,7 +22,7 @@ function initDefaultBlacklistedHostnames() {
 }
 
 function initSponsors() {
-    sponsorTwitterHandles = [{
+    var sponsorTwitterHandles = [{
         twitterhandle: "KiskaZilla"
     }, {
         twitterhandle: "mrchrisellis"
@@ -199,6 +199,7 @@ function restartTheWeek() {
     localStorage['endOfWeek'] = alarm;
 }
 
+var db;
 $(document).ready(function() {
     db = new ydn.db.Storage('protip', schema);
 

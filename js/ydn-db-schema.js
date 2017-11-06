@@ -1,4 +1,4 @@
-subscriptions = {
+var subscriptions = {
   name: 'subscriptions',
   keyPath: 'bitcoinAddress',
   autoIncrement: false,
@@ -15,7 +15,7 @@ subscriptions = {
   ]
 };
 
-sites = {
+var sites = {
   name: 'sites',
   keyPath: 'url',
   autoIncrement: false,
@@ -35,7 +35,7 @@ sites = {
   ]
 };
 
-blacklist = {
+var blacklist = {
   name: 'blacklist',
   keyPath: 'url',
   autoIncrement: false,
@@ -46,7 +46,7 @@ blacklist = {
   ]
 };
 
-blacklistedHostname = {
+var blacklistedHostname = {
   name: 'blacklistedhostnames',
   keyPath: 'hostname',
   autoIncrement: false,
@@ -57,7 +57,7 @@ blacklistedHostname = {
   ]
 };
 
-blacklistBitcoinAddresses = {
+var blacklistBitcoinAddresses = {
   name: 'blacklistbitcoinaddresses',
   keyPath: 'bitcoinAddress',
   autoIncrement: false,
@@ -68,7 +68,7 @@ blacklistBitcoinAddresses = {
   ]
 };
 
-sponsors = {
+var sponsors = {
   name: 'sponsors',
   keyPath: 'twitterhandle',
   autoIncrement: false,
@@ -79,7 +79,7 @@ sponsors = {
   ]
 };
 
-audit = {
+var audit = {
   name: 'audit',
   keyPath: 'createdAt',
   autoIncrement: false,
@@ -90,10 +90,8 @@ audit = {
   ]
 };
 
-schema = {
+var schema = {
   version: 1,
   autoSchema: false, // must be false when version is defined
   stores: [subscriptions, sites, blacklist, blacklistedHostname, blacklistBitcoinAddresses, audit, sponsors]
 }
-
-

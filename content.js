@@ -13,7 +13,7 @@ window.addEventListener("message", function (event) {
 }, false);
 
 var port = chrome.runtime.connect();
-knownBTCAddress = '' // set global
+var knownBTCAddress = '';
 if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
 
     chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
@@ -100,7 +100,7 @@ function selectPrioritizedBitcoinAddress(options){
 function scanLinks() {
     var matchedLinks = [];
     var links = document.links;
-    for ( i = 0; i < links.length; i++ ) {
+    for (var i = 0; i < links.length; i++ ) {
 
         // The standard for most third party software such as tipping services and wallets.
         // <a href="bitcoin:1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF">foo</a>
@@ -146,7 +146,7 @@ function scanText(target){
         //var words = node.textContent.split(/(\r\n|\n|\r|\s)/gm)
         var words = node.textContent.split(/(\r\n|\n|\r|\s|\,|\;|\.)/gm)
         var parent_span = document.createElement("span");
-        for ( i = 0; i < words.length; i++ ) {
+        for (var i = 0; i < words.length; i++ ) {
             //if(words[i].trim() == 'and'){
             //debugger;
             if(validAddress(words[i].trim())){
@@ -201,14 +201,14 @@ var matchText = function(node, regex, callback, excludeElements) {
 
 $(function() {
 
-  observeDOM = (function(){
+  var observeDOM = (function(){
       var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
           eventListenerSupported = window.addEventListener;
 
       return function(obj, callback){
           if( MutationObserver ){
               // define a new observer
-              obs = new MutationObserver(function(mutations, observer){ // set as global
+              var obs = new MutationObserver(function(mutations, observer){
               //var obs = new MutationObserver(function(mutations, observer){
                   if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
                       if(mutations[0].addedNodes.length > 0){
@@ -286,7 +286,7 @@ $(function() {
 function scanMetatags(){
     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
     var metatags = document.getElementsByTagName('meta');
-    for ( i = 0; i < metatags.length; i++ ) {
+    for (var i = 0; i < metatags.length; i++ ) {
         if( metatags[i].name == 'microtip' && validAddress(metatags[i].content) ) {
             return metatags[i].content // only get the first instance of a microtip metatag.
         }

@@ -149,7 +149,7 @@ function updateTimeOnPage() {
 }
 
 function isBlacklisted(url, callback){
-    hostname = new URL(url).hostname;
+    var hostname = new URL(url).hostname;
     db.get('blacklistedhostnames', hostname).then(function(record){
         if(!record){ // if hostname not blacklisted.
             db.get('blacklist', url).then(function(record){
@@ -177,7 +177,7 @@ function hasKnownBtcAddress(url, callback){
 
 
 function isStarredUser(url, callback){
-    twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
+    var twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
     if(twitterHandle){
         twitterHandle = twitterHandle[1];
         db.get('sponsors', twitterHandle).then(function(record){
@@ -212,6 +212,7 @@ Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
 
+var db;
 function initialize() {
     db = new ydn.db.Storage('protip', schema);
 
