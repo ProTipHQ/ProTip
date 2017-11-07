@@ -1,6 +1,7 @@
 {
    "background": {
       "scripts": [
+        "/lib/browser-polyfill.js",
         "/init/error-log.js",
         "/lib/jquery-2.1.3.min.js",
         "/lib/promise.min.js",
@@ -25,6 +26,7 @@
        {
            "matches": ["http://*/*", "https://*/*"],
            "js": [
+                "/lib/browser-polyfill.js",
                 "/init/error-log.js",
                 "/lib/jquery-2.1.3.min.js",
                 "/content.js",
