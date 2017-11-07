@@ -6,7 +6,7 @@ function initAlarmDisplay() {
             $('#date-end-of-week').html('1 week from now, ' + weekInTheFuture.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
             $('#days-till-end-of-week').html('0');
         } else {
-            browser.alarms.getAll(function(objs){
+            browser.alarms.getAll().then(function(objs){
                 var date = new Date(objs[0].scheduledTime);
                 $('#date-end-of-week').html('on ' + date.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
                 var daysRemaining = daysTillEndOfWeek(date);

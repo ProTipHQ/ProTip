@@ -259,7 +259,7 @@ function initialize() {
     window.setInterval(updateTimeOnPage, updateTimeOnPageInterval);
 
     // Keep track of idle time.
-    browser.idle.queryState(60, checkIdleTime);
+    browser.idle.queryState(60).then(checkIdleTime);
     browser.idle.onStateChanged.addListener(checkIdleTime);
 }
 
