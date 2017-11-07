@@ -62,5 +62,10 @@
    "options_page": "/views/options.html",
    "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
+   "applications": {
+     "gecko": {
+       "id": "protip@protip"
+     }
+   },
    "version": "1.0.0.40"
 }
