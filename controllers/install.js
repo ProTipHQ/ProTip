@@ -226,7 +226,7 @@ $(document).ready(function() {
     $('#launch').click(function(obj){
         localStorage['proTipInstalled'] = true;
         if(localStorage['protip-popup-install']){
-           chrome.tabs.create({
+           browser.tabs.create({
                 url: "/views/home.html" // obj.href
            });
         } else {

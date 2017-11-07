@@ -18,7 +18,7 @@ function subscriptionLabelCell(record) {
         // In a chrome popup
         // the links won't work without the below. Needs to be
         // re-ran on every table creation.
-        chrome.tabs.create({
+        browser.tabs.create({
             url: $(this).attr('href')
         });
         return false;
