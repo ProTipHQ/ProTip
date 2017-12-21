@@ -164,7 +164,7 @@ function initBitcoinWallet(){
             }
             currencyManager.amount(response.balance).then(function(moneyWithoutSymbol) {
                 localStorage['availableBalanceFiat'] = moneyWithoutSymbol;
-                chrome.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
+                browser.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
             });
             currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
                 $('#btc-balance-to-fiat').html(formattedMoney);
@@ -213,7 +213,7 @@ $(function() {
 
     $('#confirm-donate-now').click(function() {
 
-        chrome.browserAction.setBadgeText({
+        browser.browserAction.setBadgeText({
             text: ''
         });
 

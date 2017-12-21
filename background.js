@@ -4,7 +4,7 @@ var startTime = null;
 
 var updateTimeOnPageInterval = 1000 * 10;  // 10 seconds // 1 minute.
 
-chrome.alarms.onAlarm.addListener(function( alarm ) {
+browser.alarms.onAlarm.addListener(function( alarm ) {
     if(localStorage['automaticDonate'] == "true"){
         var val = '',
             address = '',
@@ -22,8 +22,8 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
                 window.alarmManager.doToggleAlarm();
 
                 db.clear('sites');
-                chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
-                chrome.browserAction.setBadgeText({text: 'Sent!'});
+                browser.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
+                browser.browserAction.setBadgeText({text: 'Sent!'});
             }, function(error){
                 // If doToggleAlarm() is not called, the alarm will fire every 2 hours after the set period.
                 // Maybe the balance is too low, or blockcypher.com is not working, or there are no
@@ -32,22 +32,22 @@ chrome.alarms.onAlarm.addListener(function( alarm ) {
                 window.alarmManager.doToggleAlarm();
 
                 db.clear('sites');
-                chrome.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
-                chrome.browserAction.setBadgeText({text: 'Sent!'});
+                browser.browserAction.setBadgeBackgroundColor({color:'#5bc0de'});
+                browser.browserAction.setBadgeText({text: 'Sent!'});
                 console.log(error.message);
             });
         });
     } else if (localStorage['manualRemind'] == 'true') {
         localStorage['weeklyAlarmReminder'] = true;
-        chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
-        chrome.browserAction.setBadgeText({text: '....'});
+        browser.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
+        browser.browserAction.setBadgeText({text: '....'});
     }
 });
 
-chrome.runtime.onInstalled.addListener(function(details){
+browser.runtime.onInstalled.addListener(function(details){
     //if(details.reason == "update"){
         preferences.convert();
-        var thisVersion = chrome.runtime.getManifest().version;
+        var thisVersion = browser.runtime.getManifest().version;
         console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     //}
 });
@@ -56,24 +56,24 @@ window.addEventListener("storage", function(e){
     // Let the user see their available balance in the browserAction
     // Doesn't have to be super accurate. Certainly don't need to hit
     // an API call constantly.
-    chrome.browserAction.setBadgeBackgroundColor({color:'#dddddd'});
+    browser.browserAction.setBadgeBackgroundColor({color:'#dddddd'});
     if(localStorage['availableBalanceFiat'] == '0'){
-        chrome.browserAction.setBadgeText({text: '0.00'});
+        browser.browserAction.setBadgeText({text: '0.00'});
     } else {
-        chrome.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
+        browser.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
         // currencyManager.amount(parseFloat(localStorage['availableBalanceFiat'])).then(function(formattedMoney) {
-        //     chrome.browserAction.setBadgeText({text: formattedMoney});
+        //     browser.browserAction.setBadgeText({text: formattedMoney});
         // });
     }
 
     if(insufficientBalance()) {
-       chrome.browserAction.setBadgeBackgroundColor({color:'#ff0000'});
+       browser.browserAction.setBadgeBackgroundColor({color:'#ff0000'});
     }
 
     // If weekly reminder active, then show the [....] flag.
     // if (localStorage['manualRemind'] == 'true' && localStorage['weeklyAlarmReminder'] == 'true'){
-    //     chrome.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
-    //     chrome.browserAction.setBadgeText({text: '....'});
+    //     browser.browserAction.setBadgeBackgroundColor({color:'#9BDBFC'});
+    //     browser.browserAction.setBadgeText({text: '....'});
     // }
 }, false);
 
@@ -110,9 +110,9 @@ function updateTimeOnPage() {
         return;
     }
 
-    chrome.tabs.get(currentTabId, function(tab) {
+    browser.tabs.get(currentTabId).then(function(tab) {
         // Ensure set on focused window.
-        chrome.windows.get(tab.windowId, function(window) {
+        browser.windows.get(tab.windowId).then(function(window) {
             if (!window.focused) {
                 return;
             }
@@ -149,7 +149,7 @@ function updateTimeOnPage() {
 }
 
 function isBlacklisted(url, callback){
-    hostname = new URL(url).hostname;
+    var hostname = new URL(url).hostname;
     db.get('blacklistedhostnames', hostname).then(function(record){
         if(!record){ // if hostname not blacklisted.
             db.get('blacklist', url).then(function(record){
@@ -177,7 +177,7 @@ function hasKnownBtcAddress(url, callback){
 
 
 function isStarredUser(url, callback){
-    twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
+    var twitterHandle = url.match(/[https|http]:\/\/twitter\.com\/(.*)/);
     if(twitterHandle){
         twitterHandle = twitterHandle[1];
         db.get('sponsors', twitterHandle).then(function(record){
@@ -212,6 +212,7 @@ Array.prototype.diff = function(a) {
     return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
 
+var db;
 function initialize() {
     db = new ydn.db.Storage('protip', schema);
 
@@ -225,14 +226,14 @@ function initialize() {
     }
 
 
-    chrome.tabs.onSelectionChanged.addListener(
-    function(tabId, selectionInfo) {
+    browser.tabs.onActivated.addListener(
+    function(activeInfo) {
         console.log("Tab changed");
-        currentTabId = tabId;
+        currentTabId = activeInfo.tabId;
         updateTimeOnPage();
     });
 
-    chrome.tabs.onUpdated.addListener(
+    browser.tabs.onUpdated.addListener(
     function(tabId, changeInfo, tab) {
         if (tabId == currentTabId) {
             console.log("Tab updated");
@@ -240,13 +241,16 @@ function initialize() {
         }
     });
 
-    chrome.windows.onFocusChanged.addListener(
+    browser.windows.onFocusChanged.addListener(
     function(windowId) {
         console.log("Detected window focus changed.");
-        chrome.tabs.getSelected(windowId,
-        function(tab) {
+        browser.tabs.query({windowId: windowId, active: true})
+          .then(function(tabs) {
             console.log("Window/Tab changed");
-            currentTabId = tab.id;
+            var tab = tabs[0];
+            if (tab !== undefined) {
+              currentTabId = tab.id;
+            }
             updateTimeOnPage();
         });
     });
@@ -255,26 +259,27 @@ function initialize() {
     window.setInterval(updateTimeOnPage, updateTimeOnPageInterval);
 
     // Keep track of idle time.
-    chrome.idle.queryState(60, checkIdleTime);
-    chrome.idle.onStateChanged.addListener(checkIdleTime);
+    browser.idle.queryState(60).then(checkIdleTime);
+    browser.idle.onStateChanged.addListener(checkIdleTime);
 }
 
 initialize();
 
 
-chrome.runtime.onMessage.addListener(
+browser.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
 
         if(request.action && request.action == "isBlacklisted") {
             isBlacklisted(request.url, function(blacklistFound){
-                chrome.tabs.getSelected(null, function(tab) {
+                browser.tabs.query({active: true}).then(function(tabs) {
+                    var tab = tabs[0];
                     if(blacklistFound){
-                        chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
-                        chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
+                        browser.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
+                        browser.browserAction.setBadgeText({text: 'x', tabId: tab.id});
                     } else {
                         hasKnownBtcAddress(request.url, function(record){
                             // give permission for the content script to scan the DOM for BTC addresses
-                            chrome.tabs.sendRequest(tab.id, {method: 'isBlacklisted', response: false, knownBTCAddress: record.bitcoinAddress});
+                            browser.tabs.sendMessage(tab.id, {method: 'isBlacklisted', response: false, knownBTCAddress: record.bitcoinAddress});
                         })
                     }
                 });
@@ -282,18 +287,20 @@ chrome.runtime.onMessage.addListener(
         } else if(request.action && request.action == "isStarredUser") {
             isStarredUser(request.url, function(starredFound){
                 if( starredFound ) {
-                    chrome.tabs.getSelected(null, function(tab) {
-                        chrome.tabs.sendRequest(tab.id, {method: 'isStarredUser', response: true});
+                    browser.tabs.query({active: true}).then(function(tabs) {
+                        var tab = tabs[0];
+                        browser.tabs.sendMessage(tab.id, {method: 'isStarredUser', response: true});
                     });
                 }
             });
         } else if(request.action && request.action == "deleteBitcoinAddress"){
             db.remove('sites', request.url);
             db.put('blacklist', { url: request.url });
-            chrome.tabs.getSelected(null, function(tab) {
-                chrome.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
-                chrome.browserAction.setBadgeText({text: 'x', tabId: tab.id});
-                chrome.browserAction.setIcon({path: 'assets/images/icon_48.png', tabId: tab.id});
+            browser.tabs.query({active: true}).then(function(tabs) {
+                var tab = tabs[0];
+                browser.browserAction.setBadgeBackgroundColor({color:'#000000', tabId: tab.id});
+                browser.browserAction.setBadgeText({text: 'x', tabId: tab.id});
+                browser.browserAction.setIcon({path: 'assets/images/icon_48.png', tabId: tab.id});
             });
         } else if(request.action && request.action == "putBitcoinAddress" && validAddress(request.bitcoinAddress)){
             db.get('sites', request.url).done(function(record) {
@@ -304,14 +311,15 @@ chrome.runtime.onMessage.addListener(
                 }
                 db.remove('blacklist', request.url);
             });
-            chrome.tabs.getSelected(null, function(tab) {
-                chrome.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
+            browser.tabs.query({active: true}).then(function(tabs) {
+                var tab = tabs[0];
+                browser.browserAction.setBadgeBackgroundColor({color:'#00ff00', tabId: tab.id});
                 if (request.source && request.source == 'metatag') {
-                    chrome.browserAction.setBadgeText({text: 'meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                    browser.browserAction.setBadgeText({text: 'meta', tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 } else {
-                    chrome.browserAction.setBadgeText({text: request.bitcoinAddress.trim().substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
+                    browser.browserAction.setBadgeText({text: request.bitcoinAddress.trim().substring(0,4), tabId: tab.id}); // request.bitcoinAddresses.length.toString(), tabId: tab.id});
                 }
-                chrome.browserAction.setIcon({path: 'assets/images/heart48x48.png', tabId: tab.id});
+                browser.browserAction.setIcon({path: 'assets/images/heart48x48.png', tabId: tab.id});
             });
         }
     }

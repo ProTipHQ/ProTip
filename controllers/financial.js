@@ -33,7 +33,7 @@ $(document).ready(function() {
         // Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
         //     localStorage['availableBalanceFiat'] = results[0];
         //     debugger;
-        //     //chrome.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
+        //     //browser.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
         // });
     });
     setupWallet();
@@ -429,7 +429,7 @@ $(document).ready(function() {
      */
 
     if (typeof chrome !== 'undefined') {
-        $('#version').text(chrome.runtime.getManifest().version);
+        $('#version').text(browser.runtime.getManifest().version);
     } else {
         addon.port.on('version', function(version) {
             $('#version').text(version);
@@ -438,7 +438,7 @@ $(document).ready(function() {
 
     $('#aboutModal').on('click', 'a', function() {
         if (typeof chrome !== 'undefined') {
-            chrome.tabs.create({
+            browser.tabs.create({
                 url: $(this).attr('href')
             });
         } else {

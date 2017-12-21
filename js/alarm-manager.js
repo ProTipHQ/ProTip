@@ -6,7 +6,7 @@
     alarmManager.prototype = {
 
         // checkAlarm: function (callback) {
-        //     chrome.alarms.getAll(function(alarms) {
+        //     browser.alarms.getAll().then(function(alarms) {
         //         var hasAlarm = alarms.some(function(a) {
         //             return a.name == alarmName;
         //         });
@@ -15,7 +15,7 @@
         // },
 
         // alarmExpired: function (alarmExpireDate, callback) {
-        //     chrome.alarms.getAll(function(alarms) {
+        //     browser.alarms.getAll().then(function(alarms) {
         //         debugger;
         //                alarms[0].scheduledTime
         //                Date.now()
@@ -34,7 +34,7 @@
         // },
 
         alarmExpired: function (alarmExpireDate, callback) {
-            chrome.alarms.getAll(function(alarms) {
+            browser.alarms.getAll().then(function(alarms) {
                 var alarmExpires = new Date(alarmExpireDate);
                 var now = (new Date).getTime();
 
@@ -68,10 +68,10 @@
             // There we are storing the initial expiry date.
             localStorage['alarmExpireDate'] = new Date(now + delayInMilliseconds);
 
-            chrome.alarms.create(alarmName, {
+            browser.alarms.create(alarmName, {
                 delayInMinutes: delayInMinutes, periodInMinutes: null
             });
-            chrome.alarms.getAll(function(objs){
+            browser.alarms.getAll().then(function(objs){
                 var date = new Date(objs[0].scheduledTime);
                 console.log(
                     'New alarm created for ' + date.format()
@@ -80,7 +80,7 @@
         },
 
         listAlarms: function() {
-            chrome.alarms.getAll(function(objs){
+            browser.alarms.getAll().then(function(objs){
                 for(var i=0;i<objs.length;i++){
                     var date = new Date(objs[i].scheduledTime);
                     console.log(
@@ -91,7 +91,7 @@
         },
 
         getAlarmDate: function() {
-            chrome.alarms.getAll(function(objs){
+            browser.alarms.getAll().then(function(objs){
                 var date = new Date(objs[0].scheduledTime);
                 console.log(
                     date.format()
@@ -112,16 +112,16 @@
             // There we are storing the initial expiry date.
             localStorage['alarmExpireDate'] = new Date(now + delayMilliseconds);
 
-            chrome.browserAction.setBadgeText({
+            browser.browserAction.setBadgeText({
                 text: ''
             });
-            chrome.alarms.create(alarmName, {
+            browser.alarms.create(alarmName, {
                 delayInMinutes: delayInMinutes, periodInMinutes: 60 // in one week, with retrys every 1 hour.
             });
         },
 
         cancelAlarm: function () {
-            chrome.alarms.clear(alarmName);
+            browser.alarms.clear(alarmName);
         },
 
         doToggleAlarm: function () {

@@ -4,7 +4,7 @@ window.addEventListener("message", function (event) {
         return;
     }
 
-    chrome.runtime.sendMessage({
+    browser.runtime.sendMessage({
         action: event.data.action,
         bitcoinAddress: event.data.bitcoinAddress,
         url: document.URL,
@@ -12,19 +12,19 @@ window.addEventListener("message", function (event) {
      });
 }, false);
 
-var port = chrome.runtime.connect();
-knownBTCAddress = '' // set global
+var port = browser.runtime.connect();
+var knownBTCAddress = '';
 if(document.URL.match(/http/)){ // only send http or https urls no chrome:// type addresses.
 
-    chrome.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
-    chrome.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
+    browser.runtime.sendMessage({action: 'isBlacklisted', url:document.URL});
+    browser.runtime.sendMessage({action: 'isStarredUser', url:document.URL});
 
     // ProTip finds addresses in a 2 step in process using 2 different functions.
     // 1) It scans the whole page and wraps all the bitcoin addresses it finds.
     // 2) It loops over all the wrapped bitcoin addresses and chooses the
     //    bitcoin address it is going to put into the database.
 
-    chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         knownBTCAddress = request.knownBTCAddress // Set global
         // If the URL is not blackedlisted, scan the page.
         if (request.method == 'isBlacklisted' && request.response == false){
@@ -68,7 +68,7 @@ function selectPrioritizedBitcoinAddress(options){
       // the known bitcoin addresss.
       // Otherwise people don't think that ProTip is not detecting the bitcoin
       // address in the Metatag on repeat visits to the URL.
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
           source: 'metatag',
           action: "putBitcoinAddress",
           bitcoinAddress: metatag,
@@ -81,7 +81,7 @@ function selectPrioritizedBitcoinAddress(options){
       recordAndHighlightBitcoinAddress(options.knownBTCAddress)
   } else if (metatag){
       // (2) Don't select any bitcoin addresses. Display 'Meta' in ProTip icon.
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
           source: 'metatag',
           action: "putBitcoinAddress",
           bitcoinAddress: metatag,
@@ -100,7 +100,7 @@ function selectPrioritizedBitcoinAddress(options){
 function scanLinks() {
     var matchedLinks = [];
     var links = document.links;
-    for ( i = 0; i < links.length; i++ ) {
+    for (var i = 0; i < links.length; i++ ) {
 
         // The standard for most third party software such as tipping services and wallets.
         // <a href="bitcoin:1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF">foo</a>
@@ -146,7 +146,7 @@ function scanText(target){
         //var words = node.textContent.split(/(\r\n|\n|\r|\s)/gm)
         var words = node.textContent.split(/(\r\n|\n|\r|\s|\,|\;|\.)/gm)
         var parent_span = document.createElement("span");
-        for ( i = 0; i < words.length; i++ ) {
+        for (var i = 0; i < words.length; i++ ) {
             //if(words[i].trim() == 'and'){
             //debugger;
             if(validAddress(words[i].trim())){
@@ -201,14 +201,14 @@ var matchText = function(node, regex, callback, excludeElements) {
 
 $(function() {
 
-  observeDOM = (function(){
+  var observeDOM = (function(){
       var MutationObserver = window.MutationObserver || window.WebKitMutationObserver,
           eventListenerSupported = window.addEventListener;
 
       return function(obj, callback){
           if( MutationObserver ){
               // define a new observer
-              obs = new MutationObserver(function(mutations, observer){ // set as global
+              var obs = new MutationObserver(function(mutations, observer){
               //var obs = new MutationObserver(function(mutations, observer){
                   if( mutations[0].addedNodes.length || mutations[0].removedNodes.length ){
                       if(mutations[0].addedNodes.length > 0){
@@ -286,7 +286,7 @@ $(function() {
 function scanMetatags(){
     //<meta name="microtip" content="1PvxNMqU29vRj8k5EVKsQEEfc84rS1Br3b" data-currency="btc">
     var metatags = document.getElementsByTagName('meta');
-    for ( i = 0; i < metatags.length; i++ ) {
+    for (var i = 0; i < metatags.length; i++ ) {
         if( metatags[i].name == 'microtip' && validAddress(metatags[i].content) ) {
             return metatags[i].content // only get the first instance of a microtip metatag.
         }
@@ -352,7 +352,7 @@ function tagElementWithProTipUI(match, klass_name){
 }
 
 function recordAndHighlightBitcoinAddress(btcAddress){
-  chrome.runtime.sendMessage({
+  browser.runtime.sendMessage({
       action: 'putBitcoinAddress',
       bitcoinAddress: btcAddress,
       title: document.title,
@@ -410,7 +410,7 @@ function starredUser(){
     span.style.backgroundColor = '#7FE56F';
 
     //Code for displaying <extensionDir>/images/myimage.png:
-    var imgURL = chrome.extension.getURL("assets/images/star.png");
+    var imgURL = browser.extension.getURL("/assets/images/star.png");
     var img = document.createElement("img");
     img.setAttribute("src", imgURL);
 
