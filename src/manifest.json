@@ -1,0 +1,55 @@
+{
+   "manifest_version": 2,
+   "name": "ProTip",
+   "short_name": "ProTip",
+   "description": "ProTip makes peer to peer payments, tipping, and crowd funding easy as well weekly subscriptions and content payments for premium work.",
+   "permissions": [ "idle", "tabs", "storage", "alarms", "notifications" ],
+   "applications": {
+     "gecko": {
+       "id": "protip@protip.is"
+     }
+   },
+   "version": "1.0.0.40",
+   "background": {
+      "scripts": [
+        "/preferences.js",
+        "/error-log.js",
+        "/js/libs.js",
+        "/js/app.js",
+        "/background.js"
+      ]
+   },
+   "web_accessible_resources": [
+       "/assets/images/star.png"
+   ],
+   "content_scripts": [{
+       "matches": ["http://*/*", "https://*/*"],
+       "js": [
+            "/preferences.js",
+            "/error-log.js",
+            "/js/libs.js",
+            "/content.js"
+       ]
+   }],
+  "icons": {
+    "16": "/assets/images/heart16x16.png",
+    "48": "/assets/images/heart48x48.png",
+    "128": "/assets/images/heart128x128.png"
+   },
+   "browser_action": {
+      "default_icon": "/assets/images/heart48x48_passive.png",
+      "default_popup": "/views/popup.html",
+      "default_title": "ProTip"
+   },
+   "icons": {
+      "128": "/assets/images/heart128x128.png"
+   },
+   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
+   "permissions": [
+        "https://api.blockcypher.com/*",
+        "http://blockchain.info/*",
+        "https://blockchain.info/*",
+        "wss://ws.blockchain.info:*",
+        "https://apiv2.bitcoinaverage.com/indices/global/ticker/short"
+   ]
+}
