@@ -1,0 +1,55 @@
+{
+  "name": "protip",
+  "version": "1.0.0",
+  "description": "A browser extension for peer-to-peer tipping and crowd funding using Bitcoin",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProTipHQ/ProTip.git"
+  },
+  "scripts": {
+    "build": "rm -rf ./extension && gulp build",
+    "package": "gulp package",
+    "firefox": "web-ext -s extension run --bc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chrome-webstore-upload-cli": "^1.1.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.1",
+    "gulp-exec": "^3.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "lodash": "^4.17.5",
+    "moment": "^2.18.1",
+    "webextension-polyfill": "^0.1.1"
+  },
+  "devDependencies": {
+    "crx": "^3.2.1",
+    "gulp": "^3.9.1",
+    "gulp-add-src": "^0.2.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-clip-empty-files": "^0.1.2",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-eslint": "^4.0.0",
+    "gulp-identity": "^0.1.0",
+    "gulp-run": "^1.7.1",
+    "gulp-stylelint": "^4.0.0",
+    "gulp-uglify": "^3.0.0",
+    "uglifyify": "^4.0.1",
+    "watchify": "^3.9.0",
+    "web-ext": "^1.10.0"
+  },
+  "keywords": [
+    "webextension",
+    "bitcoin",
+    "tipping",
+    "crowdfunding"
+  ],
+  "author": "Brennan Novak, Leo Campbell",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ProTipHQ/ProTip/issues"
+  },
+  "homepage": "https://protip.is"
+}

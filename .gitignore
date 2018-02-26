@@ -1,3 +1,12 @@
+dist/
+extension/
+web-ext-artifacts/
+node_modules/
+.chrome-extension-key.pem
+package-lock.json
+yarn-error.log
+yarn.lock
+
 ### OSX ###
 .DS_Store
 .AppleDouble
@@ -5,7 +14,6 @@
 
 # Icon must end with two \r
 Icon
-web-ext-artifacts/
 
 # Thumbnails
 ._*
