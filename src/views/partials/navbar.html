@@ -1,0 +1,66 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container nav-non-responsive">
+    <div id="navbar" class="">
+      <ul class="nav navbar-nav">
+        <li {% if page.name == "home" %}class="active"{% endif %}>
+          <a href="home.html">
+            <div class="menu-icon">
+              <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
+            </div>
+            <div class="menu-label">Home</div>
+          </a>
+        </li>
+        <li {% if page.name == "subscriptions" %}class="active"{% endif %}>
+          <a id="subscriptions" href="subscriptions.html">
+            <div class="menu-icon">
+              <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
+            </div>
+            <div class="menu-label">Subscriptions</div>
+          </a>
+        </li>
+        <li {% if page.name == "financial" %}class="active"{% endif %}>
+          <a href="financial.html">
+            <div class="menu-icon">
+              <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+            </div>
+            <div class="menu-label">
+              Wallet
+            </div>
+          </a>
+        </li>
+        <li {% if page.name == "blacklist" %}class="active"{% endif %}>
+          <a id="blacklist" href="blacklist.html">
+            <div class="menu-icon">
+              <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
+            </div>
+             <div class="menu-label">Ignore</div>
+          </a>
+        </li>
+        <li {% if page.name == "options" %}class="active"{% endif %}>
+          <a href="options.html">
+            <div class="menu-icon">
+              <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
+            </div>
+            <div class="menu-label">Options</div>
+          </a>
+        </li>
+        <li {% if page.name == "recommend" %}class="active"{% endif %}>
+          <a href="recommend.html">
+            <div class="menu-icon" style="margin-top:2px;">
+              <i class="fa fa-group"></i>
+            </div>
+            <div class="menu-label">Recommended</div>
+          </a>
+        </li>
+        <!--
+        <li {% if page.name == "passes" %}class="active"{% endif %}>
+          <a id="paywalls" href="passes.html">
+            <div id="menu-pass-icon"></div>
+            <div class="menu-label">Passes</div>
+          </a>
+        </li>
+        -->
+      </ul>
+    </div>
+  </div>
+</nav>

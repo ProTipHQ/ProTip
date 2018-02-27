@@ -1,103 +1,12 @@
+{% set page = { name: 'blacklist' } %}
 <!DOCTYPE html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>ProTip</title>
-    <meta name="description" content="Protip, peer-to-peer tipping for the web">
-
-    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/bootstrap-responsive-override.css">
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../assets/css/protip.css">
-
-    <script src="../lib/browser-polyfill.js"></script>
-    <script src="../init/error-log.js"></script>
-    <script src="../lib/jquery-2.1.3.min.js"></script>
-    <script src="../assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../lib/ydn-db.min.js"></script>
-    <script src="../js/ydn-db-schema.js"></script>
-    <script src="../js/ui-utils.js"></script>
+    {% include "head.html" %}
     <script src="../controllers/blacklist.js"></script>
 </head>
 
 <body>
-
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container nav-non-responsive">
-            <div id="navbar" class="">
-                <ul class="nav navbar-nav">
-
-                    <li>
-                        <a href="home.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Home</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a id="subscriptions" href="subscriptions.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-heart big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Subscriptions</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="financial.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Wallet</div>
-                        </a>
-                    </li>
-
-                    <li class="active">
-                        <a id="blacklist" href="blacklist.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Ignore</div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="options.html">
-                            <div class="menu-icon">
-                                <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
-                            </div>
-                            <div class="menu-label">Options</div>
-                        </a>
-                    </li>
-
-                    <li>
-                      <a href="recommend.html">
-                        <div class="menu-icon" style="margin-top:2px;">
-                          <i class="fa fa-group"></i>
-                        </div>
-                        <div class="menu-label">Recommended</div>
-                      </a>
-                    </li>
-
-                    <!--
-
-                    <li>
-                        <a id="paywalls" href="passes.html">
-                            <div id="menu-pass-icon"></div>
-                            <div class="menu-label">Passes</div>
-                        </a>
-                    </li>
-
-                    -->
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+    {% include "navbar.html" %}
 
     <label class="ios-subheading">IGNORED URL</label>
     <div style="background-color:#fff;

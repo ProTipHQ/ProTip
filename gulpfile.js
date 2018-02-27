@@ -8,6 +8,7 @@ var minifyCSS = require('gulp-csso')
 var concat = require('gulp-concat')
 var sourcemaps = require('gulp-sourcemaps')
 var exec = require('child_process').exec
+var nunjucksRender = require('gulp-nunjucks-render')
 
 gulp.task('clean', function(cb) {
     exec('rm -rf extension', function(err, stdout, stderr) {
@@ -25,6 +26,7 @@ gulp.task('copy', function() {
     gulp.src('src/init/**')
         .pipe(gulp.dest('extension/init'))
     gulp.src('src/views/*.html')
+        .pipe(nunjucksRender({ path: ['src/views/partials'] }))
         .pipe(gulp.dest('extension/views'))
     gulp.src('src/lib/*.js')
         .pipe(gulp.dest('extension/lib'))
