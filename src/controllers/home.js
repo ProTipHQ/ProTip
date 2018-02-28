@@ -100,9 +100,7 @@ function setMinIncidentalFiatAmounts(incidentalTotalFiat){
 function restartCountDown(){
     window.alarmManager.doToggleAlarm();
     initAlarmDisplay();
-    $('#date-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
+    // TODO: had .effect() on #date-end-of-week
 }
 
 var db;
@@ -140,9 +138,7 @@ $(function() {
             localStorage['weeklyAlarmReminder'] = false;
             window.alarmManager.doToggleAlarm();
             restartCountDown();
-            $('#payment-history').effect("highlight", {
-                color: 'rgb(100, 189, 99)'
-            }, 4000);
+            // TODO: had .effect() on #payment-history for 4000 ms
             db.clear('sites');
             $('#notice').html('Transaction Submitted');
             $('#notice-dialogue').fadeIn().slideDown();
@@ -155,9 +151,7 @@ $(function() {
             localStorage['weeklyAlarmReminder'] = false;
             window.alarmManager.doToggleAlarm();
             restartCountDown();
-            $('#payment-history').effect("highlight", {
-                color: 'rgb(100, 189, 99)'
-            }, 4000);
+            // TODO: had .effect() on #payment-history for 4000 ms
             db.clear('sites');
             updateBalance(wallet.getAddress());
             $('#notice').html('Transaction Submitted');
@@ -169,17 +163,6 @@ $(function() {
 
     $('#dismiss-manual-reminder-popover').click(function(){
         $('#donate-now-reminder').fadeOut('fast');
-    });
-
-    $( "#slider" ).slider({
-        range: "max",
-        min: 0.03,
-        max: 10,
-        value: parseFloat(localStorage['incidentalTotalFiat']),
-        slide: function( event, ui ) {
-          $( "#incidental-fiat-amount" ).val( parseFloat(ui.value));
-          $('#incidental-fiat-amount').trigger('change');
-        }
     });
 
     $("input[name=remind-me]:radio").change(function(value) {
@@ -216,15 +199,11 @@ $(function() {
         }
 
         $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
-        $('#balance-covers-weeks').effect("highlight", {
-            color: 'rgb(100, 189, 99)'
-        }, 400);
+        // TODO: had .effect() on #balance-covers-weeks for 400 ms
 
         // use standard money formattor
         $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); 
-        // use standard money formattor
         $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
-        $( "#slider" ).slider({value: $(this).val() });
     });
 
     $('#donate-now').click(function() {

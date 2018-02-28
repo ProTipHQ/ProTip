@@ -49,9 +49,7 @@ function buildPopupRow(record) {
 function restartCountDown(){
     var countDownObj = restartTheWeek();
     $('#days-till-end-of-week').html(countDownObj.daysRemaining);
-    $('#days-till-end-of-week').effect("highlight", {
-        color: 'rgb(100, 189, 99)'
-    }, 1000);
+    // TODO: had .effect on #days-till-end-of-week for 1000ms
 }
 
 function initPopupCurrentWeek() {

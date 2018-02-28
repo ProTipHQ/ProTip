@@ -23,11 +23,9 @@
     {% include "navbar.html" %}
 
     <div id="show-bitcoin-artists" style="display:none;overflow:hidden;" class="alert alert-info alert-dismissible fade in" role="alert">
-
       <button type="button" id="show-bitcoin-artists-close" class="close" style="" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span>
       </button>
-
       <span style="font-weight:bold;display:block;float:right;font-size:10px;padding-right:50px;">
         [
           <a id="hideBitcoinArtists" href="" data-dismiss="alert">
@@ -36,7 +34,6 @@
           </a>
         ]
       </span>
-
       <div class="media">
         <div class="media-left">
           <a href="#">
@@ -61,19 +58,15 @@
             <a class="external-link" href="https://pemersonwilliams.wordpress.com/">P Emerson</a> |
             <a class="external-link" href="https://soundcloud.com/pinkhousemusictribe">Infinite Radio - Pink House Music Tribe</a> |
             <a class="external-link" href="https://historiesofthingstocome.blogspot.co.uk">Histories of Things to Come</a>
-
             <a href="recommend.html" > more ...</a>
-
           </p>
         </div>
       </div>
     </div>
-
     <div class="ios-subheading">
       PAYMENT SCHEDULE
     </div>
     <div class="ios-section">
-
       <div style="padding:7px;height:10px;">
         <span id="donate-now-reminder" style="display:none;">
           <div class="popover fade right in" data-trigger="focus" role="tooltip" id="popover411060" style="top: -23px; left: 241px; z-index:1; display: block;position:relative;">
@@ -83,7 +76,6 @@
           </div>
         </span>
       </div>
-
       <div id="successAlert" class="alert alert-success alert-dismissable"  style="display: none;">
           <button id="successAlertClose" type="button" class="close">&times;</button>
           <p id="successAlertLabel">Success</p>
@@ -92,26 +84,20 @@
           <button id="unkownErrorAlertClose" type="button" class="close">&times;</button>
           <p id="unknownErrorAlertLabel">Unknown error</p>
       </div>
-
       <button id="donate-now" style="margin-bottom:15px;" type="button" class="btn btn-success">
         Donate Now &amp; Reset Timer (<span class="fiat-code"></span><span id="weekly-spend-manual-pay-reminder-btn"></span>)
       </button>
       <div id="payment-history" style="border-radius:8px;display:inline;padding:7px;font-size:80%;position:relative;top:-5px;">
           <a id="payment-history-link" target="_blank" style="text-decoration:inherit;" href="">Your Payment History...</a>
       </div>
-
       <div id="notice-dialogue" style="display:none;width:500px;" class="alert alert-info" role="alert">
-        <p id="notice">
-
-        </p>
+        <p id="notice"></p>
       </div>
-
       <div id="insufficient-funds-dialogue" style="display:none;width:500px;" class="alert alert-warning alert-dismissible fade in" role="alert">
         <p>
           Insufficient funds.
         </p>
       </div>
-
       <div id="confirm-donate-now-dialogue" style="display:none;width:490px;" class="alert alert-info alert-dismissible fade in" role="alert">
         <p>
           You will be donating to all the websites listed in the table below.
@@ -127,7 +113,6 @@
           <button type="button" id="confirm-donate-cancel" class="btn btn-default">Cancel</button>
         </p>
       </div>
-
       <div style="padding:7px;">
         <input type="radio" id="manualRemind" value="manualRemind" name="remind-me" checked="checked" />
         Remind me to Manually Donate in
@@ -145,25 +130,11 @@
         </button>
       </div>
   </div>
-  <!-- / ios-section -->
-
   <div class="ios-subheading">
     WEEKLY BUDGET
   </div>
-
     <div class="ios-section" style="overflow:hidden;">
-
-
       <table id="budget-table" style="border-spacing: 17px;border-collapse: separate;float:left;">
-        <!-- <thead>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-        </thead> -->
         <tbody>
           <tr>
             <td style="text-align:right;">
@@ -173,17 +144,13 @@
               <span class="fiat-code"></span>
               <input id="incidental-fiat-amount" style="width:77px;" class="amount-fiat" type="number" min="0.00" step="0.01"/>
             </td>
-            <td>
-              <div id="slider" style="width:150px;"></div>
-            </td>
+            <td></td>
           </tr>
-
           <tr>
             <td colspan="3">
               <hr style="margin-top:0px;margin-bottom:0px;" />
             </td>
           </tr>
-
           <tr>
             <td style="text-align:right;">
               Weekly Subscriptions
@@ -196,13 +163,11 @@
               <a href="subscriptions.html">Edit...</a>
             </td>
           </tr>
-
           <tr>
             <td colspan="3">
               <hr/>
             </td>
           </tr>
-
           <tr>
             <td style="text-align:right;font-size:10px;">
               Bitcoin Transaction fee
@@ -212,15 +177,11 @@
               <span id="bitcoin-fee" style="margin-left:7px;"></span>
             </td>
             <td style="width:200px;">
-              <div style="
-                  font-size: 72%;
-                  color: #999;
-              ">
+              <div style="font-size: 72%; color: #999;">
                   Please note the Bitcoin fee is fixed, but denominated in
                   Bitcoin, 0.0001 BTC. Shifting exchange rates
                   may affect the conversion into your local currency.
               </div>
-
             </td>
           </tr>
           <tr>
@@ -228,7 +189,6 @@
               <hr/>
             </td>
           </tr>
-
           <tr style="border-top:solid #000 1px;">
             <td style="text-align:right;">
               <strong>Weekly Total</strong>
@@ -246,21 +206,18 @@
               )
             </td>
           </tr>
-
           <tr>
             <td colspan="4">
             </td>
           </tr>
         </tbody>
       </table>
-
       <div class="panel panel-default" style="width:350px;float:left;">
         <div class="panel-heading" style="text-align:center;">
           <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
           Top-up your Bitcoin Wallet.
           <div>
               <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ ... </span>
-              <!-- [<small><span id="head-line-balance">...</span></small>] -->
           </div>
           <div id="balance-pending-confirmation-container" class='alert alert-info' style="padding:2px;margin-bottom:0px;display:none;">
             <small><span class="balance-pending-confirmation" id="balance-pending-confirmation">...</span> Pending Confirmation</small>
@@ -275,12 +232,9 @@
         </div>
       </div>
     </div>
-    <!-- / ios-section -->
-
     <div class="ios-subheading">
       WEEKLY BROWSING
     </div>
-
     <table class="table table-condensed" style="border-bottom:solid #ccc 1px;">
       <thead>
         <tr>
@@ -309,6 +263,5 @@
       <tbody id="browsing-table">
       </tbody>
     </table>
-
   </body>
 </html>
