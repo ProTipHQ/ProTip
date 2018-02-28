@@ -67,7 +67,7 @@ function subscriptionAmountCell(record) {
         db.put('subscriptions', record).done(function(){
             subscriptionTotalFiatAmount().then(function(totalFiatAmount){
                 $('#subscription-total-amount').html(totalFiatAmount);
-                $('#subscription-total-amount-container').effect("highlight", {color: 'rgb(100, 189, 99)'}, 100); // cannot get this to work 'out of the box'.
+                // TODO had broekn .effect highlight rgb(100, 189, 99) 100 ms
             });
         });
     });
@@ -202,7 +202,6 @@ function buildBrowsingTable(domId) {
     // first, by removing the subscriptions
     // second, by tallying up the total amount
     // of time spent overall.
-
     // Remove subscriptions for daily browsing.
     db.values('subscriptions').done(function(records) {
         for (var i in records) {

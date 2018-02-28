@@ -22,8 +22,6 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
             $('#subscription-fiat-amount').html(parseFloat(totalSubscriptionFiat).formatMoney(2));
 
             var incidentalTotalFiat = setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionFiat);
-            //('#incidental-fiat-amount').val(availableIncidentalTotalFiat);
-            //localStorage['incidentalTotalFiat'] = incidentalTotalFiat;
             $('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
 
             var weeklyTotalFiat = setWeeklyTotalFiat(localStorage['incidentalTotalFiat'], bitcoinFeeFiat, totalSubscriptionFiat);
@@ -46,23 +44,23 @@ function setBudgetWidget(availableBalanceFiat, bitcoinFeeFiat) {
 }
 
 function setIncidentalTotalFiat(availableBalanceFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
-    //var total = parseFloat(localStorage['incidentalTotalFiat']) + parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat)
+
     var availableIncidentalTotalFiat = parseFloat(availableBalanceFiat) - (parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat));
+    // Handle first time loading with empty wallet.
     if (availableIncidentalTotalFiat < 0) {
         availableIncidentalTotalFiat = 0
-    } // Handle first time loading with empty wallet.
+    }
 
-    //$('#incidental-fiat-amount').val(availableIncidentalTotalFiat);
-    //$('#incidental-fiat-amount').val(localStorage['incidentalTotalFiat']);
     return parseFloat(availableIncidentalTotalFiat);
 }
 
 function setWeeklyTotalFiat(incidentalTotalFiat, bitcoinFeeFiat, totalSubscriptionsFiat) {
     var weeklyTotalFiat = parseFloat(bitcoinFeeFiat) + parseFloat(totalSubscriptionsFiat) + parseFloat(incidentalTotalFiat);
     weeklyTotalFiat = parseFloat(weeklyTotalFiat).toFixed(2);
+    // fix initializations problem
     if (weeklyTotalFiat < 0) {
         weeklyTotalFiat = 0
-    } // fix initializations problem.
+    }
     return weeklyTotalFiat;
 }
 
@@ -78,7 +76,7 @@ function initDefaultSubscriptionAmountFiat() {
     }
 }
 
-function initIncidentalTotalFiat(){
+function initIncidentalTotalFiat() {
     if (!localStorage['incidentalTotalFiat']) {
         localStorage['incidentalTotalFiat'] = 0;
     }

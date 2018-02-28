@@ -9,7 +9,6 @@ function allowExternalLinks() {
     });
 }
 
-
 function initAvailableCurrenciesOptions() {
     if (!localStorage["fiatCurrencyCode"]) {
         localStorage["fiatCurrencyCode"] = "USD"
@@ -22,25 +21,16 @@ function initAvailableCurrenciesOptions() {
     }
 
     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
-    updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
-
-    // $('#fiat-currency-select').change(function() {
-    //     preferences.setCurrency($(this.selectedOptions).val());
-    //     localStorage["fiatCurrencyCode"] = this.value;
-    //     updateFiatCurrencyCode();
-    // });
+    updateFiatCurrencyCode();
 }
 
-
 function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
-  //var oldFiatCurrencyCode = localStorage["fiatCurrencyCode"];
-  var exchangeRateCoeff;
 
-  //return preferences.setCurrency(oldFiatCurrencyCode).then(function(){
+    var exchangeRateCoeff;
 
-  return preferences.setCurrency(newCurrencyCode).then(function(){
-      return currencyManager.updateExchangeRate();
-  }).then(function(exchangeToBTC){
+    return preferences.setCurrency(newCurrencyCode).then(function(){
+        return currencyManager.updateExchangeRate();
+    }).then(function(exchangeToBTC){
       return new Promise(function (resolve, reject) {
           if (oldFiatCurrencyCode == 'BTC' && newCurrencyCode == 'mBTC') {
               // from BTC to mBTC
@@ -88,7 +78,6 @@ function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
                       return {exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode};
                   }
               }, function(error){
-                  //debugger;
                   console.log(error);
               }));
           }
@@ -96,7 +85,7 @@ function updateCurrency(newCurrencyCode, oldFiatCurrencyCode) {
   });
 }
 
-function exportSubscriptions(){
+function exportSubscriptions() {
     db.values('subscriptions').done(function(records) {
         var savedSubscriptions = [];
         for (var i in records) {
@@ -107,14 +96,13 @@ function exportSubscriptions(){
     });
 }
 
-function importSubscriptions(subscriptionRecords){
-    //var subscriptionRecords = JSON.parse(subscriptionRecords);
+function importSubscriptions(subscriptionRecords) {
     for(var i in subscriptionRecords){
         db.put('subscriptions', subscriptionRecords[i]);
     }
 }
 
-function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){
+function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode) {
     currencyManager.getSymbol(newCurrencyCode).then(function(currencyDetails){
         var roundingFactor = currencyDetails[2];
         if(roundingFactor){
@@ -124,8 +112,8 @@ function updateGlobalOptionsAmount(exchangeRateCoeff, newCurrencyCode){
             localStorage['defaultSubscriptionAmountFiat'] = exchangeRateCoeff * localStorage['defaultSubscriptionAmountFiat'];
             localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
         }
+
         $('#default-subscription-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
-        //localStorage['incidentalTotalFiat'] = exchangeRateCoeff * localStorage['incidentalTotalFiat'];
         db.values('subscriptions').done(function(records) {
             for (var i in records) {
                 if(roundingFactor){

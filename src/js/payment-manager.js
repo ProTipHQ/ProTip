@@ -1,11 +1,10 @@
 (function(window) {
-    var paymentManager = function() {};
 
+    var paymentManager = function() {};
     var satoshis = 100000000;
     var fee = satoshis * .0001;
 
     paymentManager.prototype = {
-
         subscriptions: function(exchangeRateToSatoshi) {
             return new Promise(function(resolve, reject) {
                 var subscriptions = [];
@@ -23,7 +22,6 @@
                 });
             });
         },
-
         browsing: function(incidentalTotalSatoshi) {
             return new Promise(function(resolve, reject) {
                 var sites = [];
@@ -57,18 +55,15 @@
                 });
             });
         },
-
         processPayments: function(paymentFiatData, totalWeeklyBudgetSatoshis, exchangeRate) {
             // Add the payments *upto* fiat budget.
             var paymentObjs = [];
-
             var txTotalSatoshis = 0;
 
             paymentFiatData = _.sortBy(paymentFiatData, 'amountFiat').reverse(); // sort descending
             // Most browsers do return properties in the same order as they were inserted,
             // but it is explicitly not guaranteed behaviour so you should not rely upon it.
             // In particular see section 12.6.4 of the ECMAScript specification:
-
             for (i = 0; i < paymentFiatData.length; i++) {
                 var satoshisAsFloat = (parseFloat(paymentFiatData[i].amountFiat) / exchangeRate) * satoshis;
                 paymentFiatData[i].txSatoshis = Math.floor(parseFloat(satoshisAsFloat));
@@ -86,7 +81,6 @@
             }
             return paymentObjs;
         },
-
         payAll: function(incidentalTotalFiat, subscriptionTotalFiat) {
             // Very important, many currency conversions cause rounding
             // errors, which can result in very small, but important

@@ -1,38 +1,9 @@
 (function(window) {
-    var alarmManager = function() {};
 
+    var alarmManager = function() {};
     var alarmName = 'remindme';
 
     alarmManager.prototype = {
-
-        // checkAlarm: function (callback) {
-        //     browser.alarms.getAll().then(function(alarms) {
-        //         var hasAlarm = alarms.some(function(a) {
-        //             return a.name == alarmName;
-        //         });
-        //         if (callback) { callback(hasAlarm) }
-        //     })
-        // },
-
-        // alarmExpired: function (alarmExpireDate, callback) {
-        //     browser.alarms.getAll().then(function(alarms) {
-        //         debugger;
-        //                alarms[0].scheduledTime
-        //                Date.now()
-        //         //var alarmExpires = new Date(alarmExpireDate);
-        //         //var now = (new Date).getTime();
-        //
-        //         if(alarms[0].scheduledTime >= Date.now())){
-        //             localStorage['weeklyAlarmReminder'] = false;
-        //             callback(false)
-        //         } else {
-        //             // if alarms is for some reason empty [].length, conclude that it has expired.
-        //             localStorage['weeklyAlarmReminder'] = true;
-        //             callback(true)
-        //         }
-        //     });
-        // },
-
         alarmExpired: function (alarmExpireDate, callback) {
             browser.alarms.getAll().then(function(alarms) {
                 var alarmExpires = new Date(alarmExpireDate);
@@ -48,7 +19,6 @@
                 }
             });
         },
-
         setAlarm: function(delayInMinutes) {
             // is for testing only.
             this.cancelAlarm();
@@ -78,7 +48,6 @@
                 );
             });
         },
-
         listAlarms: function() {
             browser.alarms.getAll().then(function(objs){
                 for(var i=0;i<objs.length;i++){
@@ -89,7 +58,6 @@
                 }
             });
         },
-
         getAlarmDate: function() {
             browser.alarms.getAll().then(function(objs){
                 var date = new Date(objs[0].scheduledTime);
@@ -98,11 +66,10 @@
                 );
             });
         },
-
         createAlarm: function () {
             localStorage['weeklyAlarmReminder'] = false;
             var delayInMinutes = 10080
-            var delayMilliseconds = delayInMinutes * 60 * 1000; // convert to milliseconds
+            var delayMilliseconds = delayInMinutes * 60 * 1000;
             var now = (new Date).getTime();
             // the attribute periodInMinutes means that an expired alarm is replaced with a new alarm with
             // scheduledTime = expired_scheduledTime + periodInMinutes;
@@ -119,11 +86,9 @@
                 delayInMinutes: delayInMinutes, periodInMinutes: 60 // in one week, with retrys every 1 hour.
             });
         },
-
         cancelAlarm: function () {
             browser.alarms.clear(alarmName);
         },
-
         doToggleAlarm: function () {
              this.cancelAlarm();
              this.createAlarm();
