@@ -54,7 +54,6 @@
             estimatedFeeSatoshi = Math.ceil((number_of_inputs * 181 + number_of_outputs * 34 + 10)/1000) * 10000;
             return new BigInteger('' + estimatedFeeSatoshi, 10);
         },
-
         ensureOutputsDoNotExceedInputs: function (txOutputs, inputs) {
             // Adjusts txOutputs to fit within the available inputs.
             // txOutputs should be in decending in priority.
@@ -102,24 +101,19 @@
                 totalInputsSatoshi: new BigInteger('' + totalInputsSatoshi, 10)
             }
         },
-
         getAddress: function () {
             return address;
         },
-
         getBalance: function () {
             return balance;
         },
-
         isEncrypted: function () {
             return isEncrypted;
         },
-
         // Balance listener gets called with new balance whenever it updates
         setBalanceListener: function (listener) {
             balanceListener = listener;
         },
-
         // Create a new address
         generateAddress: function (password) {
             return new Promise(function (resolve, reject) {
@@ -135,31 +129,8 @@
                     resolve(address);
                 });
 
-                // if (ret.validatePassword(password)) {
-                //     var eckey = new bitcoin.ECPair(false);
-                //     if (isEncrypted) {
-                //         if (typeof chrome !== 'undefined') {
-                //             privateKey = CryptoJS.AES.encrypt(eckey.getExportedPrivateKey(), password);
-                //         } else {
-                //             privateKey = JSON.parse(CryptoJS.AES.encrypt(eckey.getExportedPrivateKey(), password, {format:jsonFormatter}));
-                //         }
-                //     } else {
-                //         privateKey = eckey.getExportedPrivateKey();
-                //     }
-                //     address = eckey.getBitcoinAddress().toString();
-                //     balance = 0;
-                //     Promise.all([preferences.setAddress(address), preferences.setPrivateKey(privateKey), preferences.setIsEncrypted(isEncrypted)]).then(function () {
-                //         updateBalance()
-                //         resolve();
-                //     });
-                //
-                //
-                // } else {
-                //     reject(Error('Incorrect password'));
-                // }
             });
         },
-
         // Restore the previously saved address
         restoreAddress: function () {
             return new Promise(function (resolve, reject) {
@@ -176,7 +147,6 @@
                 });
             });
         },
-
         // Import an address using a private key
         importAddress: function (password, _privateKey) {
             return new Promise(function (resolve, reject) {
@@ -199,7 +169,6 @@
                 }
             });
         },
-
         // Check if the password is valid
         validatePassword: function (password) {
             if (isEncrypted) {
@@ -218,7 +187,6 @@
                 return true;
             }
         },
-
         // Return a decrypted private key using the password
         getDecryptedPrivateKey: function (password) {
             if (isEncrypted) {
@@ -239,37 +207,6 @@
                 return privateKey;
             }
         },
-
-        // adjustTxValue: function(availableBalance, txOutputs, txValue, selectedOuts, inputs, miniumfee){
-        //             // TxValue is converted from Fiat to Satoshi
-        //    // adjust TxValue to compensate for minor exchange rate variation
-        //    var selectedOuts = [];
-        //             var eckey = new Bitcoin.ECKey(decryptedPrivateKey);
-        //             // Total cost is amount plus fee
-        //             var totalAmount = 0;
-        //             for (i = 0; i < txOutputs.length; i++) {
-        //                 totalAmount += parseInt(txOutputs[i].txSatoshis);
-        //             }
-        //             var totalInt = Number(totalAmount) + Number(fee);
-        //
-        //             var txValue = new BigInteger('' + totalInt, 10);
-        //             availableValue = BigInteger.ZERO;
-        //             // Gather enough inputs so that their value is greater than or equal to the total cost
-        //             for (var i = 0; i < inputs.length; i++) {
-        //                 selectedOuts.push(inputs[i]);
-        //                 availableValue = availableValue.add(new BigInteger('' + inputs[i].value, 10));
-        //                 if (availableValue.compareTo(txValue) >= 0) break;
-        //             }
-        //    var rangeWiggleRoom.
-        //    if (availableValue.compareTo(txValue) < 0) {
-        //        return {  }
-        //    } else {
-        //        totalAmount = totalAmount - 5000;
-        //        compileInputs(totalAmount, fee)
-        //    }
-        //
-        //    return {txValue: , selectedOuts: ,
-        // }
     };
 
     // Gets the current balance and sets up a websocket to monitor new transactions
@@ -391,7 +328,6 @@
                     var totalAvailableUnspentOutputs = 0;
                     for (var i = 0; i < unspentOutputs.length; i++) {
                         tx.addInput(unspentOutputs[i].tx_hash, unspentOutputs[i].tx_output_n);
-                        //console.log("tx.addInput('" + unspentOutputs[i].tx_hash + "', "+ unspentOutputs[i].tx_output_n + ");");
                         totalAvailableUnspentOutputs += unspentOutputs[i].value;
                     }
 
@@ -411,7 +347,6 @@
                         txValue += txOutputs[i].txSatoshis;
                         if(totalAvailableUnspentOutputs - txValue >= 0){
                             tx.addOutput(txOutputs[i].txDest, txOutputs[i].txSatoshis);
-                            //console.log("tx.addOutput('"+txOutputs[i].txDest+"', "+txOutputs[i].txSatoshis+");");
                         } else { break }
                     }
 
@@ -419,7 +354,6 @@
                     var changeValue = totalAvailableUnspentOutputs - txValue;
                     if (changeValue > dust) {
                         tx.addOutput(keyPair.getAddress(), changeValue);
-                        //console.log("tx.addOutput('"+keyPair.getAddress()+"', "+changeValue+");");
                     } // else leave this tiny amount for the miner's fee. Sub-dust outputs should be avoided.
 
                     // Ensure that the miner's fee must never be more than the standard fee + dust.
@@ -432,7 +366,6 @@
                     // Sign all inputs with the same key.
                     for (var i = 0; i < tx.inputs.length; i++) {
                         tx.sign(i, keyPair);
-                        //console.log("tx.sign("+i+", "+keyPair+");");
                     }
 
                     var data = tx.build().toHex();

@@ -12,61 +12,9 @@
 (function (window) {
     var currencyManager = function () {};
     currencyManager.prototype = {
-
         getExchangeRate: function (fiatCurrency) {
             return util.getJSON('https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=' + fiatCurrency)
         },
-
-        // getExchangeRateCoeff: function (obj) {
-        //     var newCurrencyCode = obj.newCurrencyCode || 'USD';
-        //     var oldFiatCurrencyCode = obj.oldFiatCurrencyCode || 'USD';
-        //
-        //     return new Promise(function (resolve, reject) {
-        //         if (oldFiatCurrencyCode == 'BTC' && newCurrencyCode == 'mBTC') {
-        //             // from BTC to mBTC
-        //             exchangeRateCoeff = 1000;
-        //             resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //         } else if (oldFiatCurrencyCode == 'mBTC' && newCurrencyCode == 'BTC') {
-        //             // from mBTC to BTC
-        //             exchangeRateCoeff = 1/1000;
-        //             resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //         } else if (newCurrencyCode == 'BTC') {
-        //             // from fiat to BTC
-        //             currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
-        //                 exchangeRateCoeff = 1/rateObj[Object.keys(rateObj)[0]]['averages']['day'];
-        //                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //             });
-        //         } else if (newCurrencyCode == 'mBTC'){
-        //             currencyManager.getExchangeRate(oldFiatCurrencyCode).then(function(rateObj) {
-        //                 // from fiat to mBTC
-        //                 exchangeRateCoeff = 1000/rateObj[Object.keys(rateObj)[0]]['averages']['day'];
-        //                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //             });
-        //         } else if (oldFiatCurrencyCode == 'BTC') {
-        //             currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
-        //                 // from BTC to fiat
-        //                 exchangeRateCoeff = rateObj[Object.keys(rateObj)[0]]['averages']['day'];
-        //                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //             });
-        //         } else if (oldFiatCurrencyCode == 'mBTC') {
-        //           currencyManager.getExchangeRate(newCurrencyCode).then(function(rateObj) {
-        //               // from mBTC to fiat
-        //               exchangeRateCoeff = rateObj[Object.keys(rateObj)[0]]['averages']['day']/1000;
-        //               resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //           });
-        //         } else { // fiat to fiat
-        //             util.getJSON('http://api.fixer.io/latest?symbols=' + newCurrencyCode + ',' + oldFiatCurrencyCode)
-        //             .then(function(ratesData){
-        //                 if(newCurrencyCode == 'EUR' || oldFiatCurrencyCode == 'EUR'){
-        //                     resolve({exchangeRateCoeff: ratesData.rates[Object.keys(ratesData.rates)[0]], newCurrencyCode: newCurrencyCode});
-        //                 }
-        //                 exchangeRateCoeff = ratesData.rates[newCurrencyCode] / ratesData.rates[oldFiatCurrencyCode];
-        //                 resolve({exchangeRateCoeff: exchangeRateCoeff, newCurrencyCode: newCurrencyCode});
-        //             });
-        //         }
-        //     });
-        // },
-
         updateExchangeRate: function () {
             preferences.getCurrency().then(function (currency) {
                 switch (currency) {
@@ -86,28 +34,6 @@
                 return Error(err);
             });
         },
-
-        // updateExchangeRate: function () {
-        //     return preferences.getCurrency().then(function (currency) {
-        //         switch (currency) {
-        //             // for BTC and mBTC we don't need to get exchange rate
-        //             // Bit of a hack for BTC. The wallet balance is always stored in BTC
-        //             case 'BTC':
-        //                 return new Promise(function (resolve) { resolve({'dummy': {'averages': {'day': 1}}})}); // hack hack
-        //             case 'mBTC':
-        //                 return new Promise(function (resolve) { resolve({'dummy': {'averages': {'day': 1000}}})}); // hack hack
-        //             default:
-        //                 return util.getJSON('https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=' + currency);
-        //         }
-        //     }).then(function (response) {
-        //         preferences.setExchangeRate(response[Object.keys(response)[0]]['averages']['day']);
-        //         return response[Object.keys(response)[0]]['averages']['day']
-        //     }, function(err){
-        //         debugger;
-        //         reject(err);
-        //     });
-        // },
-
         getSymbol: function () {
             return preferences.getCurrency().then(function (currency) {
                 switch (currency) {
@@ -148,12 +74,10 @@
                 }
             });
         },
-
         getAvailableCurrencies: function () {
             // 'EUR',
             return ['mBTC', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'EUR', 'GBP', 'ILS', 'NOK', 'NZD', 'PLN', 'RUB', 'SEK', 'SGD', 'USD', 'ZAR'];
         },
-
         amount: function (valueSatoshi) {
             return Promise.all([preferences.getExchangeRate(), this.getSymbol()]).then(function (values) {
                 var rate,
@@ -168,7 +92,6 @@
                 }
             });
         },
-
         formatCurrency: function(value) {
             return Promise.all([this.amount(value), this.getSymbol()]).then(function (results) {
                 var symbol = results[1][0],
@@ -194,7 +117,6 @@
                 }
            });
         },
-
         formatAmount: function (value) {
             return Promise.all([preferences.getExchangeRate(), this.getSymbol()]).then(function (values) {
                 var rate = values[0],

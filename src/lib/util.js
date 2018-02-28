@@ -20,8 +20,6 @@
                     if (req.status == 200) {
                         resolve(req.response);
                     } else {
-                      //$('#unknownErrorAlertLabel').text('Network Error: ' + req.responseURL + ' is unreachable. Please try again later.'); // Hack belongs in a UI layer
-                      //$('#unknownErrorAlert').slideDown(); // Hack belongs in a UI layer
                       reject(Error(req.response));
                     }
                 }
@@ -36,10 +34,6 @@
                 }
                 req.send(data);
             });
-            // .catch(function(error) {
-            //                 Error('Network error');
-            //                 console.log("Failed!", error);
-            //             });
         };
 
     util.prototype = {
@@ -50,11 +44,9 @@
                 return ret.message('getJSON', url);
             }
         },
-
         get: function (url) {
             return request(url);
         },
-
         post: function (url, data) {
             if (typeof chrome !== 'undefined') {
                 return request(url, 'POST', data);
@@ -62,7 +54,6 @@
                 return ret.message('post', {url:url, content:data});
             }
         },
-
         // Used to send messages from content scripts to add-on scripts and return values to content scripts in Firefox add-on
         message: function (name, value) {
             return new Promise(function (resolve) {
