@@ -1,21 +1,62 @@
-
 function initDefaultBlacklistedHostnames() {
     var hostnames = [{
+        hostname: "archive.is"
+    }, {
+        hostname: "archive.org"
+    }, {
+        homename: "bitcoin.com"
+    }, {
+        hostname: "wallet.bitcoin.com"
+    }, {
+        hostname: "bitconnect.co"
+    }, {
+        hostname: "bitcoinmillions.co"
+    }, {
         hostname: "www.bitfinex.com"
     }, {
-        hostname: "btc-e.com"
+        hostname: "bittrex.com"
     }, {
         hostname: "www.bitstamp.net"
     }, {
+        hostname: "www.blockexperts.com"
+    }, {
         hostname: "blockexplorer.com"
     }, {
-        hostname: "insight.bitpay.com"
-    }, {
         hostname: "blockchain.info"
+    }, {
+        hostname: "www.blockcypher.com"
+    }, {
+        hostname: "live.blockcypher.com"
+    }, {
+        hostname: "www.blocktrail.com"
+    }, {
+        hostname: "btc-e.com"
+    }, {
+        hostname: "www.btcc.com"
+    }, {
+        hostname: "circle.com"
+    }, {
+        hostname: "coinbase.com"
+    }, {
+        hostname: "coinmarketcap.com"
+    }, {
+        hostname: "edgesecure.co"
     }, {
         hostname: "google.com"
     }, {
         hostname: "google.co.uk"
+    }, {
+        hostname: "insight.bitpay.com"
+    }, {
+        hostname: "kraken.com"
+    }, {
+        hostname: "ledgerwallet.com"
+    }, {
+        hostname: "poloniex.com"
+    }, {
+        hostname: "www.poloniex.com"
+    }, {
+        hostname: "trezor.io"
     }]
 
     db.put('blacklistedhostnames', hostnames);
@@ -91,7 +132,7 @@ function initFiatCurrency() {
     }
 
     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
-    updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+    updateFiatCurrencyCode();
 
     $('#fiat-currency-select').change(function() {
         $('#ajax-loader').show();
@@ -101,7 +142,7 @@ function initFiatCurrency() {
             updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
-            updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+            updateFiatCurrencyCode(); 
             $('#ajax-loader').hide();
         }, function(response){
           // If all fails, reset to USD
@@ -113,28 +154,6 @@ function initFiatCurrency() {
         });
     });
 
-
-    // $('#fiat-currency-select').change(function() {
-    //     $('#ajax-loader').show();
-    //     currencyManager.getExchangeRateCoeff({
-    //         newCurrencyCode: this.value,
-    //         oldFiatCurrencyCode: localStorage["fiatCurrencyCode"]
-    //     }).then(function(response){
-    //         perferences.setCurrency(response.newCurrencyCode).then(function(){
-    //             debugger;
-    //             updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
-    //             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
-    //             updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
-    //             $('#ajax-loader').hide();
-    //         });
-    //     });
-    //     // }, function(response){
-    //     //   // If all fails, reset to USD
-    //     //   localStorage["fiatCurrencyCode"] = 'USD';
-    //     //   $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
-    //     //   updateFiatCurrencyCode();
-    //     // });
-    // });
 }
 
 function updateFiatCurrencyCode() {
@@ -188,12 +207,9 @@ function daysTillEndOWeek(endOfWeek) {
 function restartTheWeek() {
     var now = (new Date).getTime();
     var milliSecondsInWeek = 604800000;
-    var extraHour = 3600000; // add an hour to help the UI design.
-
+    var extraHour = 3600000;
     var alarm = now + milliSecondsInWeek + extraHour;
-
     var endOfWeek = new Date(alarm);
-
     var daysRemaining = daysTillEndOWeek(endOfWeek);
 
     localStorage['endOfWeek'] = alarm;
@@ -227,7 +243,7 @@ $(document).ready(function() {
         localStorage['proTipInstalled'] = true;
         if(localStorage['protip-popup-install']){
            browser.tabs.create({
-                url: "/views/home.html" // obj.href
+                url: "/views/home.html"
            });
         } else {
            window.location.href = "home.html";
@@ -238,9 +254,7 @@ $(document).ready(function() {
     window.alarmManager.doToggleAlarm();
     restartTheWeek();
 
-    /*
-     *  Import Private Key
-     */
+    //  Import Private Key
     $('#importPrivateKey').click(function() {
         $('#importPrivateKeyPasswordIncorrect').hide();
         $('#importPrivateKeyBadPrivateKey').hide();
@@ -257,7 +271,6 @@ $(document).ready(function() {
         var privateKey = $('#importPrivateKeyPrivateKey').val();
         try {
             new bitcoin.ECPair.fromWIF(privateKey);
-            //new bitcoin.ECPair(privateKey).getExportedPrivateKey();
         } catch (e) {
             $('#importPrivateKeyBadPrivateKey').slideDown();
             return;
