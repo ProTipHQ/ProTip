@@ -33,11 +33,13 @@ function subscriptionSwitchCellDefaultOn(record) {
 
     var input = document.createElement("input");
     input.type = "checkbox";
-    input.checked = true; // This is the subscription table all rows are subscribed.
+    // This is the subscription table all rows are subscribed
+    input.checked = true;
     input.id = record.bitcoinAddress;
-
-    input.className = 'js-switch'; // Switchery.js
-    cell.appendChild(input); // append to cell before init Switchery
+    // Switchery.js
+    input.className = 'js-switch';
+    // append to cell before init Switchery
+    cell.appendChild(input);
 
     new Switchery(input, {
         size: 'small'
@@ -118,8 +120,7 @@ function manualSubscription() {
 
 function validAddress(address){
   // Bitcoinjs doesn't do mixed normal and multisig inputs
-  // Proposed for version 2.
-  // Some patches exist:
+  // Proposed for version 2. Some patches exist:
   // https://github.com/OutCast3k/bitcoin-multisig/issues/6
   // An explaination is here.
   // https://github.com/bitcoinjs/bitcoinjs-lib/issues/417
@@ -151,9 +152,7 @@ $(function() {
 
     db = new ydn.db.Storage('protip', schema);
 
-    buildTable('subscription-tbody'); //('subscription-table');
-
-
+    buildTable('subscription-tbody');
 
     subscriptionTotalFiatAmount().then(function(totalFiatAmount){
         $('#subscription-total-amount').html(totalFiatAmount);
@@ -162,7 +161,8 @@ $(function() {
     $('#manual-amount-fiat').attr('placeholder', localStorage['defaultSubscriptionAmountFiat']);
     $('#protip-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 
-    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address'); // A hack.
+    // A hack
+    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address');
     $('#manualSubscriptionForm').validate({
         rules: {
             manualBitcoinAddress: {
@@ -175,7 +175,7 @@ $(function() {
         },
         submitHandler: function() {
             manualSubscription();
-            buildTable('subscription-tbody'); //('subscription-table');
+            buildTable('subscription-tbody');
         }
     });
 
@@ -197,8 +197,8 @@ $(function() {
     $('#protip-subscribe-btn').click(function() {
         proTipSubscription();
         localStorage['showProTipSubscription'] = false;
-        //$('#protip-subscription-form').fadeOut().slideUp();
     });
     allowExternalLinks();
     updateFiatCurrencyCode();
+
 });

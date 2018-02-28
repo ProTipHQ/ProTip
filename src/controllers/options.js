@@ -7,12 +7,9 @@ $(function() {
         localStorage["fiatCurrencyCode"] = "USD"
     }
 
-    //initialize()
-    // db = new ydn.db.Storage('protip', schema);
     // Going to use *localStore* for the options/preferences because
-    // IndexedDB isn't built for a single record options array very
-    // well. When wiping the IndexedDB must remember not to wipe the
-    // Blacklists.
+    // IndexedDB isn't built for a single record options array very well.
+    // When wiping the IndexedDB must remember not to wipe the Blacklists.
     db = new ydn.db.Storage('protip', schema);
 
     $('#fiat-currency-select').val(localStorage["fiatCurrencyCode"]);
@@ -24,7 +21,7 @@ $(function() {
             updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
-            updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
+            updateFiatCurrencyCode();
             $('#ajax-loader').hide();
         }, function(response){
           // If all fails, reset to USD
@@ -37,10 +34,7 @@ $(function() {
     });
 
     $('#clear-log').click(function(){clearLog()});
-    //updateFiatCurrencyCode(); // update any in page <span class="fiat-code">USD</span>
 
-    // initFiatCurrency();
-    //updateFiatCurrencyCode();
     initAvailableCurrenciesOptions();
     initDefaultSubscriptionAmountFiat();
     initErrorLog();
@@ -48,7 +42,6 @@ $(function() {
     allowExternalLinks();
 
     wallet.restoreAddress().then(function () {
-        //$('#textAddress').text(wallet.getAddress());
         setExampleMetaTag();
     });
 });
@@ -93,6 +86,3 @@ function clearLog(){
     localStorage.setItem("errorLog", JSON.stringify([]));
     $('#console-log').empty();
 }
-
-
-

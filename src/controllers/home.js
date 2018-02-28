@@ -2,7 +2,8 @@ function initAlarmDisplay() {
     alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
         if(expired){
             var now = (new Date).getTime();
-            var weekInTheFuture = new Date(now+(60 * 60 * 24 * 7)); // One week in the future.
+            // One week in the future
+            var weekInTheFuture = new Date(now+(60 * 60 * 24 * 7));
             $('#date-end-of-week').html('1 week from now, ' + weekInTheFuture.format("dddd, mmmm dS, yyyy, h:MM:ss TT"));
             $('#days-till-end-of-week').html('0');
         } else {
@@ -43,7 +44,9 @@ function setupWallet() {
 
 function updateBalance(address) {
     var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
-    util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+
+    // TODO: This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+    util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) {
 
         if(response.txrefs){
             response.balance = _.reduce(response.txrefs, function(memo, obj){ return obj.value + memo; }, 0);
@@ -59,22 +62,23 @@ function updateBalance(address) {
             // indicate the total of the unconfirmed unspent outputs.
             // Even from http://dev.blockcypher.com/#address I cannot workout
             // what this number really represents.
-            //
             var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj){ return obj.value + memo; }, 0);
             $('#balance-pending-confirmation-container').show();
             currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation){
                 $('#balance-pending-confirmation').html(balancePendingConfirmation);
             });
         }
+
         currencyManager.amount(response.balance).then(function(moneyWithoutSymbol) {
             localStorage['availableBalanceFiat'] = moneyWithoutSymbol;
             currencyManager.amount(FEE).then(function(bitcoinFeeFiat) {
                 $('#bitcoin-fee').text(bitcoinFeeFiat);
                 setBudgetWidget(localStorage['availableBalanceFiat'], bitcoinFeeFiat);
             });
-            browser.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
+            // May as well use this API call to also update this value.
+            browser.browserAction.setBadgeText({text: moneyWithoutSymbol});
         });
-        //$('#head-line-balance').text('BTC ' + response.balance);
+
         currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
             for(i=0;i < $('.btc-balance-to-fiat').length; i++){
                 $('.btc-balance-to-fiat')[i].textContent = formattedMoney;
@@ -85,8 +89,8 @@ function updateBalance(address) {
 
 function setMinIncidentalFiatAmounts(incidentalTotalFiat){
     if(parseFloat(incidentalTotalFiat) >= 0.00) {
-        // If the Tx is less than <= 0.01 it takes many many hours to confirm, and your change is locked up.
-        // Making 0.03 the min.
+        // If the Tx is less than <= 0.01 it takes many many hours to confirm,
+        // and your change is locked up making 0.03 the min
         return parseFloat(incidentalTotalFiat);
     } else {
         return 0.00;
@@ -128,7 +132,6 @@ $(function() {
     $('#confirm-donate-now').click(function() {
         $('#donate-now').button('Sending...');
         $('#notice-dialogue').slideUp().fadeOut();
-        //localStorage['weeklyAlarmReminder'] = false;
         browser.browserAction.setBadgeText({
             text: ''
         });
@@ -140,7 +143,6 @@ $(function() {
             $('#payment-history').effect("highlight", {
                 color: 'rgb(100, 189, 99)'
             }, 4000);
-            //$('#notice').html(response);
             db.clear('sites');
             $('#notice').html('Transaction Submitted');
             $('#notice-dialogue').fadeIn().slideDown();
@@ -150,7 +152,6 @@ $(function() {
 
         }, function(response){
             // blockCypher is returning a error code when the transaction was successfull?
-            //$('#notice').html(response);
             localStorage['weeklyAlarmReminder'] = false;
             window.alarmManager.doToggleAlarm();
             restartCountDown();
@@ -196,7 +197,6 @@ $(function() {
             localStorage['automaticDonate'] = false;
             localStorage['manualRemind'] = true;
         }
-        //restartCountDown();
     });
 
     $('#incidental-fiat-amount').change(function() {
@@ -207,26 +207,23 @@ $(function() {
         var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
         var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
         var incidentalTotalFiat = parseFloat($(this).val());
-
         var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-        // if (availableBalanceFiat > 0 && weeklyTotalFiat > availableBalanceFiat - bitcoinFeeFiat) {
-        //     weeklyTotalFiat = availableBalanceFiat - bitcoinFeeFiat;
-        //     $(this).attr('max', incidentalTotalFiat);
-        // }
-
         var balanceCoversXWeeks = (availableBalanceFiat - weeklyTotalFiat) / weeklyTotalFiat;
 
+        // initalization with empty wallet
         if (balanceCoversXWeeks < 0) {
             balanceCoversXWeeks = 0
-        } // initalization with empty wallet.
+        }
 
         $('#balance-covers-weeks').html(balanceCoversXWeeks.toFixed(1));
         $('#balance-covers-weeks').effect("highlight", {
             color: 'rgb(100, 189, 99)'
         }, 400);
 
-        $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
-        $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
+        // use standard money formattor
+        $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); 
+        // use standard money formattor
+        $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
         $( "#slider" ).slider({value: $(this).val() });
     });
 

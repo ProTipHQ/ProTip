@@ -1,5 +1,5 @@
-
 $(document).ready(function() {
+
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
@@ -29,12 +29,6 @@ $(document).ready(function() {
     }
     wallet.setBalanceListener(function(balance) {
         setBalance(balance);
-
-        // Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-        //     localStorage['availableBalanceFiat'] = results[0];
-        //     debugger;
-        //     //browser.browserAction.setBadgeText({text: localStorage['availableBalanceFiat']});
-        // });
     });
     setupWallet();
 
@@ -89,18 +83,6 @@ $(document).ready(function() {
                   $('#btc-balance-to-fiat').text('0.00');
               }
           });
-          // var host = 'https://blockchain.info/';
-          // var address = wallet.getAddress();
-          // util.getJSON(host + 'unspent?active=' + address).then(function(unspentOutputs){
-          //     if(typeof unspentOutputs.notice !== "undefined"){
-          //       reject(Error(unspentOutputs.notice.trim()));
-          //     }
-          //     unspentOutputs = unspentOutputs.unspent_outputs;
-          //     var unspentBalance = _.reduce(unspentOutputs, function(memo, obj){ return obj.value + memo; }, 0);
-          //     $('#max-available-balance').text((parseInt(unspentBalance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
-          // function(){
-          //     $('#max-available-balance').text('0 ' + BTCUnits);
-          // });
     }
 
     $('#successAlertClose').click(function() {
@@ -474,4 +456,3 @@ $(document).ready(function() {
     });
 
 });
-

@@ -2,10 +2,8 @@ function buildPopupBrowsingTable(domId) {
     var tbody = $('#' + domId);
     tbody.empty();
 
-    // The Sites records should be filtered,
-    // first, by removing the subscriptions
-    // second, by tallying up the total amount
-    // of time spent overall.
+    // The Sites records should be filtered, first, by removing the subscriptions
+    // second, by tallying up the total amount of time spent overall.
 
     // Remove subscriptions for daily browsing.
     db.values('subscriptions').done(function(records) {
@@ -18,8 +16,9 @@ function buildPopupBrowsingTable(domId) {
     // the correct values for the percentages of each site.
     db.values('sites').done(function(records) {
         localStorage['totalTime'] = 0;
+        // it is possible to get a new site record which doesn't yet have a timeOnPage.
         for (var i in records) {
-            if (records[i].timeOnPage) { // it is possible to get a new site record which doesn't yet have a timeOnPage.
+            if (records[i].timeOnPage) {
                 localStorage['totalTime'] = parseInt(localStorage['totalTime']) + parseInt(records[i].timeOnPage);
             }
         };
@@ -85,48 +84,8 @@ function initPopupCurrentWeek() {
 }
 
 function initBitcoinWallet(){
-  // Setup the wallet, page values and callbacks
-    // var val = '',
-    //     address = '',
-    //     SATOSHIS = 100000000,
-    //     FEE = SATOSHIS * .0001,
-    //     BTCUnits = 'BTC',
-    //     BTCMultiplier = SATOSHIS;
-    //
-    // function setupWallet() {
-    //     wallet.restoreAddress();
-    // }
-    // wallet.setBalanceListener(function(balance) {
-    //
-    //     setBalance(balance);
-    //     Promise.all([currencyManager.amount(balance), currencyManager.amount(FEE)]).then(function(results) {
-    //         localStorage['availableBalanceFiat'] = results[0];
-    //     });
-    // });
-    // setupWallet();
-    //
-    //
-    // function setBalance(balance) {
-    //     if (Number(balance) < 0 || isNaN(balance)) {
-    //         balance = 0;
-    //     }
-    //     $('#head-line-balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-    //     $('#balance').text(parseInt(balance) / BTCMultiplier + ' ' + BTCUnits);
-    //
-    //     if (balance > 0) {
-    //         currencyManager.formatCurrency(balance).then(function(formattedMoney) {
-    //             var text = formattedMoney;
-    //             $('#btc-balance-to-fiat').text(text);
-    //         });
-    //     } else {
-    //         $('#btc-balance-to-fiat').text('0.00');
-    //     }
-    // }
-    // setBalance();
 
-    wallet.restoreAddress().then(function(){
-        //updateBalance(wallet.getAddress());
-        },
+    wallet.restoreAddress().then(function() {},
         function() {
             return wallet.generateAddress();
         }).then(function(address){
@@ -138,8 +97,10 @@ function initBitcoinWallet(){
     );
 
     function updateBalance(address) {
+
+        // TODO: This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress
         var host = 'https://api.blockcypher.com/v1/btc/main/addrs/';
-        util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) { // This API call is an unnesscesary duplicate of a earlier call in wallest.restoreAddress. Intergrate there.
+        util.getJSON(host + address + '?unspentOnly=true&limit=50').then(function (response) {
 
             if(response.txrefs){
                 response.balance = _.reduce(response.txrefs, function(memo, obj){ return obj.value + memo; }, 0);
@@ -155,7 +116,6 @@ function initBitcoinWallet(){
                 // indicate the total of the unconfirmed unspent outputs.
                 // Even from http://dev.blockcypher.com/#address I cannot workout
                 // what this number really represents.
-                //
                 var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj){ return obj.value + memo; }, 0);
                 $('#balance-pending-confirmation-container').show();
                 currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation){
@@ -164,7 +124,8 @@ function initBitcoinWallet(){
             }
             currencyManager.amount(response.balance).then(function(moneyWithoutSymbol) {
                 localStorage['availableBalanceFiat'] = moneyWithoutSymbol;
-                browser.browserAction.setBadgeText({text: moneyWithoutSymbol}); // May as well use this API call to also update this value.
+                // May as well use this API call to also update this value.
+                browser.browserAction.setBadgeText({text: moneyWithoutSymbol});
             });
             currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
                 $('#btc-balance-to-fiat').html(formattedMoney);
@@ -180,7 +141,8 @@ function initBitcoinWallet(){
         var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
 
         var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-        $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
+        // use standard money formattor
+        $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2));
     };
     setBudgetAmounts();
 }
@@ -209,7 +171,7 @@ $(function() {
     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
 
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-    $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2)); // use standard money formattor
+    $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
     $('#confirm-donate-now').click(function() {
 
@@ -258,9 +220,6 @@ $(function() {
                     $('#browsing-table').fadeOut();
                     $('#browsing-table').empty();
                 }
-                // $('#notice').html(error.message);
-                // $('#notice-dialogue').fadeIn().slideDown();
-                // $('#donate-now').button('reset');
             });
         });
     });
