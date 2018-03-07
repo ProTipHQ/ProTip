@@ -219,7 +219,7 @@ function initialize() {
         localStorage.paused = "false";
     }
 
-    browser.tabs.onActivated.addListener( function(activeInfo) {
+    browser.tabs.onActivated.addListener(function(activeInfo) {
         //console.log("Tab changed");
         currentTabId = activeInfo.tabId;
         updateTimeOnPage();
