@@ -1,36 +1,58 @@
 var fs = require('fs')
 var path = require('path')
+var browserify = require('browserify')
 var gulp = require('gulp')
-var del = require('del')
+var eslint = require('gulp-eslint')
+var source = require('vinyl-source-stream')
+var buffer = require('vinyl-buffer')
+var npmDist = require('gulp-npm-dist');
 var rename = require('gulp-rename')
 var uglify = require('gulp-uglify')
 var minifyCSS = require('gulp-csso')
 var concat = require('gulp-concat')
 var sourcemaps = require('gulp-sourcemaps')
-var exec = require('child_process').exec
 var nunjucksRender = require('gulp-nunjucks-render')
+var log = require('gulplog')
+var del = require('del')
+var exec = require('child_process').exec
 
+// Testing
+gulp.task('lint', function() {
+    return gulp.src([
+        'src/controllers/*.js',
+        'src/various/*.js',
+        'src/wallet/*.js'
+    ])
+        .pipe(eslint())
+        .pipe(eslint.format())
+})
+
+// Building
 gulp.task('clean', function(cb) {
-    exec('rm -rf extension', function(err, stdout, stderr) {
+    exec('rm -rf extension/', function(err, stdout, stderr) {
         cb(err)
     })
 })
 
+gulp.task('libs', function() {
+    gulp.src(npmDist(), {
+        base:'./node_modules'
+    })
+        .pipe(gulp.dest('./extension/libs'));
+});
+
 gulp.task('copy', function() {
-    gulp.src('src/assets/**/*', { base: 'src' })
+    gulp.src('src/controllers/*')
+        .pipe(gulp.dest('extension/js'))
+    gulp.src('src/css/*', {
+        base: 'src'
+    })
         .pipe(gulp.dest('extension'))
-    gulp.src('src/controllers/*.js')
-        .pipe(gulp.dest('extension/controllers'))
-    gulp.src('src/features/**')
-        .pipe(gulp.dest('extension/features'))
-    gulp.src('src/init/**')
-        .pipe(gulp.dest('extension/init'))
-    gulp.src('src/views/*.html')
-        .pipe(nunjucksRender({ path: ['src/views/partials'] }))
-        .pipe(gulp.dest('extension/views'))
-    gulp.src('src/lib/*.js')
-        .pipe(gulp.dest('extension/lib'))
-    gulp.src('src/js/*.js')
+    gulp.src('src/fonts/**')
+        .pipe(gulp.dest('extension/fonts'))
+    gulp.src('src/images/**/*')
+        .pipe(gulp.dest('extension/images'))
+    gulp.src('src/various/*')
         .pipe(gulp.dest('extension/js'))
     gulp.src([
         'src/background.js',
@@ -39,10 +61,31 @@ gulp.task('copy', function() {
     ]).pipe(gulp.dest('extension'))
 })
 
-gulp.task('build', [ 'clean', 'copy' ])
+gulp.task('views', function() {
+    gulp.src('src/views/*.html')
+        .pipe(nunjucksRender({ path: ['src/views/partials'] }))
+        .pipe(gulp.dest('extension/views'))
+})
 
+gulp.task('bundle', function () {
+  var b = browserify({
+    entries: './src/bundle.js',
+    debug: true
+  })
 
-// Package for FF & Chrome
+  return b.bundle()
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+        //.pipe(uglify())
+        .on('error', log.error)
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./extension/js/'))
+})
+
+gulp.task('build', ['clean', 'libs', 'copy', 'views', 'bundle'])
+
+// Packaging
 var getManifest = function() {
      var manifest = JSON.parse(fs.readFileSync('./extension/manifest.json'))
      return manifest

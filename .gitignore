@@ -7,6 +7,9 @@ package-lock.json
 yarn-error.log
 yarn.lock
 
+# Dev things
+*.swp
+
 ### OSX ###
 .DS_Store
 .AppleDouble
