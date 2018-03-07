@@ -1,3 +1,8 @@
+/* wallet.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 $(document).ready(function() {
 
     if(!localStorage['proTipInstalled']) {
@@ -5,12 +10,12 @@ $(document).ready(function() {
     }
 
     // Setup the wallet, page values and callbacks
-    var val = '',
-        address = '',
-        SATOSHIS = 100000000,
-        FEE = SATOSHIS * .0001,
-        BTCUnits = 'BTC',
-        BTCMultiplier = SATOSHIS;
+    var val = ''
+    var address = ''
+    var SATOSHIS = 100000000
+    var FEE = SATOSHIS * .0001
+    var BTCUnits = 'BTC'
+    var BTCMultiplier = SATOSHIS
 
     function setupWallet() {
         wallet.restoreAddress().then(setQRCodes,
@@ -68,21 +73,21 @@ $(document).ready(function() {
 
         $('#bitcoin-fee').text((10000 / BTCMultiplier + ' ' + BTCUnits));
 
-          var address = wallet.getAddress();
-          util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/'+address+'/balance').then(function(response){
-              if(parseInt(response.final_balance) > 0){
-                  $('#head-line-balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
-                  $('#balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
-                  $('#max-available-balance').text((parseInt(response.final_balance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
-                  currencyManager.formatAmount(response.final_balance).then(function(formattedMoney) {
-                      var text = formattedMoney;
-                      $('#btc-balance-to-fiat').text(text);
-                  });
-              } else {
-                  $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
-                  $('#btc-balance-to-fiat').text('0.00');
-              }
-          });
+        var address = wallet.getAddress();
+        util.getJSON('https://api.blockcypher.com/v1/btc/main/addrs/' + address + '/balance').then(function(response) {
+            if (parseInt(response.final_balance) > 0) {
+                $('#head-line-balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
+                $('#balance').text(parseInt(response.final_balance) / BTCMultiplier + ' ' + BTCUnits);
+                $('#max-available-balance').text((parseInt(response.final_balance - FEE) / BTCMultiplier) + ' ' + BTCUnits);
+                currencyManager.formatAmount(response.final_balance).then(function(formattedMoney) {
+                    var text = formattedMoney;
+                    $('#btc-balance-to-fiat').text(text);
+                });
+            } else {
+                $('#max-available-balance').text('0.00' + ' ' + BTCUnits);
+                $('#btc-balance-to-fiat').text('0.00');
+            }
+        });
     }
 
     $('#successAlertClose').click(function() {
@@ -100,9 +105,7 @@ $(document).ready(function() {
         addon.port.on('show', setupWallet);
     }
 
-    /*
-     *  Send BTC
-     */
+    // Send BTC
     $('#sendButton').click(function() {
         val = Math.floor(Number($('#amount').val() * BTCMultiplier));
         address = $('#sendAddress').val();
@@ -158,7 +161,6 @@ $(document).ready(function() {
             txDest: address,
             txSatoshis: val
         }], FEE, password).then(function() {
-            //wallet.send(address, val, FEE, password).then(function () {
             $('#amount').val(null);
             $('#sendAddress').val(null);
             $('#amountLabel').text('Amount:');
@@ -167,27 +169,14 @@ $(document).ready(function() {
             $('#successAlert').slideDown();
             $('#sendConfirmationModal').modal('hide');
             $('#cover').fadeOut('slow');
-        }, function(e) {
+        }, function() {
             $('#successAlertLabel').text('Transaction Submitted');
             $('#successAlert').slideDown();
-            // if (wallet.isEncrypted()) {
-            //     $('#sendConfirmationPasswordIncorrect').text(e.message).slideDown();
-            // } else {
-            //     $('#unknownErrorAlertLabel').text(e.message);
-            //     $('#unknownErrorAlert').slideDown();
-            // }
             $('#cover').hide();
         });
     }
 
-
-    /*
-     *  Settings Menu
-     */
-
-    /*
-     * Set Password
-     */
+    // Settings Menu
     $('#setPassword').click(function() {
         $('#passwordMismatch').hide();
         $('#setPasswordIncorrect').hide();
@@ -216,9 +205,9 @@ $(document).ready(function() {
     });
 
     $('#confirmSetPassword').click(function() {
-        var password = $('#setPasswordPassword').val(),
-            newPassword = $('#newPassword').val(),
-            confirmNewPassword = $('#confirmNewPassword').val();
+        var password = $('#setPasswordPassword').val();
+        var newPassword = $('#newPassword').val();
+        var confirmNewPassword = $('#confirmNewPassword').val();
         var validInput = true;
         if ((wallet.isEncrypted() && !password) || (!$('#removePassword').is(':checked') && (!newPassword || !confirmNewPassword))) {
             validInput = false;
@@ -248,12 +237,8 @@ $(document).ready(function() {
                 $('#setPasswordModal').modal('hide');
             });
         }
-
     });
 
-    /*
-     * Currency selection
-     */
     $('#setCurrency').click(function() {
         preferences.getCurrency().then(function(currency) {
             var currencies = currencyManager.getAvailableCurrencies();
@@ -284,39 +269,34 @@ $(document).ready(function() {
         });
     });
 
-    /*
-     * Units selection
-     */
-    $('#setUnits').click(function() {
-        preferences.getBTCUnits().then(function(units) {
-            var availableUnits = ['BTC', 'mBTC', 'µBTC'];
-            var tableBody = '<tr>';
-            for (var i = 0; i < availableUnits.length; i++) {
-                tableBody += '<td><div class="radio no-padding"><label><input type="radio" name="' + availableUnits[i] + '"';
-                if (availableUnits[i] === units) {
-                    tableBody += ' checked';
+    $('#setUnits').on('click', function() {
+        var setUnit = function(unit) {
+            $.each($('#setBTCUnits').find('input[type=radio]'), function() {
+                if ($(this).attr('name') == unit) {
+                    $(this).prop('checked', true)
                 }
-                tableBody += '>' + availableUnits[i] + '</label></div></td>';
-            }
-            tableBody += '</tr>';
-            $('#tableBody').html(tableBody);
-            $('#setCurrencyModal').modal().show();
-            $('.radio').click(function() {
-                var units = $.trim($(this).text());
-                $('input:radio[name=' + units + ']').attr('checked', 'checked');
-                setBTCUnits(units);
-                preferences.setBTCUnits(units).then(function() {
-                    $('#successAlertLabel').text('Units set to ' + units + '.');
-                    $('#successAlert').show();
-                    $('#setCurrencyModal').modal('hide');
-                });
-            });
+            })
+        }
+        preferences.getBTCUnits().then(setUnit)
+    })
+
+    $('#setBTCUnits').find('.radio').on('click', function() {
+        var unit = $.trim($(this).text());
+        setBTCUnits(unit);
+        preferences.setBTCUnits(unit).then(function() {
+            $.each($('#setBTCUnits').find('input[type=radio]'), function() {
+                if ($(this).attr('name') == unit) {
+                    $(this).prop('checked', true)
+                } else {
+                    $(this).prop('checked', false)
+                }
+            })
+            $('#successAlertLabel').text('Bitcoin Units set to: ' + unit);
+            $('#successAlert').show();
+            $('#setUnitsModal').modal('hide');
         });
     });
 
-    /*
-     *  Show Private Key
-     */
     $('#showPrivateKey').click(function() {
         $('#showPrivateKeyPasswordIncorrect').hide();
         if (wallet.isEncrypted()) {
@@ -343,9 +323,6 @@ $(document).ready(function() {
         }
     });
 
-    /*
-     *  Import Private Key
-     */
     $('#importPrivateKey').click(function() {
         $('#importPrivateKeyPasswordIncorrect').hide();
         $('#importPrivateKeyBadPrivateKey').hide();
@@ -382,9 +359,6 @@ $(document).ready(function() {
         });
     });
 
-    /*
-     *  Generate New Wallet
-     */
     $('#generateNewWallet').click(function() {
         $('#generateNewWalletPasswordIncorrect').hide();
         if (wallet.isEncrypted()) {
@@ -406,10 +380,7 @@ $(document).ready(function() {
         });
     });
 
-    /*
-     * About
-     */
-
+    // About
     if (typeof chrome !== 'undefined') {
         $('#version').text(browser.runtime.getManifest().version);
     } else {
@@ -429,10 +400,7 @@ $(document).ready(function() {
         return false;
     });
 
-    /*
-     * Resizing
-     */
-
+    // Modal Resizing
     $('.modal').on('shown.bs.modal', function() {
         var $main = $('#main');
         var height = $main.height();
@@ -446,10 +414,11 @@ $(document).ready(function() {
     }).on('hidden.bs.modal', function() {
         $('#main').height('auto');
         if (typeof chrome === 'undefined') {
+            var height
             if ($('#successAlert').is(':visible')) {
-                var height = 350;
+                height = 350;
             } else {
-                var height = 278;
+                height = 278;
             }
             addon.port.emit('resize', height);
         }
