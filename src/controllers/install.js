@@ -1,3 +1,8 @@
+/* install.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 function initDefaultBlacklistedHostnames() {
     var hostnames = [{
         hostname: "archive.is"
@@ -126,7 +131,7 @@ function initFiatCurrency() {
     }
 
     var currencies = currencyManager.getAvailableCurrencies();
-    for (var i in currencies) {
+    for (let i in currencies) {
         var option = $('<option value="' + currencies[i] + '">' + currencies[i] + '</option>')[0];
         $('#fiat-currency-select').append(option);
     }
@@ -136,15 +141,16 @@ function initFiatCurrency() {
 
     $('#fiat-currency-select').change(function() {
         $('#ajax-loader').show();
-        var old = 'f00';
-        updateCurrency(this.value, localStorage["fiatCurrencyCode"]).then(function(response){
+        var updateCurrency
+        var updateGlobalOptionsAmount
+        updateCurrency(this.value, localStorage["fiatCurrencyCode"]).then(function(response) {
 
             updateGlobalOptionsAmount(response.exchangeRateCoeff, response.newCurrencyCode);
             localStorage["fiatCurrencyCode"] = response.newCurrencyCode;
 
-            updateFiatCurrencyCode(); 
+            updateFiatCurrencyCode();
             $('#ajax-loader').hide();
-        }, function(response){
+        }, function() {
           // If all fails, reset to USD
           localStorage["fiatCurrencyCode"] = 'USD';
           preferences.setCurrency(localStorage['fiatCurrencyCode']);
@@ -166,20 +172,6 @@ function updateFiatCurrencyCode() {
 
 function setupWallet() {
 
-    wallet.restoreAddress().then(setAddress(),
-        function() {
-            console.log('bazzz');
-            return wallet.generateAddress();
-        }).then(function(){
-            console.log('barr');
-            setAddress();
-        },
-        function() {
-            alert('Failed to generate wallet. Refresh and try again.');
-        }
-    );
-
-
     function setAddress() {
         preferences.getPrivateKey().then(function(privateKey){
             $('#private-key-input').val(privateKey);
@@ -188,6 +180,17 @@ function setupWallet() {
             $('#textAddress').text(address());
         });
     }
+
+    wallet.restoreAddress().then(setAddress(),
+        function() {
+            return wallet.generateAddress();
+        }).then(function() {
+            setAddress();
+        },
+        function() {
+            alert('Failed to generate wallet. Refresh and try again.');
+        }
+    );
 }
 
 function millisecondsToDays(milliseconds) {
@@ -209,14 +212,13 @@ function restartTheWeek() {
     var milliSecondsInWeek = 604800000;
     var extraHour = 3600000;
     var alarm = now + milliSecondsInWeek + extraHour;
-    var endOfWeek = new Date(alarm);
-    var daysRemaining = daysTillEndOWeek(endOfWeek);
 
     localStorage['endOfWeek'] = alarm;
 }
 
 var db;
 $(document).ready(function() {
+
     db = new ydn.db.Storage('protip', schema);
 
     initFiatCurrency();
@@ -239,7 +241,7 @@ $(document).ready(function() {
 
     allowExternalLinks();
 
-    $('#launch').click(function(obj){
+    $('#launch').click(function() {
         localStorage['proTipInstalled'] = true;
         if(localStorage['protip-popup-install']){
            browser.tabs.create({

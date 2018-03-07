@@ -1,3 +1,8 @@
+/* home.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 function initAlarmDisplay() {
     alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
         if(expired){
@@ -18,18 +23,17 @@ function initAlarmDisplay() {
 }
 
 function setupWallet() {
-    wallet.restoreAddress().then(function(){
+    wallet.restoreAddress().then(function() {
         setQRCodes();
         updateBalance(wallet.getAddress());
-        },
-        function() {
-            return wallet.generateAddress();
-        }).then(function(address){
-            setQRCodes;
-            updateBalance(wallet.getAddress());
-        },
-        function() {
+    }, function() {
+        return wallet.generateAddress();
+    }).then(function() {
+        setQRCodes;
+        updateBalance(wallet.getAddress());
+    }, function(err) {
             alert('Failed to generate wallet. Refresh and try again.');
+            console.log(err)
         }
     );
 
@@ -39,7 +43,6 @@ function setupWallet() {
         var blockchainURL = 'https://blockchain.info/address/' + wallet.getAddress();
         $('#payment-history-link').attr('href', blockchainURL);
     }
-
 }
 
 function updateBalance(address) {
@@ -62,9 +65,11 @@ function updateBalance(address) {
             // indicate the total of the unconfirmed unspent outputs.
             // Even from http://dev.blockcypher.com/#address I cannot workout
             // what this number really represents.
-            var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj){ return obj.value + memo; }, 0);
+            var pendingConfirmation = _.reduce(response.unconfirmed_txrefs, function(memo, obj) {
+                    return obj.value + memo;
+                }, 0);
             $('#balance-pending-confirmation-container').show();
-            currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation){
+            currencyManager.formatCurrency(pendingConfirmation).then(function(balancePendingConfirmation) {
                 $('#balance-pending-confirmation').html(balancePendingConfirmation);
             });
         }
@@ -75,14 +80,6 @@ function updateBalance(address) {
                 $('#bitcoin-fee').text(bitcoinFeeFiat);
                 setBudgetWidget(localStorage['availableBalanceFiat'], bitcoinFeeFiat);
             });
-            // May as well use this API call to also update this value.
-            browser.browserAction.setBadgeText({text: moneyWithoutSymbol});
-        });
-
-        currencyManager.formatCurrency(response.balance).then(function(formattedMoney) {
-            for(i=0;i < $('.btc-balance-to-fiat').length; i++){
-                $('.btc-balance-to-fiat')[i].textContent = formattedMoney;
-            }
         });
     });
 }
@@ -104,7 +101,9 @@ function restartCountDown(){
 }
 
 var db;
-$(function() {
+
+$(document).ready(function() {
+
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
@@ -114,9 +113,7 @@ $(function() {
 
     updateFiatCurrencyCode();
     allowExternalLinks();
-
     initAlarmDisplay();
-
     setupWallet();
     buildBrowsingTable('browsing-table');
 
@@ -125,6 +122,7 @@ $(function() {
     var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
     var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
+
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
     $('#confirm-donate-now').click(function() {
@@ -134,34 +132,35 @@ $(function() {
             text: ''
         });
 
-        paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
-            localStorage['weeklyAlarmReminder'] = false;
-            window.alarmManager.doToggleAlarm();
-            restartCountDown();
-            // TODO: had .effect() on #payment-history for 4000 ms
-            db.clear('sites');
-            $('#notice').html('Transaction Submitted');
-            $('#notice-dialogue').fadeIn().slideDown();
-            $('#donate-now').button('reset');
-            $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-            updateBalance(wallet.getAddress());
+        paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat'])
+            .then(function() {
+                localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
+                restartCountDown();
+                // TODO: had .effect() on #payment-history for 4000 ms
+                db.clear('sites');
+                $('#notice').html('Transaction Submitted');
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+                $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+                updateBalance(wallet.getAddress());
 
-        }, function(response){
-            // blockCypher is returning a error code when the transaction was successfull?
-            localStorage['weeklyAlarmReminder'] = false;
-            window.alarmManager.doToggleAlarm();
-            restartCountDown();
-            // TODO: had .effect() on #payment-history for 4000 ms
-            db.clear('sites');
-            updateBalance(wallet.getAddress());
-            $('#notice').html('Transaction Submitted');
-            $('#notice-dialogue').fadeIn().slideDown();
-            $('#donate-now').button('reset');
-            $('#confirm-donate-now-dialogue').slideUp().fadeOut();
-        });
+            }, function() {
+                // blockCypher is returning a error code when the transaction was successfull?
+                localStorage['weeklyAlarmReminder'] = false;
+                window.alarmManager.doToggleAlarm();
+                restartCountDown();
+                // TODO: had .effect() on #payment-history for 4000 ms
+                db.clear('sites');
+                updateBalance(wallet.getAddress());
+                $('#notice').html('Transaction Submitted');
+                $('#notice-dialogue').fadeIn().slideDown();
+                $('#donate-now').button('reset');
+                $('#confirm-donate-now-dialogue').slideUp().fadeOut();
+            });
     });
 
-    $('#dismiss-manual-reminder-popover').click(function(){
+    $('#dismiss-manual-reminder-popover').click(function() {
         $('#donate-now-reminder').fadeOut('fast');
     });
 
@@ -169,7 +168,7 @@ $(function() {
         if (this.value == 'automaticDonate') {
             localStorage['automaticDonate'] = true;
             localStorage['manualRemind'] = false;
-            alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired){
+            alarmManager.alarmExpired(localStorage['alarmExpireDate'], function(expired) {
                 if (expired) {
                     restartTheWeek();
                     window.alarmManager.doToggleAlarm();
@@ -268,4 +267,5 @@ $(function() {
       $('#browsing-table').empty();
       db.clear('sites');
     });
+
 });

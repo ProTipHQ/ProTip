@@ -1,3 +1,8 @@
+/* subscriptions.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 function subscriptionLabelCell(record) {
     var cell = document.createElement("td");
 
@@ -6,10 +11,11 @@ function subscriptionLabelCell(record) {
     ));
     var a = document.createElement('a');
     a.style.display = 'block';
+    var linkText
     if (record.url) { // url is optional, for manual subscriptions
-        var linkText = document.createTextNode(record.url.replace(/http(s?):\/\/(www.|)/, '').substring(0, 40));
+        linkText = document.createTextNode(record.url.replace(/http(s?):\/\/(www.|)/, '').substring(0, 40));
     } else {
-        var linkText = document.createTextNode('');
+        linkText = document.createTextNode('');
     }
     a.appendChild(linkText);
     a.className = 'external-link';
@@ -64,8 +70,7 @@ function subscriptionSwitchCellDefaultOn(record) {
     return cell;
 }
 
-function subscriptionEmptyRow(domId){
-    var tbody = $('#' + domId);
+function subscriptionEmptyRow() {
     var row = document.createElement("tr");
     var cell = document.createElement("td");
     cell.setAttribute("colspan",4);
@@ -118,23 +123,6 @@ function manualSubscription() {
     });
 }
 
-function validAddress(address){
-  // Bitcoinjs doesn't do mixed normal and multisig inputs
-  // Proposed for version 2. Some patches exist:
-  // https://github.com/OutCast3k/bitcoin-multisig/issues/6
-  // An explaination is here.
-  // https://github.com/bitcoinjs/bitcoinjs-lib/issues/417
-  // Multisig addresses are defined as follows:
-  // base58(0x05 + [20-byte scripthash] + [4-byte checksum])
-  // For testnet, it's 0xC4 instead of 0x05, indeed.
-  try {
-      new bitcoin.address.fromBase58Check(address);
-  } catch (e) {
-      return false;
-  }
-  return true;
-}
-
 function proTipSubscription() {
     db.put('subscriptions', {
         amountFiat: $('#protip-amount-fiat').val(),
@@ -145,7 +133,8 @@ function proTipSubscription() {
     $('#protip-subscription-form').slideUp();
 }
 
-$(function() {
+$(document).ready(function() {
+
     if(!localStorage['proTipInstalled']) {
         window.location.replace("install.html");
     }
@@ -162,7 +151,10 @@ $(function() {
     $('#protip-amount-fiat').val(localStorage['defaultSubscriptionAmountFiat']);
 
     // A hack
-    $.validator.addMethod('validBitcoinAddress', function(value, element){return false;},'Invalid bitcoin address');
+    $.validator.addMethod('validBitcoinAddress', function() {
+        return false;
+    },'Invalid bitcoin address');
+
     $('#manualSubscriptionForm').validate({
         rules: {
             manualBitcoinAddress: {
@@ -198,6 +190,7 @@ $(function() {
         proTipSubscription();
         localStorage['showProTipSubscription'] = false;
     });
+
     allowExternalLinks();
     updateFiatCurrencyCode();
 

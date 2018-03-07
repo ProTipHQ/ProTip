@@ -1,6 +1,8 @@
-// ------------------
-// BLACKLISTED URLS CRUD
-// ------------------
+/* blacklist.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 function buildBlacklistSelector() {
     var select = document.getElementById("remove-from-blacklist");
 
@@ -62,13 +64,13 @@ function buildBlacklistedHostnameSelector() {
 
 function addToBlacklistedHostname() {
     var input = document.getElementById("add-blacklisted-hostnames");
-
+    var hostname
     try {
-        var hostname = new URL(input.value).hostname;
+        hostname = new URL(input.value).hostname;
     } catch (e) {
-        var hostname = input.value;
+        hostname = input.value;
     }
-    if (hostname) { //not empty string
+    if (hostname) {
         db.put('blacklistedhostnames', {
             hostname: hostname
         }).then(function() {
@@ -131,8 +133,7 @@ function removeFromBlacklistedBitcoinAddress() {
 }
 
 function validateURL(textval) {
-    var urlregex = new RegExp(
-        "^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+    var urlregex = new RegExp("^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
     return urlregex.test(textval);
 }
 

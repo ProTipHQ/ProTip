@@ -1,3 +1,8 @@
+/* popup.js
+ * ProTip 2015-2018
+ * License: GPL v3.0
+ */
+
 function buildPopupBrowsingTable(domId) {
     var tbody = $('#' + domId);
     tbody.empty();
@@ -7,7 +12,7 @@ function buildPopupBrowsingTable(domId) {
 
     // Remove subscriptions for daily browsing.
     db.values('subscriptions').done(function(records) {
-        for (var i in records) {
+        for (let i in records) {
             db.remove('sites', records[i].url);
         }
     });
@@ -17,11 +22,11 @@ function buildPopupBrowsingTable(domId) {
     db.values('sites').done(function(records) {
         localStorage['totalTime'] = 0;
         // it is possible to get a new site record which doesn't yet have a timeOnPage.
-        for (var i in records) {
+        for (let i in records) {
             if (records[i].timeOnPage) {
                 localStorage['totalTime'] = parseInt(localStorage['totalTime']) + parseInt(records[i].timeOnPage);
             }
-        };
+        }
     });
 
     db.from('sites').order('timeOnPage').reverse().list(10).done(function(records) {
@@ -46,7 +51,7 @@ function buildPopupRow(record) {
     return row;
 }
 
-function restartCountDown(){
+function restartCountDown() {
     var countDownObj = restartTheWeek();
     $('#days-till-end-of-week').html(countDownObj.daysRemaining);
     // TODO: had .effect on #days-till-end-of-week for 1000ms
@@ -81,12 +86,12 @@ function initPopupCurrentWeek() {
     }
 }
 
-function initBitcoinWallet(){
+function initBitcoinWallet() {
 
     wallet.restoreAddress().then(function() {},
         function() {
             return wallet.generateAddress();
-        }).then(function(address){
+        }).then(function() {
             updateBalance(wallet.getAddress());
         },
         function() {
@@ -131,21 +136,20 @@ function initBitcoinWallet(){
         });
     }
 
-    function setBudgetAmounts(){
-
-        var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
+    function setBudgetAmounts() {
+        //var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
         var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
         var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
         var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
 
         var weeklyTotalFiat = bitcoinFeeFiat + totalSubscriptionsFiat + incidentalTotalFiat;
-        // use standard money formattor
         $('#total-fiat-amount').html(parseFloat(weeklyTotalFiat).toFixed(2));
-    };
+    }
+
     setBudgetAmounts();
 }
 
-$(function() {
+$(document).ready(function() {
     if(!localStorage['proTipInstalled']) {
         localStorage['protip-popup-install'] = true;
         window.location.replace("install.html");
@@ -163,7 +167,7 @@ $(function() {
         $('#donate-now-reminder').show();
     }
 
-    var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
+    //var availableBalanceFiat = parseFloat(localStorage['availableBalanceFiat']);
     var bitcoinFeeFiat = parseFloat(localStorage['bitcoinFeeFiat']);
     var totalSubscriptionsFiat = parseFloat(localStorage['subscriptionTotalFiat']);
     var incidentalTotalFiat = parseFloat(localStorage['incidentalTotalFiat']);
@@ -172,7 +176,6 @@ $(function() {
     $('#weekly-spend-manual-pay-reminder-btn').html(parseFloat(weeklyTotalFiat).toFixed(2));
 
     $('#confirm-donate-now').click(function() {
-
         browser.browserAction.setBadgeText({
             text: ''
         });
@@ -180,13 +183,13 @@ $(function() {
         Promise.all([
             preferences.setCurrency(localStorage["fiatCurrencyCode"]),
         ]).then(function() {
-            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response){
+            paymentManager.payAll(localStorage['incidentalTotalFiat'], localStorage['subscriptionTotalFiat']).then(function(response) {
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();
                 $('#notice').html(response);
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');
-                if (response.trim() != 'Transaction Submitted'){
+                if (response.trim() != 'Transaction Submitted') {
                     $('#payment-error').html(response);
                     $('#payment-error').fadeIn().slideDown();
                     $('#confirm-donate-now-dialogue').fadeOut().slideUp();
@@ -199,25 +202,20 @@ $(function() {
                     $('#browsing-table').fadeOut();
                     $('#browsing-table').empty();
                 }
-            }, function(error){
+            }, function(error) {
+                // TODO something weird here as "error" is not used anywhere
+                // Code looks identical to how "response" is handled above
                 localStorage['weeklyAlarmReminder'] = false;
                 window.alarmManager.doToggleAlarm();
-                $('#notice').html(response);
+                $('#notice').html('Transaction submitted but had an error');
                 $('#notice-dialogue').fadeIn().slideDown();
                 $('#donate-now').button('reset');
-                if (response.trim() != 'Transaction Submitted'){
-                    $('#payment-error').html(response);
-                    $('#payment-error').fadeIn().slideDown();
-                    $('#confirm-donate-now-dialogue').fadeOut().slideUp();
-                    restartCountDown();
-                    alarmManager.doToggleAlarm();
-                    initPopupCurrentWeek();
-                } else {
-                    $('#transaction-submitted').html(response);
-                    $('#payment-error').fadeIn().slideDown();
-                    $('#browsing-table').fadeOut();
-                    $('#browsing-table').empty();
-                }
+                $('#payment-error').html(error);
+                $('#payment-error').fadeIn().slideDown();
+                $('#confirm-donate-now-dialogue').fadeOut().slideUp();
+                restartCountDown();
+                alarmManager.doToggleAlarm();
+                initPopupCurrentWeek();
             });
         });
     });
