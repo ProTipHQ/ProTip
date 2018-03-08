@@ -6,24 +6,22 @@
   </head>
   <body>
     {% include "navbar.html" %}
-    <div id="show-bitcoin-artists" style="display:none;overflow:hidden;" class="alert alert-info alert-dismissible fade in" role="alert">
-      <button type="button" id="show-bitcoin-artists-close" class="close" style="" data-dismiss="alert" aria-label="Close">
+    <div id="show-bitcoin-artists" class="alert alert-info alert-dismissible" role="alert">
+      <button type="button" id="show-bitcoin-artists-close" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">×</span>
       </button>
-      <span style="font-weight:bold;display:block;float:right;font-size:10px;padding-right:50px;">
-        [<a id="hideBitcoinArtists" href="" data-dismiss="alert">
-            Permanently Hide <span aria-hidden="true">×</span>
-          </a>]
-      </span>
+      <a id="hideBitcoinArtists" href="" data-dismiss="alert">
+          Permanently Hide <span aria-hidden="true">×</span>
+      </a>
       <div class="media">
         <div class="media-left">
           <a href="#">
-            <i class="fa fa-group" style="font-size:57px;"></i>
+            <i class="fa fa-group"></i>
           </a>
         </div>
         <div class="media-body">
           <h4 class="media-heading" id="top-aligned-media">
-            <a class="external-link" href="http://www.dancarlin.com/dc-donate/">Recommended Early Adopters:</a>
+            <a class="external-link" href="#top-aligned-media">Recommended Early Adopters:</a>
             <a class="anchorjs-link" href="#top-aligned-media"><span class="anchorjs-icon"></span></a>
           </h4>
           <p>
@@ -34,7 +32,6 @@
             <a class="external-link" href="https://www.youtube.com/channel/UCmSziBeGk4fQHdsfuJy5klw/videos">MasiosareOliver</a> |
             <a class="external-link" href="http://ananyaitsunique.blogspot.in/">Soumitra</a> |
             <a class="external-link" href="http://spelunk.in/">Pinguino</a> |
-            <a class="external-link" href="http://bitcorati.com/videogallery/rick-falkvinge-and-ancilla-tilia-on-ledger-wars-civil-liberties-and-more/">Bitcorati</a> |
             <a class="external-link" href="http://p2pconnects.us/2015/02/14/p2p-connects-us-episode-11-joyce-kim/">John Light</a> |
             <a class="external-link" href="https://pemersonwilliams.wordpress.com/">P Emerson</a> |
             <a class="external-link" href="https://soundcloud.com/pinkhousemusictribe">Infinite Radio - Pink House Music Tribe</a> |
@@ -45,46 +42,48 @@
       </div>
     </div>
     <div class="ios-subheading">
-      PAYMENT SCHEDULE
+      Payment Schedule
     </div>
     <div class="ios-section">
-      <div style="padding:7px;height:10px;">
-        <span id="donate-now-reminder" style="display:none;">
-          <div class="popover fade right in" data-trigger="focus" role="tooltip" id="popover411060" style="top: -23px; left: 241px; z-index:1; display: block;position:relative;">
+      <div>
+        <span id="donate-now-reminder">
+          <div class="popover fade right in" data-trigger="focus" role="tooltip" id="popover411060">
             <div class="arrow"></div>
-            <h3 class="popover-title" style="background-color:#9BDBFC;">Manual Reminder<a style="float:right;color:black;" id="dismiss-manual-reminder-popover" aria-hidden="true">×</a></h3>
+            <h3 class="popover-title">
+                Manual Reminder <a id="dismiss-manual-reminder-popover" aria-hidden="true">×</a>
+            </h3>
             <div class="popover-content">You asked to be reminded to manually donate 7 days ago.</div>
           </div>
         </span>
       </div>
-      <div id="successAlert" class="alert alert-success alert-dismissable"  style="display: none;">
+      <div id="successAlert" class="alert alert-success alert-dismissable d-none">
           <button id="successAlertClose" type="button" class="close">&times;</button>
           <p id="successAlertLabel">Success</p>
       </div>
-      <div id="unknownErrorAlert" class="alert alert-danger alert-dismissable"  style="display: none;">
+      <div id="unknownErrorAlert" class="alert alert-danger alert-dismissable d-none">
           <button id="unkownErrorAlertClose" type="button" class="close">&times;</button>
           <p id="unknownErrorAlertLabel">Unknown error</p>
       </div>
-      <button id="donate-now" style="margin-bottom:15px;" type="button" class="btn btn-success">
+      <button id="donate-now" type="button" class="btn btn-success">
         Donate Now &amp; Reset Timer (<span class="fiat-code"></span><span id="weekly-spend-manual-pay-reminder-btn"></span>)
       </button>
-      <div id="payment-history" style="border-radius:8px;display:inline;padding:7px;font-size:80%;position:relative;top:-5px;">
-          <a id="payment-history-link" target="_blank" style="text-decoration:inherit;" href="">Your Payment History...</a>
+      <div id="payment-history">
+          <a id="payment-history-link" target="_blank" href="">Your Payment History...</a>
       </div>
-      <div id="notice-dialogue" style="display:none;width:500px;" class="alert alert-info" role="alert">
+      <div id="notice-dialogue" class="alert alert-info" role="alert">
         <p id="notice"></p>
       </div>
-      <div id="insufficient-funds-dialogue" style="display:none;width:500px;" class="alert alert-warning alert-dismissible fade in" role="alert">
+      <div id="insufficient-funds-dialogue" class="alert alert-warning alert-dismissible d-none" role="alert">
         <p>
           Insufficient funds.
         </p>
       </div>
-      <div id="confirm-donate-now-dialogue" style="display:none;width:490px;" class="alert alert-info alert-dismissible fade in" role="alert">
+      <div id="confirm-donate-now-dialogue" class="alert alert-info alert-dismissible d-none" role="alert">
         <p>
-          You will be donating to all the websites listed in the table below.
+        You will be donating to all the websites listed in the table below.
         </p>
         <p>
-          You can quickly remove any websites from the list by clicking the <span class="glyphicon glyphicon-remove big-icon" style="color:#ff9500" aria-hidden="true"></span>.
+          You can quickly remove any websites from the list by clicking the <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>.
         </p>
         <p>
           All your previous web browsing data will be wiped clear.
@@ -94,17 +93,17 @@
           <button type="button" id="confirm-donate-cancel" class="btn btn-default">Cancel</button>
         </p>
       </div>
-      <div style="padding:7px;">
-        <input type="radio" id="manualRemind" value="manualRemind" name="remind-me" checked="checked" />
+      <div>
+        <input type="radio" id="manualRemind" value="manualRemind" name="remind-me" checked="checked">
         Remind me to Manually Donate in
-        <span class="label label-info" id="days-till-end-of-week" style="float: none;font-size:14px;border-radius:20px;">x</span>
+        <span class="label label-info" id="days-till-end-of-week">x</span>
         <span>days.</span>
       </div>
-      <div style="padding:7px;">
-        <input type="radio" id="automaticDonate" value="automaticDonate" name="remind-me" />
-        Automatically Donate <span id="date-end-of-week" style="font-weight:bold;">Loading...</span>.
+      <div>
+        <input type="radio" id="automaticDonate" value="automaticDonate" name="remind-me">
+        Automatically Donate <span id="date-end-of-week">Loading...</span>.
       </div>
-      <div style="padding:7px;">
+      <div>
         <button class="btn btn-xs btn-default" id="toggle-alarm">
           <span class="glyphicon glyphicon-bell"></span>
           Reset Weekly Timer
@@ -112,33 +111,33 @@
       </div>
   </div>
   <div class="ios-subheading">
-    WEEKLY BUDGET
+    Weekly Budget
   </div>
-    <div class="ios-section" style="overflow:hidden;">
-      <table id="budget-table" style="border-spacing: 17px;border-collapse: separate;float:left;">
+    <div class="ios-section">
+      <table id="budget-table" class="float-left">
         <tbody>
           <tr>
-            <td style="text-align:right;">
-              <span> Weekly Donations</span>
-            </td>
-            <td>
-              <span class="fiat-code"></span>
-              <input id="incidental-fiat-amount" style="width:77px;" class="amount-fiat" type="number" min="0.00" step="0.01"/>
-            </td>
-            <td></td>
+              <td class="text-right">
+                <span> Weekly Donations</span>
+              </td>
+              <td>
+                <span class="fiat-code"></span>
+                <input id="incidental-fiat-amount" class="amount-fiat" type="number" min="0.00" step="0.01"/>
+              </td>
+              <td></td>
           </tr>
           <tr>
-            <td colspan="3">
-              <hr style="margin-top:0px;margin-bottom:0px;" />
-            </td>
+              <td colspan="3">
+                  <hr>
+              </td>
           </tr>
           <tr>
-            <td style="text-align:right;">
+            <td class="text-right">
               Weekly Subscriptions
             </td>
             <td>
               <span class="fiat-code"></span>
-              <span id="subscription-fiat-amount" style="margin-left:7px;"></span>
+              <span id="subscription-fiat-amount"></span>
             </td>
             <td>
               <a href="subscriptions.html">Edit...</a>
@@ -150,15 +149,15 @@
             </td>
           </tr>
           <tr>
-            <td style="text-align:right;">
+            <td class="text-right">
               BTC Transaction fee
             </td>
-            <td style="">
+            <td>
               <span class="fiat-code"></span>
-              <span id="bitcoin-fee" style="margin-left:7px;"></span>
+              <span id="bitcoin-fee"></span>
             </td>
-            <td style="width:200px;">
-              <div style="font-size: 72%; color: #999;">
+            <td>
+              <div>
                   Please note the Bitcoin fee is fixed, but denominated in
                   Bitcoin, 0.0001 BTC. Shifting exchange rates
                   may affect the conversion into your local currency.
@@ -170,20 +169,20 @@
               <hr/>
             </td>
           </tr>
-          <tr style="border-top:solid #000 1px;">
-            <td style="text-align:right;">
+          <tr>
+            <td class="text-right">
               <strong>Weekly Total</strong>
             </td>
             <td>
               <span class="fiat-code"></span>
               <strong>
-                <span id="total-fiat-amount" style="margin-left:7px;"></span>
+                <span id="total-fiat-amount"></span>
               </strong>
             </td>
-            <td style="font-size:85%;width:230px;">
+            <td>
               (
                   Total Avail: <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ Loading... </span>
-                  ~ <span style="font-weight:bold;" id="balance-covers-weeks">x</span> wks.
+                  ~ <span id="balance-covers-weeks" class="font-weight-bold">x</span> wks.
               )
             </td>
           </tr>
@@ -193,52 +192,54 @@
           </tr>
         </tbody>
       </table>
-      <div class="panel panel-default" style="width:350px;float:left;">
-        <div class="panel-heading" style="text-align:center;">
+      <div class="panel panel-default" class="float-left">
+        <div class="panel-heading" class="text-center">
           <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
           Top-up your Bitcoin Wallet.
           <div>
-              <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ ... </span>
+              <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">
+                  ~ ...
+              </span>
           </div>
-          <div id="balance-pending-confirmation-container" class='alert alert-info' style="padding:2px;margin-bottom:0px;display:none;">
-            <small><span class="balance-pending-confirmation" id="balance-pending-confirmation">...</span> Pending Confirmation</small>
+          <div id="balance-pending-confirmation-container" class="alert alert-info d-none">
+            <span class="balance-pending-confirmation" id="balance-pending-confirmation">...</span> Pending Confirmation
           </div>
         </div>
         <div class="panel-body">
-          <div id="qrcode" style="text-align:center;"></div>
+          <div id="qrcode" class="text-center"></div>
           <h5 id="textAddress" class="text-center"></h5>
         </div>
-        <div class='alert alert-info' style="font-size:10px;margin-left:10px;margin-right:10px;">
+        <div class="alert alert-info">
           As a general security precaution, please limit your balance to small change.
         </div>
       </div>
     </div>
     <div class="ios-subheading">
-      WEEKLY BROWSING
+      Weekly Browsing
     </div>
-    <table class="table table-condensed" style="border-bottom:solid #ccc 1px;">
+    <table class="table table-condensed">
       <thead>
         <tr>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" class="text-center">
             <span class="glyphicon glyphicon-heart" aria-hidden="true" title="Subscribe"></span>
           </th>
-          <th scope="col" style="width:100%;">
-            <button style="margin-left:10px;" id="clear-data" type="button" class="btn btn-xs btn-danger" aria-label="Center Align">
+          <th scope="col">
+            <button id="clear-data" type="button" class="btn btn-xs btn-danger" aria-label="Center Align">
               <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
               Clear
             </button>
           </th>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" class="text-center">
             mins
           </th>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" class="text-center">
             <span class="fiat-code">USD</span>
           </th>
-          <th scope="col" style="text-align:center;">
+          <th scope="col" class="text-center">
             <span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#
           </th>
-          <th scope="col" style="width:88px;"></th>
-          <th scope="col" style="text-align:center;"></th>
+          <th scope="col"></th>
+          <th scope="col" class="text-center"></th>
         </tr>
       </thead>
       <tbody id="browsing-table">

@@ -5,18 +5,11 @@
   </head>
   <body>
     {% include "navbar.html" %}
-
-<!-- <div class="alert alert-success alert-dismissible" role="alert">
+    <!--
+    <div class="alert alert-success alert-dismissible" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-      <h5>
-        <span style="color:#ff3b30;">Coming Soon!</span>
-      </h5>
-      <h4>
-        Lightweight Content Passes
-      </h4>
-      </ol>
-        For Customers:
+      <h3>Coming Soon  Lightweight Content Passes</h3>
+      <h4>For Customers:</h5>
       <ol>
         <li>
           Quickly and securely pay small amounts directly to the artist
@@ -25,8 +18,7 @@
           No need to surrender your credit card, email or social media details
         </li>
       </ol>
-
-      For Artists:
+      <h4>For Artists</h4>
       <ol>
         <li>
           Perfect for ticket sales and commissions
@@ -39,43 +31,44 @@
         </li>
       </ol>
     </div>
- -->
-
-    <div class="ios-subheading">CREATE NEW PASS <span style="color:#ff3b30;">Planned Development</span></div>
+    -->
+    <div class="ios-subheading">
+        Create New Pass Planned Development
+    </div>
     <div class="ios-section">
       <form>
         <table>
           <tr>
-            <td style="text-align:right;width:170px;">
+            <td>
               <label for="exampleInputEmail1">Your Bitcoin Address</label>
             </td>
             <td>
-              <input type="text" id="manual-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e" disabled="disabled"></input>
+              <input type="text" id="manual-bitcoin-address" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e" disabled="disabled"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">Hidden File URL</label>
             </td>
             <td>
-              <input type="text" id="manual-label" style="width:300px;margin:5px;" placeholder="http://youraddress.com/file.html" disabled="disabled"></input>
+              <input type="text" id="manual-label" placeholder="http://youraddress.com/file.html" disabled="disabled"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">Your Name</label>
             </td>
             <td>
-              <input type="text" id="manual-label" disabled="disabled" style="width:300px;margin:5px;" placeholder="Nixie Pixel"></input>
+              <input type="text" id="manual-label" disabled="disabled" placeholder="Nixie Pixel"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">Price</label>
             </td>
             <td>
               <form class="form-inline">
-                <div class="form-group" style="margin-left:5px;">
+                <div class="form-group">
                   <div class="input-group">
                     <div class="input-group-addon">$</div>
                     <input type="text" disabled="disabled" class="form-control" id="exampleInputAmount" placeholder="Amount">
@@ -85,11 +78,11 @@
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
-              <label for="exampleInputPassword1">Processor </label>
+            <td class="text-right">
+              <label for="exampleInputPassword1">Processor</label>
             </td>
             <td>
-              <select id="fiat-currency-select" style="width:300px;margin-left:4px;" class="form-control">
+              <select id="fiat-currency-select" class="form-control">
                 <option value="USD">Self Hosted</option>
                 <option value="USD">Third Party</option>
               </select>
@@ -98,7 +91,7 @@
           <tr>
             <td></td>
             <td>
-              <p class="help-block" style="font-size:80%;max-width:500px;">
+              <p class="help-block">
                 Easy self hosting solutions are under development. For example, a Wordpress plugin.
               </p>
               <p>
@@ -109,20 +102,17 @@
         </table>
       </form>
       <hr/>
-
       <h4>Preview</h4>
       <div>
-        <img src="../assets/images/one_time_pass.png" style="width:560px" />
+        <img src="../assets/images/one_time_pass.png">
       </div>
-
       <h4>Embed this code</h4>
-      <textarea style="width:560px;height:150px;">
+      <textarea>
         <a class="lightweight-ticket" href="https://3rdpartyservice.com/Wa234s2" data-widget-id="577789487167705089"></a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.random.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","tesesr-wjs");</script>
       </textarea>
-
       <h4>Preview of Useage</h4>
-      <div style="text-align:left;margin-left:68px;">
+      <div>
         <img src="../assets/images/passes_screen_shot.jpg" />
       </div>
     </div>

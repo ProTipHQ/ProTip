@@ -3,22 +3,17 @@
     {% include "head.html" %}
     <script src="/js/install.js"></script>
   </head>
-  <body style="margin-top:0px;">
-
-    <h2 style="text-align:center;">
+  <body>
+    <h2 class="text-center">
       <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
       Quick Start
     </h2>
-
-    <label class="ios-subheading" style="margin-top:0px;">1. SET YOUR CURRENCY</label>
+    <label class="ios-subheading">1. SET YOUR CURRENCY</label>
     <div class="ios-section">
-      <select id="fiat-currency-select" style="width:100px;display:inline;" class="form-control">
-
+      <select id="fiat-currency-select" class="form-control d-inline">
       </select>
       <img class="ajax-loader" id="ajax-loader" src="../assets/images/ajax_loader.gif" />
     </div>
-
-
     <label class="ios-subheading">2. SAFELY STORE YOUR BITCOIN WALLET PRIVATE KEY</label>
     <div class="ios-section">
       <div class="bs-example" data-example-id="media-alignment">
@@ -29,13 +24,10 @@
             </p>
             <div id="private">
               <p>
-                This is your private key, <strong style="color:red;">save it somewhere safe and private</strong>.
+                This is your private key, save it somewhere safe and private.
               </p>
               <p>
-                <input type="text" class="form-group has-warning" id="private-key-input"
-                  style="width:450px;
-                        border-color: #F40B37;
-                        box-shadow: inset 0 1px 1px rgba(0,0,0,.075);" value="" />
+                <input type="text" class="form-group has-warning" id="private-key-input" value="" />
               </p>
             </div>
           </div>
@@ -45,57 +37,41 @@
             <h4 class="media-heading" id="middle-aligned-media">
               <strong>Or</strong> import existing private key:
             </h4>
-
             <p>
-              <div id="importPrivateKeyPasswordIncorrect" style="display:none;" class="alert alert-danger">
+              <div id="importPrivateKeyPasswordIncorrect" class="alert alert-danger d-none">
                   Your password is incorrect.
               </div>
-              <div id="importPrivateKeyBadPrivateKey" style="display:none;" class="alert alert-danger">
+              <div id="importPrivateKeyBadPrivateKey" class="alert alert-danger d-none">
                   The private key is invalid.
               </div>
-              <div id="successAlertLabel" style="display:none;" class="alert alert-success">
+              <div id="successAlertLabel" class="alert alert-success d-none">
                 Success
               </div>
             <p>
-
-
-            <!-- <form class="form-inline">
-              <div class="form-group">
-                <div class="input-group">
-                  <input type="text" class="form-control" style="width:450px" id="importPrivateKeyPrivateKey" placeholder="Private Key">
-                </div>
-              </div>
-              <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import</button>
-            </form> -->
-
-
             <p>
-              <div id="importPrivateKeyPasswordIncorrect" style="display:none;" class="alert alert-danger">
+              <div id="importPrivateKeyPasswordIncorrect" class="alert alert-danger d-none">
                   Your password is incorrect.
               </div>
-              <div id="importPrivateKeyBadPrivateKey" style="display:none;" class="alert alert-danger">
+              <div id="importPrivateKeyBadPrivateKey" class="alert alert-danger d-none">
                   The private key is invalid.
               </div>
-              <div id="successAlertLabel" style="display:none;" class="alert alert-success">
+              <div id="successAlertLabel" class="alert alert-success d-none">
                 Success
               </div>
-
               <div class="form-group">
-                  <input type="text" class="form-control" style="width:450px; display:inline;" id="importPrivateKeyPrivateKey" placeholder="Private Key">
-                  <button id="importPrivateKeyConfirm" type="button" style="display:inline" class="btn btn-primary">Import</button>
+                  <input type="text" class="form-control d-inline" id="importPrivateKeyPrivateKey" placeholder="Private Key">
+                  <button id="importPrivateKeyConfirm" type="button" class="btn btn-primary">Import</button>
               </div>
             </p>
           </div>
         </div>
       </div>
     </div>
-
-    <div style="text-align:right;padding:20px;">
+    <div>
       <a id="launch" class="btn btn-lg btn-success float-right">
         Start ProTip
         <span class="glyphicon glyphicon-chevron-right big-icon" aria-hidden="true"></span>
       </a>
     </div>
-
   </body>
 </html>

@@ -6,49 +6,34 @@
   </head>
   <body>
     {% include "navbar.html" %}
-
     <label class="ios-subheading">
-      CURRENCY
+      Currency
     </label>
     <div class="ios-section">
-      <select id="fiat-currency-select" style="width:100px;display:inline;" class="form-control">
-
+      <select id="fiat-currency-select" class="form-control">
       </select>
-      <img class="ajax-loader" id="ajax-loader" src="../assets/images/ajax_loader.gif" />
+      <img class="ajax-loader" id="ajax-loader" src="../assets/images/ajax_loader.gif"/>
     </div>
-
-
     <label class="ios-subheading">
-      DEFAULT SUBSCRIPTION AMOUNT
+      Default Subscription Amount
     </label>
     <div class="ios-section">
       <span class="fiat-code">USD</span>
-      <input type="number" id="default-subscription-amount-fiat" step="0.05" min="0.1" style="width:80px;margin:5px;"></input>
+      <input type="number" id="default-subscription-amount-fiat" step="0.05" min="0.1"></input>
     </div>
-
-    <!-- <label class="ios-subheading">
-      RESET TO DEFAULT OPTIONS
-    </label>
-    <div class="ios-section">
-        <a class="btn btn-warning" id="reset-to-default-options">Reset to Default Options</a>
-    </div> -->
-
     <label class="ios-subheading">
-      EXAMPLE METATAG
+      Example Metatag
     </label>
     <div class="ios-section">
-      <textarea id="example-metatag" style="width:400px;">
-
+      <textarea id="example-metatag">
       </textarea>
     </div>
-
     <label class="ios-subheading">
-      CONSOLE LOG
+      Console Log
     </label>
     <div class="ios-section">
-      <textarea id="console-log" style="width:500px; height:200px;"></textarea>
+      <textarea id="console-log"></textarea>
       <button id="clear-log" class="btn btn-xs btn-warning">Clear Log</button>
     </div>
-
   </body>
 </html>

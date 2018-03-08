@@ -6,21 +6,20 @@
   </head>
   <body>
     {% include "navbar.html" %}
-
     <label class="ios-subheading">
-      SUBSCRIPTIONS
+      Subscriptions
     </label>
-    <span id="subscription-total-amount-container" class="label label-info" style="font-size:11px;margin-left:10px;">
+    <span id="subscription-total-amount-container" class="label label-info">
       Total <span id="subscription-total-amount">x</span> <span class="fiat-code"></span> weekly
     </span>
-    <div class="ios-section" style="padding: 0px;">
+    <div class="ios-section">
       <table class="table table-condensed" id="subscription-table">
         <thead>
           <tr>
-            <th scope="col" style="text-align:center;">
+            <th scope="col" class="text-center">
               <span class="glyphicon glyphicon-heart" aria-hidden="true" title="Subscribe"></span>
             </th>
-            <th scope="col" style="width:100%;">Label</th>
+            <th scope="col">Label</th>
             <th scope="col"><span class="fiat-code">USD</span></th>
             <th scope="col"><span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#</th>
           </tr>
@@ -29,41 +28,41 @@
         </tbody>
       </table>
     </div>
-
     <label class="ios-subheading">MANUAL SUBSCRIPTION</label>
     <div class="ios-section">
     <form class="" name="manualSubscriptionForm" id="manualSubscriptionForm" method="get" action="" novalidate="novalidate">
         <table>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputEmail1">Address</label>
             </td>
             <td>
-              <input type="text" required="" name="manualBitcoinAddress" id="manualBitcoinAddress" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e"></input>
+              <input type="text" required="" name="manualBitcoinAddress" id="manualBitcoinAddress" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="amount">Amount </label>
             </td>
             <td>
-              <input type="number" required="" name="amount" id="manual-amount-fiat" min="0.01" step="0.01" style="width:64px;margin:5px;" placeholder="0.14"> <span class="fiat-code">USD</span> weekly <label id="manual-amount-fiat-error" class="error" for="manual-amount-fiat"></label>
+              <input type="number" required="" name="amount" id="manual-amount-fiat" min="0.01" step="0.01" placeholder="0.14">
+              <span class="fiat-code">USD</span> weekly <label id="manual-amount-fiat-error" class="error" for="manual-amount-fiat"></label>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="manual-label">Label</label>
             </td>
             <td>
-              <input type="text" id="manual-label" name="manual-label" required style="width:200px;margin:5px;" placeholder="Jane Citizen"></input>
+              <input type="text" id="manual-label" name="manual-label" required placeholder="Jane Citizen"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">URL</label>
             </td>
             <td>
-              <input type="url" name="manual-url" id="manual-url" required style="width:200px;margin:5px;" placeholder="http://example.com"></input>
+              <input type="url" name="manual-url" id="manual-url" required placeholder="http://example.com"></input>
             </td>
           </tr>
           <tr>
@@ -75,13 +74,9 @@
         </table>
       </form>
     </div>
-
-
-    <div id="protip-subscription-form" style="display:none;overflow:hidden;margin-top:40px;" class="alert alert-info alert-dismissible fade in" role="alert">
-
-      <button type="button" id="show-protip-subscription-close" class="close" style="" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-
-      <span style="font-weight:bold;display:block;float:right;font-size:10px;padding-right:50px;">
+    <div id="protip-subscription-form" class="alert alert-info alert-dismissible d-none" role="alert">
+      <button type="button" id="show-protip-subscription-close" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+      <span>
         [
           <a id="hideProTipSubscription" href="" data-dismiss="alert">
             Permanently Hide
@@ -89,43 +84,41 @@
           </a>
         ]
       </span>
-
       <h4>
         Please consider supporting ProTip's ongoing development with a weekly subscription.
       </h4>
-
       <form id="">
         <table>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputEmail1">Address</label>
             </td>
             <td>
-              <input type="text" id="protip-bitcoin-address" style="width:350px;margin:5px;" placeholder="1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF" value="1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF"></input>
+              <input type="text" id="protip-bitcoin-address" placeholder="1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF" value="1ProTip9x3uoqKDJeMQJdQUCQawDLauNiF"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">Amount </label>
             </td>
             <td>
-              <input type="number" id="protip-amount-fiat" min="0.01" step="0.01" style="width:64px;margin:5px;" placeholder="0.14" value="0.25"> <span class="fiat-code">USD</span> weekly
+              <input type="number" id="protip-amount-fiat" min="0.01" step="0.01" placeholder="0.14" value="0.25"> <span class="fiat-code">USD</span> weekly
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">Label</label>
             </td>
             <td>
-              <input type="text" id="protip-label" value="ProTip" style="width:200px;margin:5px;" placeholder="Jane Citizen"></input>
+              <input type="text" id="protip-label" value="ProTip" placeholder="Jane Citizen"></input>
             </td>
           </tr>
           <tr>
-            <td style="text-align:right">
+            <td class="text-right">
               <label for="exampleInputPassword1">URL</label>
             </td>
             <td>
-              <input type="text" value="my.protip.is" id="protip-url" style="width:200px;margin:5px;" placeholder="http://example.com"></input>
+              <input type="text" value="my.protip.is" id="protip-url" placeholder="http://example.com"></input>
             </td>
           </tr>
           <tr>
@@ -136,11 +129,6 @@
           </tr>
         </table>
       </form>
-
-
     </div>
-
-
-
   </body>
 </html>

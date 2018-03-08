@@ -7,42 +7,42 @@
   <body>
     {% include "navbar.html" %}
     <div class="ios-subheading">
-      BALANCE
+      Balance
     </div>
     <div class="ios-section">
-      <span style="font-size:20px;" id="head-line-balance">X BTC</span>
+      <span id="head-line-balance">X BTC</span>
       (<span class="btc-balance-to-fiat" id="btc-balance-to-fiat">~ Loading... </span>)
     </div>
     <div class="ios-subheading">
-      RECEIVE
+      Receive
     </div>
     <div class="ios-section">
-        <div id="qrcode" style="text-align:center;"></div>
+        <div id="qrcode" class="text-center"></div>
         <h5 id="textAddress" class="text-center"></h5>
     </div>
     <div class="ios-subheading">
-      SEND
+      Send
     </div>
     <div class="ios-section">
       <div id="send">
           <div class="panel-body">
-              <div id="successAlert" class="alert alert-success alert-dismissable"  style="display: none;">
+              <div id="successAlert" class="alert alert-success alert-dismissable d-none">
                   <button id="successAlertClose" type="button" class="close">&times;</button>
                   <p id="successAlertLabel">Success</p>
               </div>
-              <div id="unknownErrorAlert" class="alert alert-danger alert-dismissable"  style="display: none;">
+              <div id="unknownErrorAlert" class="alert alert-danger alert-dismissable d-none">
                   <button id="unkownErrorAlertClose" type="button" class="close">&times;</button>
                   <p id="unknownErrorAlertLabel">Unknown error</p>
               </div>
               <div class="form-group">
                   <label for="sendAddress">To Address:</label>
-                  <div id="addressAlert" class="alert alert-danger" style="display: none;">
+                  <div id="addressAlert" class="alert alert-danger d-none">
                       Not a valid address.
                   </div>
                   <input type="text" class="form-control" id="sendAddress" value="">
               </div>
               <label id="amountLabel" for="amount">Amount:</label>
-              <div id="amountAlert" class="alert alert-danger" style="display: none;">
+              <div id="amountAlert" class="alert alert-danger d-none">
                   Amount must be greater than zero and less than your balance.
               </div>
               <div class="input-group">
@@ -56,26 +56,26 @@
           <div>
               <table>
                     <tr>
-                        <td style="text-align:right;">
+                        <td class="text-right">
                             Balance:
                         </td>
                         <td>
-                            <span id="balance" style="padding-left:5px;">0 BTC</span>
+                            <span id="balance">0 BTC</span>
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;">
+                        <td class="text-right">
                             Fee:
                         </td>
-                        <td style="padding-left:5px;">
+                        <td>
                             <span id="bitcoin-fee">0.0001 BTC</span>
                         </td>
                     </tr>
                     <tr>
-                        <td style="text-align:right;">
+                        <td class="text-right">
                             Balance Available:
                         </td>
-                        <td style="padding-left:5px;">
+                        <td>
                             <span id="max-available-balance">0</span>
                         </td>
                     </tr>
@@ -84,7 +84,7 @@
       </div>
     </div>
     <div class="ios-subheading">
-      OPTIONS
+      Options
     </div>
     <div class="ios-section" id="wallet-option-links">
       <button type="button" id="setUnits" class="btn btn-primary" data-toggle="modal" data-target="#setUnitsModal">

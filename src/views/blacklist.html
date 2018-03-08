@@ -4,63 +4,49 @@
     {% include "head.html" %}
     <script src="/js/blacklist.js"></script>
 </head>
-
 <body>
     {% include "navbar.html" %}
-
     <label class="ios-subheading">IGNORED URL</label>
-    <div style="background-color:#fff;
-                padding:10px;
-                border-bottom: solid #ccc 1px;
-                margin-bottom:10px;">
+    <div>
         <div class="ios-element-divider">
-            <input type="text" id="add-to-blacklist" style="width:435px;margin:5px;" placeholder="http://example.com"></input>
+            <input type="text" id="add-to-blacklist" placeholder="http://example.com"></input>
             <button class="btn btn-primary btn-xs" id="add-selected-btn">Add</button>
         </div>
-
-        <select style="width:434px;margin:5px;" id="remove-from-blacklist" MULTIPLE size="10">
+        <select id="remove-from-blacklist" MULTIPLE size="10">
         </select>
         <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-btn">
             Remove Selected
         </button>
     </div>
-
-
-    <label class="ios-subheading">IGNORED DOMAINS</label>
+    <label class="ios-subheading">Ignored Domains</label>
     <div class="ios-section">
         <div class="ios-element-divider">
-            <input type="text" id="add-blacklisted-hostnames" style="width:200px;margin:5px;" placeholder="example.com">
+            <input type="text" id="add-blacklisted-hostnames" placeholder="example.com">
             </input>
             <button class="btn btn-primary btn-xs" id="add-selected-blacklisted-hostnames-btn">
                 Add
             </button>
         </div>
-
-        <select style="width:200px;margin:5px;" id="remove-from-blacklisted-hostname" MULTIPLE size="10">
+        <select id="remove-from-blacklisted-hostname" MULTIPLE size="10">
         </select>
         <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-blacklisted-hostnames-btn">
             Remove Selected
         </button>
     </div>
-
-
-    <label class="ios-subheading">IGNORED BITCOIN ADDRESSES</label>
+    <label class="ios-subheading">Ignored Bitcoin Addresses</label>
     <div class="ios-section">
         <div class="ios-element-divider">
-            <input type="text" id="add-blacklisted-bitcoin-address" style="width:350px;margin:5px;" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e">
+            <input type="text" id="add-blacklisted-bitcoin-address" placeholder="13U4gmroMmFwHAwd2Sukn4fE2WvHG6hP8e">
             </input>
             <button class="btn btn-primary btn-xs" id="add-blacklisted-bitcoin-address-btn">
                 Add
             </button>
         </div>
-
-        <select style="width:350px;margin:5px;" id="remove-from-blacklisted-bitcoin-addresses" MULTIPLE size="10">
+        <select id="remove-from-blacklisted-bitcoin-addresses" MULTIPLE size="10">
         </select>
         <button class="btn btn-primary btn-xs remove-button-select" id="remove-selected-blacklisted-bitcoin-addresses-btn">
             Remove Selected
         </button>
     </div>
-
 </body>
-
 </html>
