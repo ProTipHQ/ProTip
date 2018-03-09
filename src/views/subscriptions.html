@@ -2,7 +2,6 @@
 <!DOCTYPE html>
   <head>
     {% include "head.html" %}
-    <script src="/js/subscriptions.js"></script>
   </head>
   <body>
     {% include "navbar.html" %}
@@ -17,18 +16,18 @@
         <thead>
           <tr>
             <th scope="col" class="text-center">
-              <span class="glyphicon glyphicon-heart" aria-hidden="true" title="Subscribe"></span>
+              <i class="fa fa-heart-o" aria-hidden="true" title="Subscribe"></i>
             </th>
             <th scope="col">Label</th>
             <th scope="col"><span class="fiat-code">USD</span></th>
-            <th scope="col"><span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#</th>
+            <th scope="col"><i class="fa fa-bitcoin" aria-hidden="true"></i>#</th>
           </tr>
         </thead>
         <tbody id="subscription-tbody">
         </tbody>
       </table>
     </div>
-    <label class="ios-subheading">MANUAL SUBSCRIPTION</label>
+    <label class="ios-subheading">Manual Subscription</label>
     <div class="ios-section">
     <form class="" name="manualSubscriptionForm" id="manualSubscriptionForm" method="get" action="" novalidate="novalidate">
         <table>
@@ -42,7 +41,7 @@
           </tr>
           <tr>
             <td class="text-right">
-              <label for="amount">Amount </label>
+              <label for="amount">Amount</label>
             </td>
             <td>
               <input type="number" required="" name="amount" id="manual-amount-fiat" min="0.01" step="0.01" placeholder="0.14">
@@ -74,20 +73,19 @@
         </table>
       </form>
     </div>
-    <div id="protip-subscription-form" class="alert alert-info alert-dismissible d-none" role="alert">
-      <button type="button" id="show-protip-subscription-close" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-      <span>
-        [
-          <a id="hideProTipSubscription" href="" data-dismiss="alert">
-            Permanently Hide
-            <span aria-hidden="true">×</span>
-          </a>
-        ]
-      </span>
+    <div id="protip-subscription-form" class="alert alert-info alert-dismissible" role="alert">
+      <button type="button" id="show-protip-subscription-close" class="close" data-dismiss="alert" aria-label="Close">
+        Close
+        <i class="fa fa-close" aria-hidden="true"></i>
+      </button>
+      <button type="button" id="hideProTipSubscription" class="close" data-dismiss="alert" aria-label="Permanently Hide">
+        Permanently Hide
+        <i class="fa fa-close" aria-hidden="true"></i>
+      </button>
       <h4>
         Please consider supporting ProTip's ongoing development with a weekly subscription.
       </h4>
-      <form id="">
+      <form id="" class="form">
         <table>
           <tr>
             <td class="text-right">
@@ -130,5 +128,7 @@
         </table>
       </form>
     </div>
+    {% include "scripts.html" %}
+    <script src="/js/subscriptions.js"></script>
   </body>
 </html>

@@ -2,16 +2,16 @@
 <!DOCTYPE html>
   <head>
     {% include "head.html" %}
-    <script src="/js/home.js"></script>
   </head>
   <body>
     {% include "navbar.html" %}
     <div id="show-bitcoin-artists" class="alert alert-info alert-dismissible" role="alert">
       <button type="button" id="show-bitcoin-artists-close" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">×</span>
+          Close <i class="fa fa-close" aria-hidden="true"></i>
       </button>
-      <a id="hideBitcoinArtists" href="" data-dismiss="alert">
-          Permanently Hide <span aria-hidden="true">×</span>
+      <a id="hideBitcoinArtists" href="#" data-dismiss="alert">
+          Permanently Hide
+          <i class="fa fa-close" aria-hidden="true"></i>
       </a>
       <div class="media">
         <div class="media-left">
@@ -65,13 +65,14 @@
           <p id="unknownErrorAlertLabel">Unknown error</p>
       </div>
       <button id="donate-now" type="button" class="btn btn-success">
-        Donate Now &amp; Reset Timer (<span class="fiat-code"></span><span id="weekly-spend-manual-pay-reminder-btn"></span>)
+          <i class="fa fa-heart-o"></i>
+          Donate Now &amp; Reset Timer (<span class="fiat-code"></span><span id="weekly-spend-manual-pay-reminder-btn"></span>)
       </button>
       <div id="payment-history">
           <a id="payment-history-link" target="_blank" href="">Your Payment History...</a>
       </div>
-      <div id="notice-dialogue" class="alert alert-info" role="alert">
-        <p id="notice"></p>
+  <div id="notice-dialogue" class="alert alert-info" role="alert">
+    <p id="notice"></p>
       </div>
       <div id="insufficient-funds-dialogue" class="alert alert-warning alert-dismissible d-none" role="alert">
         <p>
@@ -83,7 +84,8 @@
         You will be donating to all the websites listed in the table below.
         </p>
         <p>
-          You can quickly remove any websites from the list by clicking the <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>.
+          You can quickly remove any websites from the list by clicking the
+          <i class="fa fa-remove" aria-hidden="true"></i>.
         </p>
         <p>
           All your previous web browsing data will be wiped clear.
@@ -105,7 +107,7 @@
       </div>
       <div>
         <button class="btn btn-xs btn-default" id="toggle-alarm">
-          <span class="glyphicon glyphicon-bell"></span>
+          <i class="fa fa-bell"></i>
           Reset Weekly Timer
         </button>
       </div>
@@ -194,7 +196,7 @@
       </table>
       <div class="panel panel-default" class="float-left">
         <div class="panel-heading" class="text-center">
-          <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
+          <i class="fa fa-piggy-bank big-icon" aria-hidden="true"></i>
           Top-up your Bitcoin Wallet.
           <div>
               <span class="btc-balance-to-fiat" id="btc-balance-to-fiat">
@@ -221,11 +223,11 @@
       <thead>
         <tr>
           <th scope="col" class="text-center">
-            <span class="glyphicon glyphicon-heart" aria-hidden="true" title="Subscribe"></span>
+            <i class="fa fa-heart" aria-hidden="true" title="Subscribe"></i>
           </th>
           <th scope="col">
             <button id="clear-data" type="button" class="btn btn-xs btn-danger" aria-label="Center Align">
-              <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+              <i class="fa fa-refresh" aria-hidden="true"></i>
               Clear
             </button>
           </th>
@@ -236,7 +238,7 @@
             <span class="fiat-code">USD</span>
           </th>
           <th scope="col" class="text-center">
-            <span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#
+            <i class="fa fa-bitcoin" aria-hidden="true"></i>#
           </th>
           <th scope="col"></th>
           <th scope="col" class="text-center"></th>
@@ -245,5 +247,7 @@
       <tbody id="browsing-table">
       </tbody>
     </table>
+    {% include "scripts.html" %}
+    <script src="/js/home.js"></script>
   </body>
 </html>

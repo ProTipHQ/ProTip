@@ -1,20 +1,24 @@
 <!DOCTYPE html>
   <head>
     {% include "head.html" %}
-    <script src="/js/popup.js"></script>
   </head>
-  <body>
+  <body class="popup">
     <!-- *** The first link on the popup automatically catches
     a focus and is highlighted, which looks a little strange.
     Using a dummy empty link to hack around this default
     behaviour. *** -->
     <a href=""></a>
     <!-- ************************************* -->
+    <h1 class="text-left">
+        <img src="/images/heart48x48.png" width="24" height="24" class="d-inline-block align-middle mr-2" alt="ProTip">
+        <i class="fa fa-heart-" aria-hidden="true"></i>
+        ProTip
+    </h1>
     <div>
       <div id="reminder-info-container"></div>
       <div class="float-right">
-        <a class="external-link" href="redirect.html">
-          <span class="glyphicon glyphicon-new-window"></span>
+        <a class="external-link" href="home.html">
+          <i class="fa fa-new-window"></i>
           Full Screen...
         </a>
       </div>
@@ -61,7 +65,7 @@
       <thead>
         <tr>
           <th scope="col" class="text-center">
-            <span class="glyphicon glyphicon-heart text-success" aria-hidden="true" title="Subscribe"></span>
+            <i class="fa fa-heart-o text-success" aria-hidden="true"></i>
             Subscribe
           </th>
           <th scope="col">
@@ -70,7 +74,7 @@
             <span class="fiat-code">USD</span>
           </th>
           <th scope="col" class="text-center align-middle">
-            <span class="glyphicon glyphicon-bitcoin" aria-hidden="true"></span>#
+            <i class="fa fa-bitcoin" aria-hidden="true"></i>#
           </th>
           <th scope="col" class="text-center align-middle">
             Ignore
@@ -84,5 +88,7 @@
       Weekly spend: <span class="fiat-code"></span><strong><span id="total-fiat-amount"></span></strong>
       (Total Avail: </span><span id="btc-balance-to-fiat">~ Loading... </span>)
     </div>
+    {% include "scripts.html" %}
+    <script src="/js/popup.js"></script>
   </body>
 </html>

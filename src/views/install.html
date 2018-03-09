@@ -1,20 +1,21 @@
 <!DOCTYPE html>
   <head>
     {% include "head.html" %}
-    <script src="/js/install.js"></script>
   </head>
-  <body>
-    <h2 class="text-center">
-      <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
-      Quick Start
-    </h2>
-    <label class="ios-subheading">1. SET YOUR CURRENCY</label>
+  <body class="install">
+    <div class="container">
+      <h1 class="text-center">
+        <img src="/images/heart48x48.png" width="36" height="36" class="d-inline-block align-middle mr-2" alt="ProTip">
+        <i class="fa fa-heart-" aria-hidden="true"></i>
+        ProTip Setup
+    </h1>
+    <h3>1. Set your currency</h3>
     <div class="ios-section">
-      <select id="fiat-currency-select" class="form-control d-inline">
+      <select id="fiat-currency-select" class="form-control">
       </select>
-      <img class="ajax-loader" id="ajax-loader" src="../assets/images/ajax_loader.gif" />
+      <img class="ajax-loader" id="ajax-loader" src="/images/ajax_loader.gif">
     </div>
-    <label class="ios-subheading">2. SAFELY STORE YOUR BITCOIN WALLET PRIVATE KEY</label>
+    <h3>2. Safely store your bitcoin wallet private key</h3>
     <div class="ios-section">
       <div class="bs-example" data-example-id="media-alignment">
         <div class="media">
@@ -26,9 +27,9 @@
               <p>
                 This is your private key, save it somewhere safe and private.
               </p>
-              <p>
-                <input type="text" class="form-group has-warning" id="private-key-input" value="" />
-              </p>
+              <div class="form-group">
+                <input type="text" class="form-control" id="private-key-input" value="">
+              </div>
             </div>
           </div>
         </div>
@@ -70,8 +71,11 @@
     <div>
       <a id="launch" class="btn btn-lg btn-success float-right">
         Start ProTip
-        <span class="glyphicon glyphicon-chevron-right big-icon" aria-hidden="true"></span>
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </a>
     </div>
+    </div>
+    {% include "scripts.html" %}
+    <script src="/js/install.js"></script>
   </body>
 </html>

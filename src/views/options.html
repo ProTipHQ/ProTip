@@ -2,7 +2,6 @@
 <!DOCTYPE html>
   <head>
     {% include "head.html" %}
-    <script src="/js/options.js"></script>
   </head>
   <body>
     {% include "navbar.html" %}
@@ -35,5 +34,7 @@
       <textarea id="console-log"></textarea>
       <button id="clear-log" class="btn btn-xs btn-warning">Clear Log</button>
     </div>
+    {% include "scripts.html" %}
+    <script src="/js/options.js"></script>
   </body>
 </html>

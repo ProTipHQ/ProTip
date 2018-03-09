@@ -2,7 +2,6 @@
 <!DOCTYPE html>
   <head>
       {% include "head.html" %}
-      <script src="/js/wallet.js"></script>
   </head>
   <body>
     {% include "navbar.html" %}
@@ -258,7 +257,7 @@
                         Cancel
                     </button>
                     <button id="showPrivateKeyConfirm" type="button" class="btn btn-primary">
-                        Show Private Key&nbsp;<span class="glyphicon glyphicon-qrcode"></span>
+                        Show Private Key&nbsp; <i class="fa fa-qrcode" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -330,6 +329,7 @@
             </div>
         </div>
     </div>
-
+    {% include "scripts.html" %}
+    <script src="/js/wallet.js"></script>
   </body>
 </html>

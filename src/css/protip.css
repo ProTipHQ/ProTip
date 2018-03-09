@@ -4,9 +4,12 @@
  */
 
 body {
-  background-color: rgb(238, 238, 243);
-  width:100%;
-  min-width:580px;
+    padding-top: 72px;
+}
+
+body.install,
+body.popup {
+    padding-top: 1.5rem;
 }
 
 .external-link {
@@ -14,43 +17,9 @@ body {
   word-break: break-word;
 }
 
-.menu-label {
-  font-size: 67%;
-  font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
-  text-align: center;
-}
-.menu-icon {
+li.nav-item i.fa {
   font-size: 150%;
   text-align:center;
-}
-
-#menu-pass-icon {
-  width: 27px;
-  height: 19px;
-  margin-left: 17px;
-  margin-top: 3px;
-  background-image: url('../images/pass_icon_default2.png');
-}
-
-#menu-pass-icon-active {
-  width: 27px;
-  height: 19px;
-  margin-left: 17px;
-  margin-top: 3px;
-  background-image: url('../images/pass_icon_active2.png');
-}
-
-#menu-pass-icon:hover {
-  width: 27px;
-  height: 19px;
-  margin-left: 17px;
-  margin-top: 3px;
-  background-image: url('../images/pass_icon_active2.png');
-}
-
-.nav-non-responsive {
-  padding-left: 0px;
-  margin-left: 0px;
 }
 
 #full-screen-link {
@@ -71,24 +40,6 @@ body {
   vertical-align: middle;
 }
 
-.navbar-default .navbar-nav > li > a {
-  padding: 8px 0 4px 0;
-}
-.navbar-nav > li {
-  width: 64px;
-}
-
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:focus,
-.navbar-default .navbar-nav > .active > a:hover {
-  color: #007aff;
-  background-color: transparent;
-}
-
-.navbar-default .navbar-nav > li > a:hover {
-  color: #007aff;
-}
-
 .amount-fiat {
   width:65px;
 }
@@ -104,7 +55,7 @@ body {
   margin-bottom:4px;
   color: #8B8B8B;
   font-weight: normal;
-  font-size: 84%;
+  font-size: 100%;
 }
 
 .ios-red        { color: #ff3b30; }
@@ -129,6 +80,12 @@ body {
   border-bottom: solid #eee 1px;
   margin-bottom: 7px;
   padding-bottom: 7px;
+}
+
+.ios-subheading-within-panel {
+  position: relative;
+  top: -10px;
+  font-size: 140%;
 }
 
 .btn-remove {
@@ -200,12 +157,6 @@ label {
 .new-password-box {
   border: 1px #ddd solid;
   display:none;
-}
-
-.ios-subheading-within-panel {
-  position: relative;
-  top: -10px;
-  font-size: 140%;
 }
 
 #budget-table > tbody > tr > td > hr {

@@ -1,75 +1,58 @@
-<nav class="navbar navbar-default navbar-fixed-top">
-  <div class="container nav-non-responsive">
-      <a class="navbar-brand" href="/views/home.html">
-        <img src="/images/heart48x48.png" width="30" height="30" class="d-inline-block align-top" alt="">
-          ProTip
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse"
-        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-      </button>
-      <div id="navbar" class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li class="nav-item {% if page.name == "home" %}active{% endif %}">
-          <a href="home.html">
-            <div class="menu-icon">
-              <span class="glyphicon glyphicon-home big-icon" aria-hidden="true"></span>
-            </div>
-            <div class="menu-label">Home</div>
-          </a>
-        </li>
-        <li class="nav-item{% if page.name == "subscriptions" %} active{% endif %}">
-          <a id="subscriptions" href="subscriptions.html">
-            <div class="menu-icon">
-                <i class="fa fa-btc" aria-hidden="true"></i>
-                <span class="fa fa-heart-o" aria-hidden="true"></span>
-            </div>
-            <div class="menu-label">Subscriptions</div>
-          </a>
-        </li>
-        <li class="nav-item{% if page.name == "wallet" %} active{% endif %}">
-          <a href="wallet.html">
-            <div class="menu-icon">
-              <span class="glyphicon glyphicon-piggy-bank big-icon" aria-hidden="true"></span>
-            </div>
-            <div class="menu-label">
-              Wallet
-            </div>
-          </a>
-        </li>
-        <li class="nav-item{% if page.name == "blacklist" %} active{% endif %}">
-          <a id="blacklist" href="blacklist.html">
-            <div class="menu-icon">
-              <span class="glyphicon glyphicon-remove big-icon" aria-hidden="true"></span>
-            </div>
-             <div class="menu-label">Ignore</div>
-          </a>
-        </li>
-        <li class="nav-item{% if page.name == "options" %} active{% endif %}">
-          <a href="options.html">
-            <div class="menu-icon">
-              <span class="glyphicon glyphicon-cog big-icon" aria-hidden="true"></span>
-            </div>
-            <div class="menu-label">Options</div>
-          </a>
-        </li>
-        <li class="nav-item{% if page.name == "recommend" %} active{% endif %}">
-          <a href="recommend.html">
-            <div class="menu-icon">
-              <i class="fa fa-group"></i>
-            </div>
-            <div class="menu-label">Recommended</div>
-          </a>
-        </li>
-        <!--
-        <li {% if page.name == "passes" %}active{% endif %}">
-          <a id="paywalls" href="passes.html">
-            <div id="menu-pass-icon"></div>
-            <div class="menu-label">Passes</div>
-          </a>
-        </li>
-        -->
-      </ul>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand ml-2" href="/views/home.html">
+        <img src="/images/heart48x48.png" width="30" height="30" class="d-inline-block align-top mr-2" alt="ProTip">
+        ProTip
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto mr-2">
+            <li class="nav-item {% if page.name == "home" %}active{% endif %}">
+              <a href="home.html" class="nav-link">
+                <i class="fa fa-home" aria-hidden="true"></i>
+                Home
+              </a>
+            </li>
+            <li class="nav-item {% if page.name == "subscriptions" %}active{% endif %}">
+              <a href="subscriptions.html" class="nav-link">
+                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                Subscriptions
+              </a>
+            </li>
+            <li class="nav-item {% if page.name == "wallet" %}active{% endif %}">
+              <a href="wallet.html" class="nav-link">
+                <i class="fa fa-bitcoin" aria-hidden="true"></i>
+                Wallet
+              </a>
+            </li>
+            <li class="nav-item {% if page.name == "blacklist" %}active{% endif %}">
+              <a href="blacklist.html" class="nav-link">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+                Ignore
+              </a>
+            </li>
+            <li class="nav-item {% if page.name == "options" %}active{% endif %}">
+              <a href="options.html" class="nav-link">
+                <i class="fa fa-cog" aria-hidden="true"></i>
+                Options
+              </a>
+            </li>
+            <li class="nav-item {% if page.name == "recommend" %}active{% endif %}">
+              <a href="recommend.html" class="nav-link">
+                <i class="fa fa-group" aria-hidden="true"></i>
+                Recommended
+              </a>
+            </li>
+            <!--
+            <li class="nav-item" {% if page.name == "passes" %}active{% endif %}">
+              <a href="passes.html" class="nav-link">
+                <i class="fa fa-pass" aria-hidden="true"></i>
+                Passes
+              </a>
+            </li>
+            -->
+        </ul>
     </div>
-  </div>
 </nav>
