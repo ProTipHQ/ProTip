@@ -151,7 +151,7 @@ function initBitcoinWallet() {
 
 $(document).ready(function() {
     if(!localStorage['proTipInstalled']) {
-        localStorage['protip-popup-install'] = true;
+        localStorage['protipPopupInstall'] = true;
         window.location.replace("install.html");
     }
 

@@ -159,11 +159,10 @@ function initFiatCurrency() {
           $('#ajax-loader').hide();
         });
     });
-
 }
 
 function updateFiatCurrencyCode() {
-    currencyManager.getSymbol().then(function(symbol){
+    currencyManager.getSymbol().then(function(symbol) {
         $.each($(".fiat-code"), function(key, element) {
             element.textContent = symbol[0];
         });
@@ -173,10 +172,10 @@ function updateFiatCurrencyCode() {
 function setupWallet() {
 
     function setAddress() {
-        preferences.getPrivateKey().then(function(privateKey){
+        preferences.getPrivateKey().then(function(privateKey) {
             $('#private-key-input').val(privateKey);
         });
-        preferences.getAddress().then(function(address){
+        preferences.getAddress().then(function(address) {
             $('#textAddress').text(address());
         });
     }
@@ -212,11 +211,11 @@ function restartTheWeek() {
     var milliSecondsInWeek = 604800000;
     var extraHour = 3600000;
     var alarm = now + milliSecondsInWeek + extraHour;
-
     localStorage['endOfWeek'] = alarm;
 }
 
 var db;
+
 $(document).ready(function() {
 
     db = new ydn.db.Storage('protip', schema);
@@ -225,25 +224,24 @@ $(document).ready(function() {
     initDefaultBlacklistedHostnames();
     initSponsors();
     setupWallet();
+    allowExternalLinks();
 
-    if(!localStorage['availableBalanceFiat']){
+    if (!localStorage['availableBalanceFiat']) {
         localStorage['availableBalanceFiat'] = 0.00;
     }
-    if(!localStorage['bitcoinFeeFiat']){
+    if (!localStorage['bitcoinFeeFiat']) {
         localStorage['bitcoinFeeFiat'] = 0.02;
     }
-    if(!localStorage['subscriptionTotalFiat']){
+    if (!localStorage['subscriptionTotalFiat']) {
         localStorage['subscriptionTotalFiat'] = 0.00
     }
-    if(!localStorage['incidentalTotalFiat']){
+    if (!localStorage['incidentalTotalFiat']) {
         localStorage['incidentalTotalFiat'] = 0.00
     }
 
-    allowExternalLinks();
-
     $('#launch').click(function() {
         localStorage['proTipInstalled'] = true;
-        if(localStorage['protip-popup-install']){
+        if (localStorage['protipPopupInstall']) {
            browser.tabs.create({
                 url: "/views/home.html"
            });
